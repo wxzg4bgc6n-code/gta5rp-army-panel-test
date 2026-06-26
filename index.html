@@ -204,6 +204,84 @@ body.theme-gold:before{
   .level-buttons,.settings-actions{grid-template-columns:1fr}
 }
 
+
+/* v91: спокойные красивые темы, один блок настроек, уровень работает внутри прогресса */
+body.theme-blue{
+  --accent:#7dd3fc;--accent2:#60a5fa;--glow:rgba(96,165,250,.18);
+}
+body.theme-blue:before{
+  background:
+    radial-gradient(circle at 45% 6%,rgba(96,165,250,.20),transparent 30%),
+    radial-gradient(circle at 82% 78%,rgba(125,211,252,.10),transparent 36%),
+    linear-gradient(180deg,#07111f 0%,#030712 55%,#01030a 100%)!important;
+}
+body.theme-green{
+  --accent:#86efac;--accent2:#2dd4bf;--glow:rgba(45,212,191,.16);
+}
+body.theme-green:before{
+  background:
+    radial-gradient(circle at 42% 6%,rgba(45,212,191,.18),transparent 30%),
+    radial-gradient(circle at 82% 78%,rgba(134,239,172,.09),transparent 36%),
+    linear-gradient(180deg,#061714 0%,#02100d 55%,#000605 100%)!important;
+}
+body.theme-purple{
+  --accent:#c4b5fd;--accent2:#818cf8;--glow:rgba(129,140,248,.18);
+}
+body.theme-purple:before{
+  background:
+    radial-gradient(circle at 44% 6%,rgba(129,140,248,.20),transparent 30%),
+    radial-gradient(circle at 82% 78%,rgba(196,181,253,.10),transparent 36%),
+    linear-gradient(180deg,#0d0a1f 0%,#070516 55%,#020108 100%)!important;
+}
+body.theme-red{
+  --accent:#fb7185;--accent2:#f472b6;--glow:rgba(244,114,182,.15);
+}
+body.theme-red:before{
+  background:
+    radial-gradient(circle at 44% 6%,rgba(251,113,133,.16),transparent 30%),
+    radial-gradient(circle at 82% 78%,rgba(244,114,182,.09),transparent 36%),
+    linear-gradient(180deg,#1a070c 0%,#10040a 55%,#050104 100%)!important;
+}
+body.theme-gold{
+  --accent:#facc15;--accent2:#f59e0b;--glow:rgba(250,204,21,.14);
+}
+body.theme-gold:before{
+  background:
+    radial-gradient(circle at 44% 6%,rgba(250,204,21,.16),transparent 30%),
+    radial-gradient(circle at 82% 78%,rgba(245,158,11,.09),transparent 36%),
+    linear-gradient(180deg,#181005 0%,#0d0802 55%,#040200 100%)!important;
+}
+.theme-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.theme-dot{
+  min-height:62px;border-radius:18px;border:1px solid rgba(255,255,255,.12);
+  background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.03));
+  display:grid;place-items:center;transition:.18s ease;
+}
+.theme-swatch{width:36px;height:36px;border-radius:50%;box-shadow:0 0 26px rgba(255,255,255,.10)}
+.choice input:checked + .theme-dot{
+  border-color:rgba(255,255,255,.55);
+  background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.045));
+  transform:translateY(-1px);
+}
+#modulesStep,#modules,.modules,#infoPanel,.info-panel,[id*="modules"],[id*="infoPanel"]{
+  display:none!important;
+}
+.level-picker-panel{
+  margin-top:16px;
+  padding:14px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(255,255,255,.04);
+}
+.level-picker-panel .field{margin:0}
+.level-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.level-buttons .btn:disabled{opacity:.42;cursor:not-allowed;filter:saturate(.4)}
+.profile-change-link{width:100%;margin-top:14px}
+@media(max-width:620px){
+  .theme-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .level-buttons{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -215,7 +293,7 @@ body.theme-gold:before{
         <label class="choice"><input type="radio" name="theme" value="theme-gold"><div class="theme-dot"><span class="theme-swatch" style="background:linear-gradient(135deg,#ffd166,#ff9f5a)"></span></div></label>
       </div></label><label class="choice"><input type="radio" name="avatar" value="🚓"><div class="tile">🚓</div></label><label class="choice"><input type="radio" name="avatar" value="🏛️"><div class="tile">🏛️</div></label><label class="choice"><input type="radio" name="avatar" value="💼"><div class="tile">💼</div></label><label class="choice"><input type="radio" name="avatar" value="🕶️"><div class="tile">🕶️</div></label><label class="choice"><input type="radio" name="avatar" value="🎮"><div class="tile">🎮</div></label></div></label><label class="field"><span>Проект</span><select id="firstProject"><option>GTA5RP</option><option>Majestic RP</option></select></label><label class="field"><span>Путь</span><div class="path-grid"><label class="choice"><input type="radio" name="path" value="Госка" checked><div class="tile"><b>🏛️ Госка</b>служба и карьера</div></label><label class="choice"><input type="radio" name="path" value="Крайм"><div class="tile"><b>🕶️ Крайм</b>семья / банда / мафия</div></label></div></label><div class="err" id="err">Сначала введи имя.</div><button class="btn" id="start">Открыть личный кабинет</button></div></div></section>
 <div class="app">
-<main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Уровень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div><button class="btn soft profile-change-link" id="editSetup">Изменить раздел / ступень</button><button class="btn soft profile-change-link" id="openSettings">Изменить проект / путь / тему</button></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и уровень</h2><p>Выбери раздел и ступень повышения из ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div><div class="next-level-box" id="nextLevelBox"><strong>Этап закрыт</strong><span id="nextLevelText">Можно перейти дальше.</span><button class="btn" id="goNextLevel" style="width:100%">Перейти на следующий уровень</button></div>
+<main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Уровень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div><button class="btn soft profile-change-link" id="openSettings">Настройки профиля</button></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и уровень</h2><p>Выбери раздел и ступень повышения из ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div><div class="next-level-box" id="nextLevelBox"><strong>Этап закрыт</strong><span id="nextLevelText">Можно перейти дальше.</span><button class="btn" id="goNextLevel" style="width:100%">Перейти на следующий уровень</button></div>
         <div class="level-picker-panel" id="levelPickerPanel">
           <label class="field">
             <span>Выбрать ступень вручную</span>
@@ -376,8 +454,11 @@ function goNextLevel(){
  showProgressToast('Открыт следующий уровень');
 }
 
+
 function setLevelDirect(level){
- if(!level) return;
+ if(!level || !S.configured) return;
+ const list=currentLevelList();
+ if(!list.includes(level)) return;
  S.level=level;
  S.tasks={};
  displayedProgress=0;
@@ -386,12 +467,18 @@ function setLevelDirect(level){
  showProgressToast('Ступень изменена');
 }
 function renderManualLevelPicker(){
+ const panel=$('#levelPickerPanel');
  const select=$('#manualLevelSelect');
+ if(panel) panel.style.display = S.configured ? 'block' : 'none';
  if(!select || !S.configured) return;
  const list=currentLevelList();
  if(!list.length) return;
- if(!list.includes(S.level)) S.level=list[0];
- select.innerHTML=list.map(v=>`<option ${S.level===v?'selected':''}>${v}</option>`).join('');
+ if(!list.includes(S.level)){
+  S.level=list[0];
+  save();
+ }
+ select.innerHTML=list.map(v=>`<option value="${v}" ${S.level===v?'selected':''}>${v}</option>`).join('');
+ select.value=S.level;
  select.onchange=()=>setLevelDirect(select.value);
  const idx=list.indexOf(S.level);
  const prev=$('#prevLevelBtn');
@@ -441,7 +528,6 @@ function renderInfo(){if(!S.configured)return;let tabs=availableTabs();if(!tabs.
 function renderAch(){let a=[];if(S.ready)a.push(['🟢','Профиль']);if(S.path)a.push([S.path==='Госка'?'🏛️':'🕶️',S.path]);if(S.org)a.push(['⭐',S.org]);if(S.configured)a.push(['📌',S.section]);if(percent()>=50)a.push(['🎖','50%']);if(percent()>=100)a.push(['🏆','Готово']);$('#achievements').innerHTML=a.map(x=>`<span class="ach">${x[0]} ${x[1]}</span>`).join('')}
 $('#start').onclick=()=>{let n=$('#firstName').value.trim();if(!n){$('#err').classList.add('show');return}S={ready:true,name:n,theme:document.querySelector('[name=theme]:checked')?.value||'theme-blue',project:$('#firstProject').value,path:document.querySelector('[name=path]:checked').value,org:'',section:'',level:'',configured:false,tasks:{},infoTab:'Academy'};save();render()};
 $('#reselectOrg').onclick=()=>{S.org='';S.section='';S.level='';S.configured=false;S.tasks={};displayedProgress=0;save();render()};
-$('#editSetup').onclick=()=>{S.configured=false;S.tasks={};displayedProgress=0;save();render()};
 $('#saveSetup').onclick=()=>{S.section=$('#section').value;S.level=$('#level').value;S.configured=true;S.tasks={};S.infoTab=S.section==='USAF'?'USAF':'Academy';save();render()};
 document.addEventListener('change',e=>{if(e.target.id==='section'){S.section=$('#section').value;S.level=(LEVELS[S.section]||LEVELS.default)[0];renderSetup()}if(e.target.id==='level'){S.level=$('#level').value}});
 
@@ -473,6 +559,7 @@ function saveSettingsModal(){
 }
 
 ['rp_panel_v88_theme_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v87_auto_next_level','rp_panel_v86_smooth_progress'].forEach(k=>localStorage.removeItem(k));
+['rp_panel_v90_fresh_theme_bg_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v88_theme_level_picker'].forEach(k=>localStorage.removeItem(k));
 load();render();
 
 setTimeout(()=>{
