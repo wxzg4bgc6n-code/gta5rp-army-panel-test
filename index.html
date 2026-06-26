@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v110</title>
+<title>RP Cabinet v111</title>
 <style>
 :root{
   --bg:#02040a;
@@ -831,6 +831,47 @@ input:focus,select:focus{
   .achievement-grid,.account-modal-summary{grid-template-columns:1fr}
 }
 
+
+/* v111: понятная кнопка коллекции и последнее достижение у аватарки */
+.avatar-wrap{
+  position:relative;
+  margin-bottom:13px;
+}
+.avatar-wrap .initial{
+  margin-bottom:0!important;
+}
+.last-achievement-badge{
+  position:absolute;
+  right:-8px;
+  bottom:-8px;
+  min-width:42px;
+  height:34px;
+  border-radius:999px;
+  display:none;
+  place-items:center;
+  border:1px solid color-mix(in srgb,var(--accent) 38%, white 0%);
+  background:rgba(8,12,22,.92);
+  color:var(--text);
+  box-shadow:0 12px 28px rgba(0,0,0,.35);
+  font-size:17px;
+}
+.last-achievement-badge.show{
+  display:grid;
+}
+.last-achievement-badge:hover{
+  background:color-mix(in srgb,var(--accent) 12%, rgba(8,12,22,.92));
+}
+.account-ach-wide{
+  width:auto!important;
+  min-width:118px!important;
+  padding:0 12px!important;
+  font-size:12px!important;
+  white-space:nowrap;
+}
+#lastAchInline{
+  color:var(--muted);
+}
+
 </style>
 </head>
 <body>
@@ -872,7 +913,10 @@ input:focus,select:focus{
   <main class="main">
     <aside class="panel profile-card">
       <div class="profile-head">
-        <div class="initial rank-emblem" id="profileInitial"><span id="rankIcon">◇</span><small id="rankTier">I</small></div>
+        <div class="avatar-wrap">
+          <div class="initial rank-emblem" id="profileInitial"><span id="rankIcon">◇</span><small id="rankTier">I</small></div>
+          <button class="last-achievement-badge" id="lastAchievementBadge" title="Последнее достижение">🏆</button>
+        </div>
         <h2 id="profileName">Игрок</h2>
         <p id="profilePath">GTA5RP › Госка</p>
       </div>
@@ -889,12 +933,13 @@ input:focus,select:focus{
             <strong id="accountRankTitle">Новичок</strong>
             <span id="accountLevelText">Уровень аккаунта 1</span>
           </div>
-          <button class="account-ach-btn" id="openAchievements">🏆</button>
+          <button class="account-ach-btn account-ach-wide" id="openAchievements">🏆 Коллекция</button>
         </div>
         <div class="account-xp-track"><div id="accountXpBar"></div></div>
         <div class="account-ach-text">
           <span id="accountXpText">0 / 100 XP</span>
           <span id="accountAchText">0 достижений</span>
+          <span id="lastAchInline">последнее: —</span>
         </div>
       </div>
       <div class="ach-strip" id="achievements" style="display:none"></div>
@@ -1044,9 +1089,9 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v110_account_rank_achievements';
+const KEY='rp_panel_v111_achievements_button_last_badge';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
@@ -1454,6 +1499,17 @@ function renderAccountBlock(){
   $('#accountXpText').textContent=`${current} / 100 XP`;
   $('#accountXpBar').style.width=`${current}%`;
   $('#accountAchText').textContent=`${opened.length} / ${ACHIEVEMENT_DEFS.length} достижений`;
+  const last=opened.sort((a,b)=>(got[b.id]?.time||0)-(got[a.id]?.time||0))[0];
+  const lastText=last?`${last.icon} ${last.title}`:'—';
+  const inline=$('#lastAchInline');
+  if(inline) inline.textContent=`последнее: ${lastText}`;
+  const badge=$('#lastAchievementBadge');
+  if(badge){
+    badge.classList.toggle('show',!!last);
+    badge.textContent=last?last.icon:'🏆';
+    badge.title=last?`Последнее достижение: ${last.title}`:'Последнее достижение';
+    badge.onclick=openAchievementsModal;
+  }
 }
 function renderAchievementModal(){
   const got=achievements();
@@ -1566,6 +1622,9 @@ $('#infoLevel').onclick=openLevelModal;
 $('#closeLevelModal').onclick=closeLevelModal;
 $('#saveLevelModal').onclick=saveLevelModal;
 $('#openAchievements').onclick=openAchievementsModal;
+document.addEventListener('click',e=>{
+  if(e.target && (e.target.id==='openAchievements' || e.target.id==='lastAchievementBadge')) openAchievementsModal();
+});
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
 $('#openSettings').onclick=openSettings;
