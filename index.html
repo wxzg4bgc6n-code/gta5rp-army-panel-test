@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v106</title>
+<title>RP Cabinet v107</title>
 <style>
 :root{
   --bg:#02040a;
@@ -745,6 +745,59 @@ input:focus,select:focus{
   .achievement-grid,.achievements-summary{grid-template-columns:1fr}
 }
 
+
+/* v107: аватарка от уровня аккаунта и фикс коллекции достижений */
+.level-avatar{
+  position:relative;
+  color:var(--text)!important;
+  overflow:hidden;
+  border:1px solid color-mix(in srgb,var(--accent) 45%, white 0%);
+}
+.level-avatar::before{
+  content:"";
+  position:absolute;
+  inset:-35%;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.24),transparent 20%),
+    radial-gradient(circle at 70% 80%,var(--glow),transparent 36%);
+}
+.level-avatar span{
+  position:relative;
+  z-index:1;
+  font-size:50px;
+  line-height:1;
+  filter:drop-shadow(0 0 12px rgba(0,0,0,.35));
+}
+.level-avatar small{
+  position:absolute;
+  right:9px;
+  bottom:8px;
+  z-index:2;
+  min-width:28px;
+  height:24px;
+  padding:0 7px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  color:#07101f;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:1px solid rgba(255,255,255,.22);
+  font-size:11px;
+  font-weight:950;
+}
+.level-avatar.tier-1{background:linear-gradient(135deg,#334155,#0f172a)!important}
+.level-avatar.tier-2{background:linear-gradient(135deg,#2563eb,#0f172a)!important}
+.level-avatar.tier-3{background:linear-gradient(135deg,#7c3aed,#111827)!important}
+.level-avatar.tier-4{background:linear-gradient(135deg,#dc2626,#111827)!important}
+.level-avatar.tier-5{background:linear-gradient(135deg,#f59e0b,#111827)!important}
+#achievementsModal{
+  z-index:10020!important;
+}
+#achievementTabs button,
+.achievement-tab{
+  cursor:pointer;
+}
+
 </style>
 </head>
 <body>
@@ -786,7 +839,7 @@ input:focus,select:focus{
   <main class="main">
     <aside class="panel profile-card">
       <div class="profile-head">
-        <div class="initial" id="profileInitial">R</div>
+        <div class="initial level-avatar" id="profileInitial"><span id="levelAvatarIcon">◇</span><small id="levelAvatarTier">I</small></div>
         <h2 id="profileName">Игрок</h2>
         <p id="profilePath">GTA5RP › Госка</p>
       </div>
@@ -950,9 +1003,9 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v106_account_level_achievements';
+const KEY='rp_panel_v107_ach_modal_level_avatars';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v106_account_level_achievements',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
@@ -1035,7 +1088,7 @@ function percent(){
 function render(){
   theme();
   const path=[S.project,S.path,S.org,S.section].filter(Boolean).join(' › ');
-  $('#profileInitial').textContent=(S.name||'R').slice(0,1).toUpperCase();
+  renderLevelAvatar();
   $('#profileName').textContent=S.name||'Игрок';
   $('#profilePath').textContent='';
   $('#infoProject').textContent=S.project;
@@ -1270,7 +1323,25 @@ function checkAchievements(){
   if(p>=50) unlockAchievement('progress_50');
   if(p>=100) unlockAchievement('progress_100');
 }
+
+function levelAvatarData(level){
+  if(level >= 41) return {icon:'👑',tier:'V',cls:'tier-5',name:'Легенда'};
+  if(level >= 31) return {icon:'🐉',tier:'IV',cls:'tier-4',name:'Элита'};
+  if(level >= 21) return {icon:'🛡️',tier:'III',cls:'tier-3',name:'Ветеран'};
+  if(level >= 11) return {icon:'⚔️',tier:'II',cls:'tier-2',name:'Опытный'};
+  return {icon:'◇',tier:'I',cls:'tier-1',name:'Новичок'};
+}
+function renderLevelAvatar(){
+  const avatar=$('#profileInitial');
+  if(!avatar) return;
+  const data=levelAvatarData(accountLevel());
+  avatar.classList.remove('tier-1','tier-2','tier-3','tier-4','tier-5');
+  avatar.classList.add(data.cls);
+  $('#levelAvatarIcon').textContent=data.icon;
+  $('#levelAvatarTier').textContent=data.tier;
+}
 function renderAccountCard(){
+  renderLevelAvatar();
   if(!S.achievements) S.achievements={};
   const opened=ACHIEVEMENT_DEFS.filter(a=>S.achievements[a.id]);
   const level=accountLevel();
@@ -1309,10 +1380,10 @@ function renderAchievementModal(){
 }
 function openAchievementsModal(){
   renderAchievementModal();
-  $('#achievementsModal').classList.add('open');
+  const m=$('#achievementsModal'); if(m){m.classList.add('open'); m.style.display='flex';}
 }
 function closeAchievementsModal(){
-  $('#achievementsModal').classList.remove('open');
+  const m=$('#achievementsModal'); if(m){m.classList.remove('open'); m.style.display='';}
 }
 function renderAchievements(){
   checkAchievements();
@@ -1397,7 +1468,13 @@ $('#editLevelBtn').onclick=openLevelModal;
 $('#infoLevel').onclick=openLevelModal;
 $('#closeLevelModal').onclick=closeLevelModal;
 $('#saveLevelModal').onclick=saveLevelModal;
-$('#openAchievements').onclick=openAchievementsModal;
+
+const openAchBtn=$('#openAchievements');
+if(openAchBtn) openAchBtn.onclick=openAchievementsModal;
+document.addEventListener('click',e=>{
+  if(e.target && e.target.id==='openAchievements') openAchievementsModal();
+});
+
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
 $('#openSettings').onclick=openSettings;
