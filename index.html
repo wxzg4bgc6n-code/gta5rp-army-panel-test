@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v129</title>
+<title>RP Cabinet v130</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2198,30 +2198,7 @@ body{
 }
 
 
-/* v129: починка layout, статистика без XP, больше достижений */
-.main{
-  display:grid!important;
-  grid-template-columns:360px minmax(0,1fr)!important;
-  gap:18px!important;
-  align-items:start!important;
-}
-.profile-card{
-  position:sticky!important;
-  top:16px!important;
-  align-self:start!important;
-  max-height:calc(100vh - 32px)!important;
-  overflow:auto!important;
-}
-.profile-card #openSettings{
-  width:100%!important;
-  margin-top:14px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-}
-.flow{
-  min-width:0!important;
-}
+/* v128: починка структуры + статистика без XP */
 .account-stats-card{
   margin-top:14px!important;
   padding:14px!important;
@@ -2240,19 +2217,40 @@ body{
   font-weight:950!important;
 }
 .account-stats-title::before{
-  content:"▦"!important;
-  color:var(--accent)!important;
-  font-size:18px!important;
+  content:""!important;
+  width:20px!important;
+  height:18px!important;
+  display:inline-block!important;
+  background:linear-gradient(135deg,var(--accent),var(--accent2))!important;
+  -webkit-mask:
+    radial-gradient(circle 2px at 4px 4px,#000 99%,transparent 100%),
+    radial-gradient(circle 2px at 4px 9px,#000 99%,transparent 100%),
+    radial-gradient(circle 2px at 4px 14px,#000 99%,transparent 100%),
+    linear-gradient(#000 0 0) 9px 3px/11px 2px no-repeat,
+    linear-gradient(#000 0 0) 9px 8px/11px 2px no-repeat,
+    linear-gradient(#000 0 0) 9px 13px/11px 2px no-repeat;
+  mask:
+    radial-gradient(circle 2px at 4px 4px,#000 99%,transparent 100%),
+    radial-gradient(circle 2px at 4px 9px,#000 99%,transparent 100%),
+    radial-gradient(circle 2px at 4px 14px,#000 99%,transparent 100%),
+    linear-gradient(#000 0 0) 9px 3px/11px 2px no-repeat,
+    linear-gradient(#000 0 0) 9px 8px/11px 2px no-repeat,
+    linear-gradient(#000 0 0) 9px 13px/11px 2px no-repeat;
   filter:drop-shadow(0 0 8px var(--glow))!important;
 }
 .account-stats-list{
   display:grid!important;
+  gap:0!important;
 }
 .stat-line{
   display:grid!important;
   grid-template-columns:1fr auto!important;
   align-items:center!important;
   min-height:44px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
   border-bottom:1px solid rgba(255,255,255,.065)!important;
 }
 .stat-line:last-child{border-bottom:0!important}
@@ -2267,19 +2265,57 @@ body{
   font-weight:950!important;
   text-align:right!important;
 }
-.account-stats-grid,.stat-item{display:none!important}
+.account-stats-grid,
+.stat-item{
+  display:none!important;
+}
 
+/* Заголовок последнего достижения как в примере, без поломки layout */
+.last-ach-title::before{
+  content:""!important;
+  width:18px!important;
+  height:18px!important;
+  display:inline-block!important;
+  border-radius:4px!important;
+  background:linear-gradient(135deg,var(--accent),var(--accent2))!important;
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 73%,0 100%)!important;
+  filter:drop-shadow(0 0 8px var(--glow))!important;
+}
+
+
+/* v130: оставлена структура v128, добавлены сложные достижения и убраны блики */
+.last-ach-card::before,
+.last-ach-body > span::after{
+  display:none!important;
+}
+.last-ach-body > span{
+  box-shadow:0 10px 24px rgba(0,0,0,.26)!important;
+  background:linear-gradient(180deg,#101725,#070b14)!important;
+}
+.last-ach-body > span::before{
+  display:none!important;
+}
+
+/* редкости достижений без лишних засветов */
 .achievement-card.rarity-common,.achievement-preview.rarity-common,.profile-icon-choice.rarity-common{--rarity:#7dd3fc}
 .achievement-card.rarity-rare,.achievement-preview.rarity-rare,.profile-icon-choice.rarity-rare{--rarity:#86efac}
 .achievement-card.rarity-epic,.achievement-preview.rarity-epic,.profile-icon-choice.rarity-epic{--rarity:#b28cff}
 .achievement-card.rarity-legendary,.achievement-preview.rarity-legendary,.profile-icon-choice.rarity-legendary{--rarity:#facc15}
-.achievement-card:not(.locked),.achievement-preview.open,.profile-icon-choice{
-  border-color:color-mix(in srgb,var(--rarity, var(--accent)) 42%, rgba(255,255,255,.10))!important;
+
+.achievement-card:not(.locked),
+.achievement-preview.open,
+.profile-icon-choice{
+  border-color:color-mix(in srgb,var(--rarity, var(--accent)) 36%, rgba(255,255,255,.10))!important;
 }
 .achievement-card.rarity-legendary:not(.locked),
 .achievement-preview.rarity-legendary.open,
 .profile-icon-choice.rarity-legendary{
-  box-shadow:0 0 0 1px rgba(250,204,21,.14),0 0 26px rgba(250,204,21,.14)!important;
+  box-shadow:0 0 0 1px rgba(250,204,21,.12)!important;
+}
+.achievement-card.rarity-epic:not(.locked),
+.achievement-preview.rarity-epic.open,
+.profile-icon-choice.rarity-epic{
+  box-shadow:0 0 0 1px rgba(178,140,255,.10)!important;
 }
 .rarity-label{
   display:inline-flex;
@@ -2291,12 +2327,8 @@ body{
   font-weight:950;
   font-style:normal;
   color:var(--rarity,var(--accent));
-  background:color-mix(in srgb,var(--rarity,var(--accent)) 10%, transparent);
-  border:1px solid color-mix(in srgb,var(--rarity,var(--accent)) 24%, transparent);
-}
-@media(max-width:900px){
-  .main{grid-template-columns:1fr!important}
-  .profile-card{position:relative!important;top:auto!important;max-height:none!important;overflow:visible!important}
+  background:color-mix(in srgb,var(--rarity,var(--accent)) 9%, transparent);
+  border:1px solid color-mix(in srgb,var(--rarity,var(--accent)) 22%, transparent);
 }
 
 </style>
@@ -2572,7 +2604,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v129_repair_more_hard_achievements';
+const VERSION_KEY='rp_panel_v130_v128_more_ach_no_glare';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
