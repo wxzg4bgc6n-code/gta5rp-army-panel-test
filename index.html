@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v125</title>
+<title>RP Cabinet v126</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2090,6 +2090,113 @@ body{
   border-color:color-mix(in srgb,var(--rarity) 66%, white 0%)!important;
 }
 
+
+/* v126: красивый значок последнего достижения + статистика аккаунта */
+.last-ach-card{
+  position:relative;
+  overflow:hidden;
+}
+.last-ach-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 8%, transparent),transparent 42%);
+  pointer-events:none;
+}
+.last-ach-title,
+.last-ach-body{
+  position:relative;
+  z-index:1;
+}
+.last-ach-body > span{
+  position:relative!important;
+  width:64px!important;
+  height:64px!important;
+  border-radius:17px!important;
+  font-size:34px!important;
+  background:
+    radial-gradient(circle at 35% 25%,rgba(255,255,255,.16),transparent 28%),
+    linear-gradient(145deg,color-mix(in srgb,var(--accent) 22%, #151c2b),#070b14)!important;
+  border:1px solid color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.10))!important;
+  box-shadow:
+    inset 0 0 18px rgba(255,255,255,.035),
+    0 14px 28px rgba(0,0,0,.34),
+    0 0 22px color-mix(in srgb,var(--accent) 12%, transparent)!important;
+}
+.last-ach-body > span::before{
+  content:"";
+  position:absolute;
+  inset:7px;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.08);
+  pointer-events:none;
+}
+.last-ach-body > span::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-7px;
+  transform:translateX(-50%);
+  width:38px;
+  height:5px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 36%, transparent);
+  filter:blur(5px);
+}
+.account-stats-card{
+  margin-top:14px;
+  padding:14px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.095);
+  background:rgba(255,255,255,.032);
+}
+.account-stats-title{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding-bottom:11px;
+  margin-bottom:11px;
+  border-bottom:1px solid rgba(255,255,255,.075);
+  font-size:15px;
+  font-weight:950;
+}
+.account-stats-title::before{
+  content:"▦";
+  color:var(--accent);
+  font-size:18px;
+  filter:drop-shadow(0 0 8px var(--glow));
+}
+.account-stats-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:9px;
+}
+.stat-item{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:12px;
+  min-height:36px;
+  padding:8px 10px;
+  border-radius:12px;
+  background:rgba(255,255,255,.028);
+  border:1px solid rgba(255,255,255,.055);
+}
+.stat-item span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+}
+.stat-item b{
+  color:var(--text);
+  font-size:12px;
+  text-align:right;
+  max-width:160px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
 </style>
 </head>
 <body>
@@ -2150,6 +2257,16 @@ body{
       <div class="last-ach-card" id="lastAchCard">
         <div class="last-ach-title">Последнее достижение</div>
         <div class="last-ach-body"><span id="lastAchCardIcon">🏆</span><div><b id="lastAchCardTitle">—</b><small id="lastAchCardDesc">Пока нет достижений</small></div></div>
+      </div>
+
+      <div class="account-stats-card" id="accountStatsCard">
+        <div class="account-stats-title">Статистика аккаунта</div>
+        <div class="account-stats-grid">
+          <div class="stat-item"><span>Достижения</span><b id="statAchievements">0 / 0</b></div>
+          <div class="stat-item"><span>Профиль создан</span><b id="statCreated">—</b></div>
+          <div class="stat-item"><span>Текущий путь</span><b id="statPath">—</b></div>
+          <div class="stat-item"><span>Значок профиля</span><b id="statIcon">—</b></div>
+        </div>
       </div>
       <div class="account-progress-card">
         <div class="account-progress-head">
@@ -2354,7 +2471,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v125_profile_icon_fix_more_achievements';
+const VERSION_KEY='rp_panel_v126_last_ach_icon_account_stats';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -2429,7 +2546,7 @@ const ACHIEVEMENT_DEFS=[
 ];
 let activeAchCategory='Все';
 
-let S={ready:false,name:'',project:'GTA5RP',path:'Госка',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{}}};
+let S={ready:false,name:'',project:'GTA5RP',path:'Госка',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now()}};
 let displayedProgress=0;
 let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
@@ -2474,6 +2591,7 @@ function load(){
       S=Object.assign(S,d);
       if(!S.account) S.account={achievements:{}};
       if(!S.account.achievements) S.account.achievements={};
+      if(!S.account.createdAt) S.account.createdAt=Date.now();
       save();
     }
   }catch(e){}
@@ -2802,6 +2920,7 @@ function setProfileIcon(id){
   S.account.profileIconAchievementId=id;
   save();
   renderProfileIcon();
+  renderAccountStats();
   render();
   closeProfileIconModal();
   showToast('Значок обновлён','Профиль изменён');
@@ -2884,6 +3003,7 @@ function renderAccountBlock(){
   checkAchievements();
   renderRankEmblem();
   renderLastAchievementUI();
+  renderAccountStats();
   renderAchievementPreviews();
   renderPathDashboard();
   const xp=accountXp();
@@ -2945,6 +3065,28 @@ function lastAchievementDef(){
   const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]);
   opened.sort((a,b)=>(got[b.id]?.time||0)-(got[a.id]?.time||0));
   return opened[0]||null;
+}
+
+function formatProfileDate(ts){
+  if(!ts) return '—';
+  try{
+    return new Date(ts).toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
+  }catch(e){return '—'}
+}
+function renderAccountStats(){
+  const got=achievements();
+  const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]).length;
+  const statAchievements=$('#statAchievements');
+  if(statAchievements) statAchievements.textContent=`${opened} / ${ACHIEVEMENT_DEFS.length}`;
+  const statCreated=$('#statCreated');
+  if(statCreated) statCreated.textContent=formatProfileDate(S.account?.createdAt);
+  const statPath=$('#statPath');
+  if(statPath) statPath.textContent=[S.project,S.path,S.org,S.section].filter(Boolean).join(' › ') || '—';
+  const statIcon=$('#statIcon');
+  if(statIcon){
+    const def=selectedProfileIconDef ? selectedProfileIconDef() : null;
+    statIcon.textContent=def ? `${def.icon} ${def.title}` : 'Не выбран';
+  }
 }
 function renderLastAchievementUI(){
   const last=lastAchievementDef();
