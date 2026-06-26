@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v128</title>
+<title>RP Cabinet v129</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2198,7 +2198,30 @@ body{
 }
 
 
-/* v128: починка структуры + статистика без XP */
+/* v129: починка layout, статистика без XP, больше достижений */
+.main{
+  display:grid!important;
+  grid-template-columns:360px minmax(0,1fr)!important;
+  gap:18px!important;
+  align-items:start!important;
+}
+.profile-card{
+  position:sticky!important;
+  top:16px!important;
+  align-self:start!important;
+  max-height:calc(100vh - 32px)!important;
+  overflow:auto!important;
+}
+.profile-card #openSettings{
+  width:100%!important;
+  margin-top:14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+.flow{
+  min-width:0!important;
+}
 .account-stats-card{
   margin-top:14px!important;
   padding:14px!important;
@@ -2217,40 +2240,19 @@ body{
   font-weight:950!important;
 }
 .account-stats-title::before{
-  content:""!important;
-  width:20px!important;
-  height:18px!important;
-  display:inline-block!important;
-  background:linear-gradient(135deg,var(--accent),var(--accent2))!important;
-  -webkit-mask:
-    radial-gradient(circle 2px at 4px 4px,#000 99%,transparent 100%),
-    radial-gradient(circle 2px at 4px 9px,#000 99%,transparent 100%),
-    radial-gradient(circle 2px at 4px 14px,#000 99%,transparent 100%),
-    linear-gradient(#000 0 0) 9px 3px/11px 2px no-repeat,
-    linear-gradient(#000 0 0) 9px 8px/11px 2px no-repeat,
-    linear-gradient(#000 0 0) 9px 13px/11px 2px no-repeat;
-  mask:
-    radial-gradient(circle 2px at 4px 4px,#000 99%,transparent 100%),
-    radial-gradient(circle 2px at 4px 9px,#000 99%,transparent 100%),
-    radial-gradient(circle 2px at 4px 14px,#000 99%,transparent 100%),
-    linear-gradient(#000 0 0) 9px 3px/11px 2px no-repeat,
-    linear-gradient(#000 0 0) 9px 8px/11px 2px no-repeat,
-    linear-gradient(#000 0 0) 9px 13px/11px 2px no-repeat;
+  content:"▦"!important;
+  color:var(--accent)!important;
+  font-size:18px!important;
   filter:drop-shadow(0 0 8px var(--glow))!important;
 }
 .account-stats-list{
   display:grid!important;
-  gap:0!important;
 }
 .stat-line{
   display:grid!important;
   grid-template-columns:1fr auto!important;
   align-items:center!important;
   min-height:44px!important;
-  padding:0!important;
-  border:0!important;
-  border-radius:0!important;
-  background:transparent!important;
   border-bottom:1px solid rgba(255,255,255,.065)!important;
 }
 .stat-line:last-child{border-bottom:0!important}
@@ -2265,21 +2267,36 @@ body{
   font-weight:950!important;
   text-align:right!important;
 }
-.account-stats-grid,
-.stat-item{
-  display:none!important;
-}
+.account-stats-grid,.stat-item{display:none!important}
 
-/* Заголовок последнего достижения как в примере, без поломки layout */
-.last-ach-title::before{
-  content:""!important;
-  width:18px!important;
-  height:18px!important;
-  display:inline-block!important;
-  border-radius:4px!important;
-  background:linear-gradient(135deg,var(--accent),var(--accent2))!important;
-  clip-path:polygon(0 0,100% 0,100% 100%,50% 73%,0 100%)!important;
-  filter:drop-shadow(0 0 8px var(--glow))!important;
+.achievement-card.rarity-common,.achievement-preview.rarity-common,.profile-icon-choice.rarity-common{--rarity:#7dd3fc}
+.achievement-card.rarity-rare,.achievement-preview.rarity-rare,.profile-icon-choice.rarity-rare{--rarity:#86efac}
+.achievement-card.rarity-epic,.achievement-preview.rarity-epic,.profile-icon-choice.rarity-epic{--rarity:#b28cff}
+.achievement-card.rarity-legendary,.achievement-preview.rarity-legendary,.profile-icon-choice.rarity-legendary{--rarity:#facc15}
+.achievement-card:not(.locked),.achievement-preview.open,.profile-icon-choice{
+  border-color:color-mix(in srgb,var(--rarity, var(--accent)) 42%, rgba(255,255,255,.10))!important;
+}
+.achievement-card.rarity-legendary:not(.locked),
+.achievement-preview.rarity-legendary.open,
+.profile-icon-choice.rarity-legendary{
+  box-shadow:0 0 0 1px rgba(250,204,21,.14),0 0 26px rgba(250,204,21,.14)!important;
+}
+.rarity-label{
+  display:inline-flex;
+  width:max-content;
+  margin-top:7px;
+  padding:3px 7px;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:950;
+  font-style:normal;
+  color:var(--rarity,var(--accent));
+  background:color-mix(in srgb,var(--rarity,var(--accent)) 10%, transparent);
+  border:1px solid color-mix(in srgb,var(--rarity,var(--accent)) 24%, transparent);
+}
+@media(max-width:900px){
+  .main{grid-template-columns:1fr!important}
+  .profile-card{position:relative!important;top:auto!important;max-height:none!important;overflow:visible!important}
 }
 
 </style>
@@ -2349,6 +2366,7 @@ body{
         <div class="account-stats-list">
           <div class="stat-line"><span>Получено достижений</span><b id="statAchievements">0 / 0</b></div>
           <div class="stat-line"><span>Дата регистрации</span><b id="statCreated">—</b></div>
+          <div class="stat-line"><span>Редкие и выше</span><b id="statRare">0</b></div>
         </div>
       </div>
       <div class="account-progress-card">
@@ -2554,7 +2572,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v128_repair_layout_stats_no_xp';
+const VERSION_KEY='rp_panel_v129_repair_more_hard_achievements';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -2602,30 +2620,64 @@ const PROMO_TASKS={
 };
 
 const ACHIEVEMENT_DEFS=[
-  {id:'profile_created',cat:'Общие',icon:'🟢',rarity:'common',title:'Профиль создан',desc:'Создать первый RP-профиль.',xp:25},
-  {id:'path_gov',cat:'Госструктуры',icon:'🏛️',rarity:'common',title:'Путь службы',desc:'Выбрать путь госструктур.',xp:25},
-  {id:'path_crime',cat:'Крайм',icon:'🕶️',rarity:'common',title:'Тёмная сторона',desc:'Выбрать путь крайма.',xp:25},
-  {id:'project_gta5rp',cat:'GTA5RP',icon:'🎮',rarity:'common',title:'GTA5RP',desc:'Выбрать проект GTA5RP.',xp:20},
-  {id:'project_majestic',cat:'Majestic',icon:'👑',rarity:'common',title:'Majestic RP',desc:'Выбрать проект Majestic RP.',xp:20},
-  {id:'org_army',cat:'ARMY',icon:'🪖',rarity:'common',title:'Служба в ARMY',desc:'Выбрать ARMY.',xp:35},
+  {id:'profile_created',cat:'Общие',icon:'🟢',rarity:'common',title:'Профиль создан',desc:'Создать первый RP-профиль.',xp:0},
+  {id:'project_gta5rp',cat:'GTA5RP',icon:'🎮',rarity:'common',title:'GTA5RP',desc:'Выбрать проект GTA5RP.',xp:0},
+  {id:'project_majestic',cat:'Majestic',icon:'👑',rarity:'common',title:'Majestic RP',desc:'Выбрать проект Majestic RP.',xp:0},
+  {id:'path_gov',cat:'Госструктуры',icon:'🏛️',rarity:'common',title:'Путь службы',desc:'Выбрать путь госструктур.',xp:0},
+  {id:'path_crime',cat:'Крайм',icon:'🕶️',rarity:'common',title:'Тёмная сторона',desc:'Выбрать путь крайма.',xp:0},
+  {id:'org_army',cat:'ARMY',icon:'🪖',rarity:'common',title:'Служба в ARMY',desc:'Выбрать ARMY.',xp:0},
 
-  {id:'academy_started',cat:'ARMY',icon:'📚',rarity:'common',title:'Курсант Academy',desc:'Начать путь в Academy.',xp:35},
-  {id:'academy_half',cat:'ARMY',icon:'📘',rarity:'rare',title:'Половина Academy',desc:'Дойти до 50% на любой ступени Academy.',xp:45},
-  {id:'academy_finished',cat:'ARMY',icon:'🎓',rarity:'epic',title:'Academy закрыта',desc:'Закрыть последнюю ступень Academy.',xp:75},
+  {id:'academy_started',cat:'Academy',icon:'📚',rarity:'common',title:'Курсант Academy',desc:'Начать путь в Academy.',xp:0},
+  {id:'academy_half',cat:'Academy',icon:'📘',rarity:'rare',title:'Половина Academy',desc:'Дойти до 50% на любой ступени Academy.',xp:0},
+  {id:'academy_finished',cat:'Academy',icon:'🎓',rarity:'epic',title:'Academy закрыта',desc:'Закрыть последнюю ступень Academy.',xp:0},
+  {id:'academy_clean_finish',cat:'Academy',icon:'🏅',rarity:'legendary',title:'Отличник Academy',desc:'Закрыть Academy полностью и выбрать отдел.',xp:0},
 
-  {id:'department_selected',cat:'Госструктуры',icon:'📌',rarity:'rare',title:'Выбор отдела',desc:'После Academy выбрать отдел.',xp:50},
-  {id:'usaf_started',cat:'USAF',icon:'✈️',rarity:'rare',title:'Путь USAF',desc:'Выбрать отдел USAF.',xp:35},
-  {id:'usaf_first_step',cat:'USAF',icon:'🛩️',rarity:'rare',title:'Первый шаг USAF',desc:'Закрыть первую ступень в USAF.',xp:55},
-  {id:'usaf_mid',cat:'USAF',icon:'🛫',rarity:'epic',title:'Пилот USAF',desc:'Дойти минимум до ступени 5 → 6 в USAF.',xp:85},
-  {id:'usaf_elite',cat:'USAF',icon:'🚀',rarity:'legendary',title:'Элита USAF',desc:'Дойти до последней ступени USAF.',xp:130},
+  {id:'department_selected',cat:'Госструктуры',icon:'📌',rarity:'rare',title:'Выбор отдела',desc:'После Academy выбрать отдел.',xp:0},
+  {id:'first_promotion',cat:'Общие',icon:'⭐',rarity:'rare',title:'Первое повышение',desc:'Получить первое повышение через панель.',xp:0},
+  {id:'progress_50',cat:'Общие',icon:'🎖️',rarity:'rare',title:'Половина пути',desc:'Достичь 50% прогресса.',xp:0},
+  {id:'progress_100',cat:'Общие',icon:'🏆',rarity:'rare',title:'Ступень закрыта',desc:'Закрыть любую ступень на 100%.',xp:0},
+  {id:'three_tasks_done',cat:'Общие',icon:'✅',rarity:'common',title:'Три задачи',desc:'Отметить 3 задачи прогресса.',xp:0},
+  {id:'six_tasks_done',cat:'Общие',icon:'🔥',rarity:'rare',title:'Полный список',desc:'Отметить 6 задач прогресса.',xp:0},
 
-  {id:'progress_50',cat:'Общие',icon:'🎖️',rarity:'rare',title:'Половина пути',desc:'Достичь 50% прогресса.',xp:40},
-  {id:'progress_100',cat:'Общие',icon:'🏆',rarity:'rare',title:'Ступень закрыта',desc:'Закрыть любую ступень на 100%.',xp:60},
-  {id:'three_tasks_done',cat:'Общие',icon:'✅',rarity:'common',title:'Три задачи',desc:'Отметить 3 задачи прогресса.',xp:35},
-  {id:'six_tasks_done',cat:'Общие',icon:'🔥',rarity:'rare',title:'Полный список',desc:'Отметить 6 задач прогресса.',xp:60},
+  {id:'usaf_started',cat:'USAF',icon:'✈️',rarity:'common',title:'Добро пожаловать в USAF',desc:'Выбрать отдел USAF после Academy.',xp:0},
+  {id:'usaf_first_step',cat:'USAF',icon:'🛩️',rarity:'rare',title:'Первый вылет',desc:'Закрыть первую ступень в USAF.',xp:0},
+  {id:'usaf_pilot',cat:'USAF',icon:'🛫',rarity:'epic',title:'Пилот USAF',desc:'Дойти минимум до ступени 5 → 6 в USAF.',xp:0},
+  {id:'usaf_instructor',cat:'USAF',icon:'🧭',rarity:'epic',title:'Инструктор неба',desc:'Закрыть ступень 6 → 7 в USAF.',xp:0},
+  {id:'usaf_elite',cat:'USAF',icon:'🚀',rarity:'legendary',title:'Элита USAF',desc:'Полностью закрыть последнюю ступень USAF.',xp:0},
 
-  {id:'first_promotion',cat:'Общие',icon:'⭐',rarity:'epic',title:'Первое повышение',desc:'Получить первое повышение через панель.',xp:90},
-  {id:'veteran_profile',cat:'Общие',icon:'💎',rarity:'legendary',title:'Ветеран панели',desc:'Открыть 15 достижений.',xp:150}
+  {id:'mp_started',cat:'MP',icon:'🚨',rarity:'common',title:'Путь Military Police',desc:'Выбрать отдел MP.',xp:0},
+  {id:'mp_first_case',cat:'MP',icon:'📋',rarity:'rare',title:'Первое дело MP',desc:'Закрыть первую ступень MP.',xp:0},
+  {id:'mp_guardian',cat:'MP',icon:'🛡️',rarity:'epic',title:'Страж порядка',desc:'Дойти минимум до 4 → 5 в MP.',xp:0},
+  {id:'mp_warden',cat:'MP',icon:'⚖️',rarity:'legendary',title:'Железная дисциплина',desc:'Полностью закрыть последнюю ступень MP.',xp:0},
+
+  {id:'df_started',cat:'DF',icon:'🪖',rarity:'common',title:'Defense Force',desc:'Выбрать отдел DF.',xp:0},
+  {id:'df_line',cat:'DF',icon:'🧱',rarity:'rare',title:'Линия обороны',desc:'Закрыть первую ступень DF.',xp:0},
+  {id:'df_shield',cat:'DF',icon:'🛡️',rarity:'epic',title:'Щит базы',desc:'Дойти минимум до 4 → 5 в DF.',xp:0},
+  {id:'df_fortress',cat:'DF',icon:'🏰',rarity:'legendary',title:'Крепость ARMY',desc:'Полностью закрыть последнюю ступень DF.',xp:0},
+
+  {id:'sd_started',cat:'SD',icon:'🚓',rarity:'common',title:'Security Division',desc:'Выбрать отдел SD.',xp:0},
+  {id:'sd_patrol',cat:'SD',icon:'🔦',rarity:'rare',title:'Патруль территории',desc:'Закрыть первую ступень SD.',xp:0},
+  {id:'sd_operator',cat:'SD',icon:'🎯',rarity:'epic',title:'Оператор SD',desc:'Дойти минимум до 4 → 5 в SD.',xp:0},
+  {id:'sd_shadow',cat:'SD',icon:'🌑',rarity:'legendary',title:'Тень периметра',desc:'Полностью закрыть последнюю ступень SD.',xp:0},
+
+  {id:'rap_started',cat:'RAP',icon:'🎙️',rarity:'common',title:'RAP',desc:'Выбрать отдел RAP.',xp:0},
+  {id:'rap_voice',cat:'RAP',icon:'📡',rarity:'rare',title:'Голос эфира',desc:'Закрыть первую ступень RAP.',xp:0},
+  {id:'rap_coord',cat:'RAP',icon:'🛰️',rarity:'epic',title:'Координатор',desc:'Дойти минимум до 4 → 5 в RAP.',xp:0},
+  {id:'rap_command',cat:'RAP',icon:'📻',rarity:'legendary',title:'Командный канал',desc:'Полностью закрыть последнюю ступень RAP.',xp:0},
+
+  {id:'sas_started',cat:'SAS',icon:'⚔️',rarity:'common',title:'SAS',desc:'Выбрать отдел SAS.',xp:0},
+  {id:'sas_trial',cat:'SAS',icon:'🥷',rarity:'rare',title:'Испытание SAS',desc:'Закрыть первую ступень SAS.',xp:0},
+  {id:'sas_blade',cat:'SAS',icon:'🗡️',rarity:'epic',title:'Острие операции',desc:'Дойти минимум до 4 → 5 в SAS.',xp:0},
+  {id:'sas_legend',cat:'SAS',icon:'🐺',rarity:'legendary',title:'Легенда SAS',desc:'Полностью закрыть последнюю ступень SAS.',xp:0},
+
+  {id:'ed_started',cat:'ED',icon:'🧪',rarity:'common',title:'Education Department',desc:'Выбрать отдел ED.',xp:0},
+  {id:'ed_lesson',cat:'ED',icon:'📝',rarity:'rare',title:'Первый урок',desc:'Закрыть первую ступень ED.',xp:0},
+  {id:'ed_mentor',cat:'ED',icon:'🧠',rarity:'epic',title:'Наставник',desc:'Дойти минимум до 4 → 5 в ED.',xp:0},
+  {id:'ed_professor',cat:'ED',icon:'📜',rarity:'legendary',title:'Профессор Academy',desc:'Полностью закрыть последнюю ступень ED.',xp:0},
+
+  {id:'all_departments_seen',cat:'Коллекция',icon:'🧩',rarity:'epic',title:'Знакомство со всеми',desc:'Побывать во всех отделах ARMY.',xp:0},
+  {id:'three_departments_finished',cat:'Коллекция',icon:'💠',rarity:'legendary',title:'Три направления',desc:'Полностью закрыть любые три отдела.',xp:0},
+  {id:'army_collector',cat:'Коллекция',icon:'👑',rarity:'legendary',title:'Коллекционер ARMY',desc:'Открыть 35 достижений.',xp:0}
 ];
 let activeAchCategory='Все';
 
@@ -3054,33 +3106,78 @@ function showAchievementToast(def){
 }
 function checkAchievements(){
   if(!S.ready) return;
+  if(!S.account) S.account={achievements:{}};
+  if(!S.account.seenSections) S.account.seenSections={};
+  if(!S.account.finishedSections) S.account.finishedSections={};
+
   unlockAchievement('profile_created');
   if(S.path==='Госка') unlockAchievement('path_gov');
   if(S.path==='Крайм') unlockAchievement('path_crime');
   if(S.project==='GTA5RP') unlockAchievement('project_gta5rp');
   if(S.project==='Majestic RP') unlockAchievement('project_majestic');
   if(S.org==='ARMY') unlockAchievement('org_army');
+
+  if(S.section) S.account.seenSections[S.section]=true;
+
   if(S.section==='Academy') unlockAchievement('academy_started');
   if(S.section==='USAF') unlockAchievement('usaf_started');
-  if(isAcademyFinalCompleted()) unlockAchievement('academy_finished');
-  if(S.section && S.section!=='Academy' && S.org==='ARMY') unlockAchievement('department_selected');
+  if(S.section==='MP') unlockAchievement('mp_started');
+  if(S.section==='DF') unlockAchievement('df_started');
+  if(S.section==='SD') unlockAchievement('sd_started');
+  if(S.section==='RAP') unlockAchievement('rap_started');
+  if(S.section==='SAS') unlockAchievement('sas_started');
+  if(S.section==='ED') unlockAchievement('ed_started');
 
   const p=percent();
-  if(S.section==='Academy' && p>=50) unlockAchievement('academy_half');
-  if(p>=50) unlockAchievement('progress_50');
-  if(p>=100) unlockAchievement('progress_100');
-
   const doneCount=Object.values(S.tasks||{}).filter(Boolean).length;
+
+  if(S.section==='Academy' && p>=50) unlockAchievement('academy_half');
+  if(isAcademyFinalCompleted()){
+    unlockAchievement('academy_finished');
+    unlockAchievement('academy_clean_finish');
+  }
+  if(S.section && S.section!=='Academy' && S.org==='ARMY') unlockAchievement('department_selected');
+
+  if(p>=50) unlockAchievement('progress_50');
+  if(p>=100){
+    unlockAchievement('progress_100');
+    if(S.section) S.account.finishedSections[S.section]=true;
+  }
   if(doneCount>=3) unlockAchievement('three_tasks_done');
   if(doneCount>=6) unlockAchievement('six_tasks_done');
-  if(S.section==='USAF' && p>=100) unlockAchievement('usaf_first_step');
 
-  if(S.section==='USAF' && S.level && (S.level.includes('5 → 6') || S.level.includes('6 → 7') || S.level.includes('7 → 8'))) unlockAchievement('usaf_mid');
+  const mid = S.level && (S.level.includes('4 → 5') || S.level.includes('5 → 6') || S.level.includes('6 → 7') || S.level.includes('7 → 8'));
+  const high = S.level && (S.level.includes('6 → 7') || S.level.includes('7 → 8'));
+  const final = S.level && (S.level.includes('5 → 6') || S.level.includes('7 → 8'));
+
+  if(S.section==='USAF' && p>=100) unlockAchievement('usaf_first_step');
+  if(S.section==='USAF' && mid) unlockAchievement('usaf_pilot');
+  if(S.section==='USAF' && high && p>=100) unlockAchievement('usaf_instructor');
   if(S.section==='USAF' && S.level && S.level.includes('7 → 8') && p>=100) unlockAchievement('usaf_elite');
+
+  const deptMap={
+    MP:['mp_first_case','mp_guardian','mp_warden'],
+    DF:['df_line','df_shield','df_fortress'],
+    SD:['sd_patrol','sd_operator','sd_shadow'],
+    RAP:['rap_voice','rap_coord','rap_command'],
+    SAS:['sas_trial','sas_blade','sas_legend'],
+    ED:['ed_lesson','ed_mentor','ed_professor']
+  };
+  if(deptMap[S.section]){
+    if(p>=100) unlockAchievement(deptMap[S.section][0]);
+    if(mid) unlockAchievement(deptMap[S.section][1]);
+    if(final && p>=100) unlockAchievement(deptMap[S.section][2]);
+  }
+
+  const allDepts=['USAF','MP','DF','SD','RAP','SAS','ED'];
+  if(allDepts.every(x=>S.account.seenSections[x])) unlockAchievement('all_departments_seen');
+  const finishedCount=allDepts.filter(x=>S.account.finishedSections[x]).length;
+  if(finishedCount>=3) unlockAchievement('three_departments_finished');
 
   const got=achievements();
   const openedCount=ACHIEVEMENT_DEFS.filter(a=>got[a.id]).length;
-  if(openedCount>=15) unlockAchievement('veteran_profile');
+  if(openedCount>=35) unlockAchievement('army_collector');
+  save();
 }
 function renderAccountBlock(){
   checkAchievements();
@@ -3158,9 +3255,11 @@ function formatProfileDate(ts){
 }
 function renderAccountStats(){
   const got=achievements();
-  const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]).length;
+  const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]);
   const statAchievements=$('#statAchievements');
-  if(statAchievements) statAchievements.textContent=`${opened} / ${ACHIEVEMENT_DEFS.length}`;
+  if(statAchievements) statAchievements.textContent=`${opened.length} / ${ACHIEVEMENT_DEFS.length}`;
+  const statRare=$('#statRare');
+  if(statRare) statRare.textContent=String(opened.filter(a=>['rare','epic','legendary'].includes(a.rarity)).length);
   const statCreated=$('#statCreated');
   if(statCreated) statCreated.textContent=formatProfileDate(S.account?.createdAt);
 }
