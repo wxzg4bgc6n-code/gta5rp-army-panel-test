@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v132</title>
+<title>RP Cabinet v133</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2606,27 +2606,76 @@ body{
 }
 
 
-/* v133 profile alignment */
-.row{
-  grid-template-columns:120px 1fr 30px !important;
+/* v133: ровные строки профиля + компактные карандаши */
+.profile-card .row,
+.profile-card .editable-row,
+.profile-card .level-row{
+  display:grid!important;
+  grid-template-columns:118px minmax(0,1fr) 32px!important;
+  align-items:center!important;
+  gap:10px!important;
+  min-height:44px!important;
+  padding:0!important;
+  border-bottom:1px solid rgba(255,255,255,.075)!important;
 }
-.row b{
-  justify-self:start !important;
-  text-align:left !important;
+.profile-card .row span{
+  align-self:center!important;
+  justify-self:start!important;
+  color:var(--muted)!important;
+  font-size:13px!important;
+  font-weight:850!important;
+  line-height:1.2!important;
 }
-.mini-edit{
-  width:30px !important;
-  height:30px !important;
-  min-width:30px !important;
-  border-radius:8px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  padding:0 !important;
+.profile-card .row b{
+  align-self:center!important;
+  justify-self:start!important;
+  text-align:left!important;
+  color:var(--text)!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  line-height:1.24!important;
+  min-width:0!important;
+  max-width:100%!important;
 }
-.mini-edit::before{
-  font-size:13px !important;
-  line-height:1 !important;
+.profile-card .row:not(.editable-row):not(.level-row)::after{
+  content:""!important;
+  width:32px!important;
+  height:32px!important;
+}
+.profile-card .mini-edit{
+  justify-self:end!important;
+  align-self:center!important;
+  width:30px!important;
+  height:30px!important;
+  min-width:30px!important;
+  min-height:30px!important;
+  padding:0!important;
+  margin:0!important;
+  border-radius:9px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border:1px solid color-mix(in srgb,var(--accent) 34%, rgba(255,255,255,.12))!important;
+  background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.035))!important;
+  color:color-mix(in srgb,var(--accent) 86%, white 8%)!important;
+  box-shadow:none!important;
+  font-size:0!important;
+  line-height:1!important;
+}
+.profile-card .mini-edit::before{
+  content:"✎"!important;
+  display:block!important;
+  font-size:13px!important;
+  line-height:1!important;
+  transform:none!important;
+  margin:0!important;
+}
+.profile-card .mini-edit:hover{
+  border-color:color-mix(in srgb,var(--accent) 58%, white 0%)!important;
+  background:color-mix(in srgb,var(--accent) 14%, rgba(255,255,255,.035))!important;
+}
+.profile-card .level-row b{
+  white-space:normal!important;
 }
 
 </style>
@@ -2902,7 +2951,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v132_profile_top_align_clean_rows';
+const VERSION_KEY='rp_panel_v133_profile_rows_gov_service_pencil_fix';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -3079,7 +3128,7 @@ function percent(){
 }
 function render(){
   theme();
-  const path=[S.project,S.path,S.org,S.section].filter(Boolean).join(' › ');
+  const path=[S.project,displayPathName(S.path),S.org,S.section].filter(Boolean).join(' › ');
   renderRankEmblem();
   $('#profileName').textContent=S.name||'Игрок';
   $('#profilePath').textContent='';
@@ -3354,6 +3403,10 @@ function selectedProfileIconDef(){
   const got=achievements();
   const def=ACHIEVEMENT_DEFS.find(a=>a.id===id);
   return def && got[id] ? def : null;
+}
+
+function displayPathName(value){
+  return value === 'Госка' ? 'Государственная служба' : (value || '');
 }
 function renderProfileIcon(){
   const def=selectedProfileIconDef();
