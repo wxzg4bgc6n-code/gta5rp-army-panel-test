@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v111</title>
+<title>RP Cabinet v112</title>
 <style>
 :root{
   --bg:#02040a;
@@ -872,6 +872,54 @@ input:focus,select:focus{
   color:var(--muted);
 }
 
+
+/* v112: нормальная эмблема ранга + смена ника в настройках */
+.avatar-wrap{
+  margin-bottom:13px;
+}
+.clean-rank-emblem{
+  width:112px!important;
+  height:112px!important;
+  border-radius:30px!important;
+  margin-bottom:0!important;
+  background:
+    linear-gradient(135deg, color-mix(in srgb,var(--accent) 28%, #111827), #111827)!important;
+  border:1px solid color-mix(in srgb,var(--accent) 45%, white 0%)!important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.04),
+    0 18px 40px rgba(0,0,0,.35),
+    0 0 36px var(--glow)!important;
+}
+.clean-rank-emblem::before{
+  inset:0!important;
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.20), transparent 24%),
+    linear-gradient(135deg, rgba(255,255,255,.08), transparent 42%)!important;
+}
+.clean-rank-emblem span{
+  font-size:44px!important;
+}
+.clean-rank-emblem small{
+  right:50%!important;
+  bottom:8px!important;
+  transform:translateX(50%)!important;
+  min-width:36px!important;
+  height:22px!important;
+  font-size:11px!important;
+  border-radius:999px!important;
+}
+.last-achievement-badge{
+  display:none!important;
+}
+.account-ach-text{
+  margin-top:9px;
+}
+#lastAchInline{
+  padding-top:4px;
+  border-top:1px solid rgba(255,255,255,.07);
+  margin-top:4px;
+}
+
 </style>
 </head>
 <body>
@@ -914,8 +962,10 @@ input:focus,select:focus{
     <aside class="panel profile-card">
       <div class="profile-head">
         <div class="avatar-wrap">
-          <div class="initial rank-emblem" id="profileInitial"><span id="rankIcon">◇</span><small id="rankTier">I</small></div>
-          <button class="last-achievement-badge" id="lastAchievementBadge" title="Последнее достижение">🏆</button>
+          <div class="initial rank-emblem clean-rank-emblem" id="profileInitial">
+            <span id="rankIcon">◇</span>
+            <small id="rankTier">I</small>
+          </div>
         </div>
         <h2 id="profileName">Игрок</h2>
         <p id="profilePath">GTA5RP › Госка</p>
@@ -1062,6 +1112,7 @@ input:focus,select:focus{
     <h2>Настройки профиля</h2>
     <p>Здесь можно сменить проект, путь и стиль панели. При смене проекта или пути организация и прогресс сбросятся.</p>
     <div class="settings-grid">
+      <label class="field"><span>Имя / ник</span><input id="settingsName" placeholder="Введи ник"></label>
       <label class="field"><span>Проект</span><select id="settingsProject"><option>GTA5RP</option><option>Majestic RP</option></select></label>
       <label class="field"><span>Путь</span><select id="settingsPath"><option>Госка</option><option>Крайм</option></select></label>
       <label class="field">
@@ -1089,9 +1140,9 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v111_achievements_button_last_badge';
+const KEY='rp_panel_v112_rank_emblem_nick_settings';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
@@ -1503,13 +1554,7 @@ function renderAccountBlock(){
   const lastText=last?`${last.icon} ${last.title}`:'—';
   const inline=$('#lastAchInline');
   if(inline) inline.textContent=`последнее: ${lastText}`;
-  const badge=$('#lastAchievementBadge');
-  if(badge){
-    badge.classList.toggle('show',!!last);
-    badge.textContent=last?last.icon:'🏆';
-    badge.title=last?`Последнее достижение: ${last.title}`:'Последнее достижение';
-    badge.onclick=openAchievementsModal;
-  }
+
 }
 function renderAchievementModal(){
   const got=achievements();
@@ -1550,6 +1595,7 @@ function showToast(title,text){
   showToast.timer=setTimeout(()=>$('#toast').classList.remove('show'),1700);
 }
 function openSettings(){
+  $('#settingsName').value=S.name||'';
   $('#settingsProject').value=S.project;
   $('#settingsPath').value=S.path;
   document.querySelectorAll('.theme-card').forEach(card=>card.classList.toggle('active',card.dataset.style===S.style));
@@ -1559,10 +1605,12 @@ function closeSettings(){
   $('#settingsModal').classList.remove('open');
 }
 function saveSettings(){
+  const newName=$('#settingsName').value.trim() || S.name || 'Игрок';
   const newProject=$('#settingsProject').value;
   const newPath=$('#settingsPath').value;
   const active=document.querySelector('.theme-card.active')?.dataset.style || S.style || 'style-arctic';
   const changedMain=newProject!==S.project || newPath!==S.path;
+  S.name=newName;
   S.project=newProject;
   S.path=newPath;
   S.style=active;
@@ -1623,7 +1671,7 @@ $('#closeLevelModal').onclick=closeLevelModal;
 $('#saveLevelModal').onclick=saveLevelModal;
 $('#openAchievements').onclick=openAchievementsModal;
 document.addEventListener('click',e=>{
-  if(e.target && (e.target.id==='openAchievements' || e.target.id==='lastAchievementBadge')) openAchievementsModal();
+  if(e.target && e.target.id==='openAchievements') openAchievementsModal();
 });
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
