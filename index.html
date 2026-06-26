@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v105</title>
+<title>RP Cabinet v106</title>
 <style>
 :root{
   --bg:#02040a;
@@ -564,6 +564,187 @@ input:focus,select:focus{
   }
 }
 
+
+/* v106: уровень аккаунта и коллекция достижений */
+.account-card{
+  margin-top:14px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  padding:13px;
+}
+.account-card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.account-card strong{
+  display:block;
+  font-size:15px;
+}
+.account-card span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+  margin-top:3px;
+}
+.account-badge{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 24%, transparent),rgba(255,255,255,.05));
+  border:1px solid color-mix(in srgb,var(--accent) 28%, white 0%);
+}
+.account-xp-line{
+  height:9px;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:12px;
+  background:rgba(255,255,255,.08);
+}
+.account-xp-line div{
+  height:100%;
+  width:0;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .45s ease;
+}
+.account-ach-line{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:3px;
+  margin-top:10px;
+}
+.account-open{
+  width:100%;
+  margin-top:12px;
+  min-height:42px;
+  font-size:13px;
+}
+.achievements-modal-card{
+  width:min(920px,100%);
+}
+.achievements-summary{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:16px;
+}
+.summary-card{
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  padding:14px;
+}
+.summary-card strong{
+  display:block;
+  font-size:20px;
+}
+.summary-card span{
+  color:var(--muted);
+  font-size:13px;
+}
+.achievement-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:16px 0 12px;
+}
+.achievement-tab{
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:999px;
+  min-height:38px;
+  padding:0 12px;
+  background:rgba(255,255,255,.055);
+  color:var(--muted);
+  font-weight:950;
+}
+.achievement-tab.active{
+  color:var(--text);
+  border-color:color-mix(in srgb,var(--accent) 56%, white 0%);
+  background:color-mix(in srgb,var(--accent) 12%, transparent);
+}
+.achievement-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.achievement-card{
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  padding:14px;
+  min-height:126px;
+}
+.achievement-card.locked{
+  opacity:.42;
+  filter:saturate(.35);
+}
+.achievement-icon{
+  font-size:28px;
+  margin-bottom:8px;
+}
+.achievement-card strong{
+  display:block;
+  font-size:14px;
+}
+.achievement-card span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+.achievement-toast{
+  position:fixed;
+  right:22px;
+  top:22px;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:260px;
+  border:1px solid color-mix(in srgb,var(--accent) 45%, white 0%);
+  border-radius:18px;
+  background:rgba(8,12,22,.94);
+  box-shadow:0 18px 45px rgba(0,0,0,.45);
+  backdrop-filter:blur(16px);
+  padding:13px 14px;
+  opacity:0;
+  transform:translateX(20px);
+  pointer-events:none;
+  transition:.25s ease;
+}
+.achievement-toast.show{
+  opacity:1;
+  transform:translateX(0);
+}
+.achievement-toast-icon{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 24%, transparent),rgba(255,255,255,.05));
+  border:1px solid color-mix(in srgb,var(--accent) 28%, white 0%);
+}
+.achievement-toast b{
+  display:block;
+  font-size:14px;
+}
+.achievement-toast span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:2px;
+}
+@media(max-width:760px){
+  .achievement-grid,.achievements-summary{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -616,7 +797,22 @@ input:focus,select:focus{
         <div class="row editable-row"><span>Раздел</span><b id="infoSection">—</b><button class="mini-edit" id="editSectionBtn" title="Изменить раздел">✎</button></div>
         <div class="row level-row"><span>Ступень</span><b id="infoLevel">—</b><button class="mini-edit" id="editLevelBtn" title="Изменить ступень">✎</button></div>
       </div>
-      <div class="ach-strip" id="achievements"></div>
+      <div class="account-card" id="accountCard">
+        <div class="account-card-top">
+          <div>
+            <strong id="accountLevelText">Уровень аккаунта 1</strong>
+            <span id="accountXpText">0 / 100 XP</span>
+          </div>
+          <div class="account-badge">🏆</div>
+        </div>
+        <div class="account-xp-line"><div id="accountXpBar"></div></div>
+        <div class="account-ach-line">
+          <span id="achCountText">0 достижений</span>
+          <span id="lastAchText">последнее: —</span>
+        </div>
+        <button class="btn soft account-open" id="openAchievements">Коллекция достижений</button>
+      </div>
+      <div class="ach-strip" id="achievements" style="display:none"></div>
       <button class="btn soft profile-settings" id="openSettings">Настройки профиля</button>
     </aside>
 
@@ -656,6 +852,29 @@ input:focus,select:focus{
 </div>
 
 
+
+
+<div class="modal" id="achievementsModal">
+  <div class="modal-card achievements-modal-card">
+    <h2>Коллекция достижений</h2>
+    <p>Достижения сохраняются на аккаунте и не пропадают при смене проекта, госки или крайма.</p>
+    <div class="achievements-summary">
+      <div class="summary-card">
+        <strong id="modalAccountLevel">Уровень 1</strong>
+        <span id="modalAccountXp">0 / 100 XP</span>
+      </div>
+      <div class="summary-card">
+        <strong id="modalAchCount">0 / 0</strong>
+        <span>открыто достижений</span>
+      </div>
+    </div>
+    <div class="achievement-tabs" id="achievementTabs"></div>
+    <div class="achievement-grid" id="achievementGrid"></div>
+    <div class="modal-actions">
+      <button class="btn" id="closeAchievements">Закрыть</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="orgSectionModal">
   <div class="modal-card level-modal-card">
@@ -724,12 +943,16 @@ input:focus,select:focus{
   </div>
 </div>
 
+<div class="achievement-toast" id="achievementToast">
+  <div class="achievement-toast-icon">🏆</div>
+  <div><b>Новое достижение</b><span id="achievementToastText">Открыто</span></div>
+</div>
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v105_ring_crop_fix_glow_restore';
+const KEY='rp_panel_v106_account_level_achievements';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
@@ -788,6 +1011,7 @@ function load(){
     const d=raw?JSON.parse(raw):null;
     if(d){
       S=Object.assign(S,d);
+      if(!S.achievements) S.achievements={};
       save();
     }
   }catch(e){}
@@ -1000,17 +1224,99 @@ function claimPromotion(){
   const next=nextLevel();
   if(!next) return;
   setLevel(next);
+  unlockAchievement('promotion_claimed');
+  if(S.section==='USAF') unlockAchievement('usaf_promotion');
   showToast('Повышение получено','Открыта следующая ступень');
 }
+
+function accountXp(){
+  return ACHIEVEMENT_DEFS.reduce((sum,a)=>sum+(S.achievements && S.achievements[a.id]?a.xp:0),0);
+}
+function accountLevel(){
+  const xp=accountXp();
+  return Math.floor(xp/100)+1;
+}
+function accountLevelXp(){
+  const xp=accountXp();
+  return {current:xp%100,next:100,total:xp};
+}
+function unlockAchievement(id){
+  if(!S.achievements) S.achievements={};
+  if(S.achievements[id]) return;
+  S.achievements[id]={time:Date.now()};
+  save();
+  const def=ACHIEVEMENT_DEFS.find(a=>a.id===id);
+  if(def) showAchievementToast(def);
+}
+function showAchievementToast(def){
+  const toast=$('#achievementToast');
+  if(!toast) return;
+  $('#achievementToastText').textContent=def.title;
+  toast.classList.add('show');
+  clearTimeout(showAchievementToast.timer);
+  showAchievementToast.timer=setTimeout(()=>toast.classList.remove('show'),2600);
+}
+function checkAchievements(){
+  if(!S.ready) return;
+  unlockAchievement('profile_created');
+  if(S.path==='Госка') unlockAchievement('path_gov');
+  if(S.path==='Крайм') unlockAchievement('path_crime');
+  if(S.project==='GTA5RP') unlockAchievement('project_gta5rp');
+  if(S.project==='Majestic RP') unlockAchievement('project_majestic');
+  if(S.org==='ARMY') unlockAchievement('org_army');
+  if(S.section==='Academy') unlockAchievement('section_academy');
+  if(S.section==='USAF') unlockAchievement('section_usaf');
+  const p=percent();
+  if(p>=50) unlockAchievement('progress_50');
+  if(p>=100) unlockAchievement('progress_100');
+}
+function renderAccountCard(){
+  if(!S.achievements) S.achievements={};
+  const opened=ACHIEVEMENT_DEFS.filter(a=>S.achievements[a.id]);
+  const level=accountLevel();
+  const xp=accountLevelXp();
+  $('#accountLevelText').textContent=`Уровень аккаунта ${level}`;
+  $('#accountXpText').textContent=`${xp.current} / ${xp.next} XP`;
+  $('#accountXpBar').style.width=`${xp.current}%`;
+  $('#achCountText').textContent=`${opened.length} / ${ACHIEVEMENT_DEFS.length} открыто`;
+  const last=opened.sort((a,b)=>(S.achievements[b.id].time||0)-(S.achievements[a.id].time||0))[0];
+  $('#lastAchText').textContent=last?`последнее: ${last.icon} ${last.title}`:'последнее: —';
+}
+function renderAchievementModal(){
+  if(!S.achievements) S.achievements={};
+  const cats=['Все',...Array.from(new Set(ACHIEVEMENT_DEFS.map(a=>a.cat)))];
+  $('#achievementTabs').innerHTML=cats.map(cat=>`<button class="achievement-tab ${activeAchCategory===cat?'active':''}" data-ach-cat="${cat}">${cat}</button>`).join('');
+  document.querySelectorAll('[data-ach-cat]').forEach(btn=>{
+    btn.onclick=()=>{
+      activeAchCategory=btn.dataset.achCat;
+      renderAchievementModal();
+    };
+  });
+  const list=activeAchCategory==='Все'?ACHIEVEMENT_DEFS:ACHIEVEMENT_DEFS.filter(a=>a.cat===activeAchCategory);
+  $('#achievementGrid').innerHTML=list.map(a=>{
+    const open=!!S.achievements[a.id];
+    return `<div class="achievement-card ${open?'':'locked'}">
+      <div class="achievement-icon">${open?a.icon:'🔒'}</div>
+      <strong>${open?a.title:'Скрытое достижение'}</strong>
+      <span>${open?a.desc:'Откроется после выполнения условия.'}</span>
+      <span>${open?`+${a.xp} XP`:''}</span>
+    </div>`;
+  }).join('');
+  $('#modalAccountLevel').textContent=`Уровень ${accountLevel()}`;
+  const xp=accountLevelXp();
+  $('#modalAccountXp').textContent=`${xp.current} / ${xp.next} XP`;
+  $('#modalAchCount').textContent=`${ACHIEVEMENT_DEFS.filter(a=>S.achievements[a.id]).length} / ${ACHIEVEMENT_DEFS.length}`;
+}
+function openAchievementsModal(){
+  renderAchievementModal();
+  $('#achievementsModal').classList.add('open');
+}
+function closeAchievementsModal(){
+  $('#achievementsModal').classList.remove('open');
+}
 function renderAchievements(){
-  const ach=[];
-  if(S.ready) ach.push(['🟢','Профиль']);
-  if(S.path) ach.push([S.path==='Госка'?'🏛️':'🕶️',S.path]);
-  if(S.org) ach.push(['⭐',S.org]);
-  if(S.section) ach.push(['📌',S.section]);
-  if(percent()>=50) ach.push(['🎖','50%']);
-  if(percent()>=100) ach.push(['🏆','Ступень закрыта']);
-  $('#achievements').innerHTML=ach.map(a=>`<span class="ach">${a[0]} ${a[1]}</span>`).join('');
+  checkAchievements();
+  renderAccountCard();
 }
 function showToast(title,text){
   $('#toast').classList.add('show');
@@ -1091,6 +1397,9 @@ $('#editLevelBtn').onclick=openLevelModal;
 $('#infoLevel').onclick=openLevelModal;
 $('#closeLevelModal').onclick=closeLevelModal;
 $('#saveLevelModal').onclick=saveLevelModal;
+$('#openAchievements').onclick=openAchievementsModal;
+$('#closeAchievements').onclick=closeAchievementsModal;
+$('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
 $('#openSettings').onclick=openSettings;
 $('#closeSettings').onclick=closeSettings;
 $('#saveSettings').onclick=saveSettings;
