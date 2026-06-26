@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RP Panel — Первый запуск</title>
+  <title>RP Panel — Выбор проекта и организации</title>
   <style>
     :root {
       --bg: #060913;
@@ -959,6 +959,40 @@
       }
     }
 
+
+    /* Пока организация не выбрана — не показываем лишние разделы */
+    body:not(.org-ready) #hub,
+    body:not(.org-ready) #notes,
+    body:not(.org-ready) .top-actions a[href="#hub"] {
+      display: none !important;
+    }
+
+    .org-warning {
+      display: none;
+      margin-top: 12px;
+      padding: 11px 12px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,209,102,.24);
+      background: rgba(255,209,102,.075);
+      color: #ffe6aa;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    body:not(.org-ready) .org-warning {
+      display: block;
+    }
+
+    body[data-project="GTA5RP"] [data-project-only="Majestic RP"],
+    body[data-project="Majestic RP"] [data-project-only="GTA5RP"] {
+      display: none !important;
+    }
+
+    body[data-project="GTA5RP"] .tab[data-tab="majestic"],
+    body[data-project="Majestic RP"] .tab[data-tab="gta"] {
+      display: none !important;
+    }
+
   </style>
 </head>
 <body>
@@ -972,7 +1006,7 @@
       <div class="launch-form">
         <label class="field">
           <span>Твоё имя / ник</span>
-          <input id="launchName" placeholder="Например: KIRI" autocomplete="nickname" />
+          <input id="launchName" placeholder="Введи свой ник" autocomplete="nickname" />
         </label>
 
         <label class="field">
@@ -1043,18 +1077,18 @@
             <h1>Добро пожаловать в личный RP-кабинет</h1>
             <p class="hero-text">
               Это чистая тестовая страница без старой ARMY-структуры, пароля, админки и защиты.
-              Здесь будет главный вход в GTA5RP, Majestic RP, госки, крайм, справочники и твой личный рост.
+              После выбора проекта и организации откроются только подходящие разделы, без лишней информации.
             </p>
           </div>
 
           <div class="hero-grid">
             <div class="hero-stat">
               <b id="statProject">2</b>
-              <span>RP-проекта в хабе</span>
+              <span>выбранный проект</span>
             </div>
             <div class="hero-stat">
-              <b id="statModules">12</b>
-              <span>заготовок разделов</span>
+              <b id="statModules">0</b>
+              <span>доступных разделов</span>
             </div>
             <div class="hero-stat">
               <b id="statProgress">0%</b>
@@ -1067,7 +1101,7 @@
           <div class="profile-top">
             <div class="avatar" id="avatarLetter">K</div>
             <div class="profile-name">
-              <strong id="profilePreviewName">KIRI</strong>
+              <strong id="profilePreviewName">Игрок</strong>
               <span id="profilePreviewMeta">GTA5RP · Downtown · не выбрано</span>
             </div>
           </div>
@@ -1075,7 +1109,7 @@
           <div class="field-grid">
             <label class="field">
               <span>Имя / ник</span>
-              <input id="profileName" placeholder="Например: KIRI" />
+              <input id="profileName" placeholder="Введи свой ник" />
             </label>
 
             <label class="field">
@@ -1093,7 +1127,20 @@
 
             <label class="field">
               <span>Организация / направление</span>
-              <input id="profileOrg" placeholder="Например: ARMY / LSPD / Крайм" />
+              <select id="profileOrg">
+                <option value="">Выбери организацию</option>
+                <option value="ARMY">ARMY</option>
+                <option value="LSPD">LSPD</option>
+                <option value="LSSD">LSSD</option>
+                <option value="FIB">FIB</option>
+                <option value="EMS">EMS</option>
+                <option value="GOV">GOV</option>
+                <option value="USSS">USSS</option>
+                <option value="PRISON">PRISON</option>
+                <option value="Weazel News">Weazel News</option>
+                <option value="Крайм">Крайм</option>
+              </select>
+              <div class="org-warning">Выбери организацию, чтобы открыть разделы панели. Пока доступен только личный кабинет и прогресс.</div>
             </label>
 
             <label class="field">
@@ -1113,7 +1160,7 @@
         <div class="section-head">
           <div>
             <h2>Главный хаб</h2>
-            <p>Все вкладки активны, но пока это чистые заготовки без старой информации. Потом сюда можно подключать нужные модули по одному.</p>
+            <p>Показываются только разделы выбранного проекта и выбранной организации. Лишние проекты не отображаются.</p>
           </div>
         </div>
 
@@ -1125,7 +1172,7 @@
           <button class="tab" data-tab="info">Справочник</button>
         </div>
 
-        <div class="panel-view active" data-view="gta">
+        <div class="panel-view active" data-view="gta" data-project-only="GTA5RP">
           <div class="cards-grid">
             <article class="module-card" style="--accent: rgba(115,167,255,.18)">
               <div class="module-icon">🏙️</div>
@@ -1148,7 +1195,7 @@
           </div>
         </div>
 
-        <div class="panel-view" data-view="majestic">
+        <div class="panel-view" data-view="majestic" data-project-only="Majestic RP">
           <div class="cards-grid">
             <article class="module-card" style="--accent: rgba(178,140,255,.18)">
               <div class="module-icon">🌆</div>
@@ -1334,7 +1381,7 @@
 
     const state = {
       profile: {
-        name: "KIRI",
+        name: "",
         project: "GTA5RP",
         server: "Downtown",
         org: "",
@@ -1390,6 +1437,9 @@
       $("#avatarLetter").textContent = avatar;
       $("#avatarLetter").classList.toggle("emoji-avatar", avatar.length > 1 || /[^A-Za-zА-Яа-я0-9]/.test(avatar));
       document.body.classList.toggle("profile-ready", Boolean(state.profile.ready));
+      document.body.classList.toggle("org-ready", Boolean(state.profile.org));
+      document.body.dataset.project = state.profile.project || "GTA5RP";
+      applyProjectUI();
 
     }
 
@@ -1436,6 +1486,28 @@
     }
 
 
+
+    function applyProjectUI() {
+      const project = state.profile.project || "GTA5RP";
+      $("#statProject").textContent = "1";
+      $("#statModules").textContent = state.profile.org ? (project === "GTA5RP" ? "8" : "4") : "0";
+
+      const activeTab = document.querySelector(".tab.active");
+      if (project === "GTA5RP") {
+        const majesticTab = document.querySelector('.tab[data-tab="majestic"]');
+        if (activeTab === majesticTab) {
+          document.querySelector('.tab[data-tab="gta"]')?.click();
+        }
+      }
+
+      if (project === "Majestic RP") {
+        const gtaTab = document.querySelector('.tab[data-tab="gta"]');
+        if (activeTab === gtaTab) {
+          document.querySelector('.tab[data-tab="majestic"]')?.click();
+        }
+      }
+    }
+
     function setupFirstLaunch() {
       const startButton = $("#launchStart");
       const error = $("#launchError");
@@ -1471,10 +1543,12 @@
 
     function setupEvents() {
       $("#saveProfile").addEventListener("click", readProfileForm);
+      $("#profileOrg").addEventListener("change", readProfileForm);
+      $("#profileProject").addEventListener("change", readProfileForm);
 
       $("#resetProfile").addEventListener("click", () => {
         state.profile = {
-          name: "KIRI",
+          name: "",
           project: "GTA5RP",
           server: "Downtown",
           org: "",
