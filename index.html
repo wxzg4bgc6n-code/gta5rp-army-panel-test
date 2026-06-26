@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v118</title>
+<title>RP Cabinet v119</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1584,6 +1584,77 @@ body{
     linear-gradient(180deg,#070a12,#020309)!important;
 }
 
+
+/* v119: уровень аккаунта перенесён к аватару, лишние достижения из профиля убраны */
+.profile-account-hero{
+  width:100%;
+  margin:10px auto 16px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.035);
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:9px 10px;
+  align-items:center;
+}
+.profile-account-hero strong{
+  display:block;
+  font-size:15px;
+  line-height:1.15;
+}
+.profile-account-hero span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+  margin-top:3px;
+}
+.hero-collection-btn{
+  min-height:38px;
+  padding:0 12px;
+  border-radius:14px;
+  border:1px solid color-mix(in srgb,var(--accent) 36%, rgba(255,255,255,.10));
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 14%, rgba(255,255,255,.04)),rgba(255,255,255,.035));
+  color:var(--text);
+  font-weight:950;
+  font-size:12px;
+  white-space:nowrap;
+}
+.hero-xp-track{
+  grid-column:1 / -1;
+  height:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.075);
+  overflow:hidden;
+}
+.hero-xp-track div{
+  height:100%;
+  width:0;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .35s ease;
+}
+#heroXpText{
+  grid-column:1 / -1;
+  margin-top:-3px;
+}
+
+/* старые блоки достижений/аккаунта в левой панели больше не нужны */
+.last-ach-card,
+.account-progress-card{
+  display:none!important;
+}
+
+/* чуть лучше баланс верхней части профиля после удаления блоков */
+.profile-head{
+  padding-bottom:12px!important;
+}
+.profile-card .settings-btn,
+#openSettings{
+  margin-top:16px!important;
+}
+
 </style>
 </head>
 <body>
@@ -1835,7 +1906,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v118_clean_dark_no_spotlights';
+const VERSION_KEY='rp_panel_v119_account_info_near_avatar_clean_profile';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -2265,11 +2336,16 @@ function renderAccountBlock(){
   const got=achievements();
   const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]);
   const r=rankInfo();
-  $('#accountRankTitle').textContent=r.title;
-  $('#accountLevelText').textContent=`Уровень аккаунта ${lvl}`;
-  $('#accountXpText').textContent=`${current} / 100 XP`;
-  $('#accountXpBar').style.width=`${current}%`;
-  $('#accountAchText').textContent=`${opened.length} / ${ACHIEVEMENT_DEFS.length} достижений`;
+  const oldRank=$('#accountRankTitle'); if(oldRank) oldRank.textContent=r.title;
+  const oldLvl=$('#accountLevelText'); if(oldLvl) oldLvl.textContent=`Уровень аккаунта ${lvl}`;
+  const oldXp=$('#accountXpText'); if(oldXp) oldXp.textContent=`${current} / 100 XP`;
+  const oldBar=$('#accountXpBar'); if(oldBar) oldBar.style.width=`${current}%`;
+  const oldAch=$('#accountAchText'); if(oldAch) oldAch.textContent=`${opened.length} / ${ACHIEVEMENT_DEFS.length} достижений`;
+
+  const heroRank=$('#heroRankTitle'); if(heroRank) heroRank.textContent=r.title;
+  const heroLvl=$('#heroLevelText'); if(heroLvl) heroLvl.textContent=`Уровень аккаунта ${lvl}`;
+  const heroXp=$('#heroXpText'); if(heroXp) heroXp.textContent=`${current} / 100 XP`;
+  const heroBar=$('#heroXpBar'); if(heroBar) heroBar.style.width=`${current}%`;
   const last=opened.sort((a,b)=>(got[b.id]?.time||0)-(got[a.id]?.time||0))[0];
   const lastText=last?`${last.icon} ${last.title}`:'—';
   const inline=$('#lastAchInline');
@@ -2433,8 +2509,9 @@ $('#closeLevelModal').onclick=closeLevelModal;
 $('#saveLevelModal').onclick=saveLevelModal;
 $('#openAchievements').onclick=openAchievementsModal;
 const openHero=$('#openAchievementsHero'); if(openHero) openHero.onclick=openAchievementsModal;
+const openHeroMini=$('#openAchievementsHeroMini'); if(openHeroMini) openHeroMini.onclick=openAchievementsModal;
 document.addEventListener('click',e=>{
-  if(e.target && (e.target.id==='openAchievements' || e.target.id==='openAchievementsHero')) openAchievementsModal();
+  if(e.target && (e.target.id==='openAchievements' || e.target.id==='openAchievementsHero' || e.target.id==='openAchievementsHeroMini')) openAchievementsModal();
 });
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
