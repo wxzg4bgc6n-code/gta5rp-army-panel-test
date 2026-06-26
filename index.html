@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v114</title>
+<title>RP Cabinet v115</title>
 <style>
 :root{
   --bg:#02040a;
@@ -951,6 +951,222 @@ input:focus,select:focus{
   background:color-mix(in srgb,var(--accent) 12%, rgba(8,12,22,.94))!important;
 }
 
+
+/* v115: основная тема как на макете + рабочая медалька достижения */
+:root{
+  --bg:#070a13;
+  --panel:#111827;
+  --panel2:#151d2b;
+  --text:#f4f0ff;
+  --muted:#aeb7ca;
+  --line:rgba(169,139,255,.18);
+  --accent:#9b6cff;
+  --accent2:#6d4dff;
+  --glow:rgba(155,108,255,.22);
+}
+body.style-arctic,body.style-emerald,body.style-violet,body.style-crimson,body.style-gold{
+  --accent:#9b6cff!important;
+  --accent2:#6d4dff!important;
+  --glow:rgba(155,108,255,.22)!important;
+}
+body::before,
+body.style-arctic:before,body.style-emerald:before,body.style-violet:before,body.style-crimson:before,body.style-gold:before{
+  background:
+    radial-gradient(circle at 18% 8%,rgba(155,108,255,.18),transparent 28%),
+    radial-gradient(circle at 82% 18%,rgba(255,174,56,.08),transparent 24%),
+    linear-gradient(180deg,#080b14 0%,#03050a 100%)!important;
+}
+.main{
+  max-width:1420px!important;
+  border-color:rgba(169,139,255,.20)!important;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(155,108,255,.10),transparent 32%),
+    linear-gradient(135deg,rgba(17,24,39,.94),rgba(9,13,23,.94))!important;
+}
+.profile-card{
+  background:rgba(8,12,22,.28)!important;
+}
+.flow{
+  gap:18px!important;
+}
+.dashboard-tabs{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:14px;
+}
+.dash-tab{
+  min-height:54px;
+  border-radius:15px;
+  border:1px solid rgba(169,139,255,.16);
+  background:rgba(5,8,16,.38);
+  color:var(--muted);
+  font-weight:950;
+}
+.dash-tab.active,.dash-tab:hover{
+  color:var(--text);
+  border-color:rgba(155,108,255,.58);
+  background:linear-gradient(135deg,rgba(155,108,255,.22),rgba(67,47,120,.18));
+}
+.dashboard-section{
+  border:1px solid rgba(169,139,255,.18)!important;
+  border-radius:22px!important;
+  background:rgba(5,8,16,.26)!important;
+  padding:18px!important;
+  margin-bottom:14px;
+}
+.dash-section-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:14px;
+}
+.dash-section-head p{
+  margin-top:4px;
+}
+.achievement-preview-grid{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:10px;
+}
+.achievement-preview{
+  min-height:126px;
+  border-radius:16px;
+  border:1px solid rgba(169,139,255,.14);
+  background:rgba(255,255,255,.035);
+  padding:12px;
+  text-align:center;
+  display:grid;
+  align-content:center;
+  gap:8px;
+}
+.achievement-preview.open{
+  border-color:rgba(155,108,255,.55);
+  background:radial-gradient(circle at 70% 0%,rgba(155,108,255,.20),transparent 40%),rgba(255,255,255,.045);
+}
+.achievement-preview.locked{
+  opacity:.42;
+  filter:saturate(.3);
+}
+.achievement-preview .ap-icon{
+  font-size:31px;
+}
+.achievement-preview b{
+  font-size:13px;
+}
+.achievement-preview span{
+  font-size:11px;
+  color:var(--muted);
+}
+.path-cards{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 34px minmax(0,1.1fr) 34px minmax(0,1fr);
+  gap:10px;
+  align-items:center;
+}
+.path-card{
+  min-height:104px;
+  border-radius:18px;
+  border:1px solid rgba(169,139,255,.14);
+  background:rgba(255,255,255,.035);
+  padding:14px;
+  display:grid;
+  align-content:center;
+  gap:6px;
+}
+.path-card.active{
+  border-color:rgba(155,108,255,.65);
+  box-shadow:0 0 28px rgba(155,108,255,.13);
+}
+.path-card.locked{opacity:.55}
+.path-card b{font-size:18px}
+.path-card span{color:var(--muted);font-size:13px}
+.path-arrow{text-align:center;color:var(--muted);font-size:28px;font-weight:950}
+
+.clean-rank-emblem{
+  background:
+    linear-gradient(145deg,rgba(255,177,64,.22),rgba(155,108,255,.32),#111827 70%)!important;
+  border-color:rgba(255,177,64,.42)!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 18px 42px rgba(0,0,0,.38),0 0 38px rgba(155,108,255,.20)!important;
+}
+.clean-rank-emblem span{
+  color:#ffe2a0;
+  text-shadow:0 0 18px rgba(255,177,64,.36);
+}
+.clean-rank-emblem small{
+  background:linear-gradient(135deg,#ffbd58,#9b6cff)!important;
+}
+.avatar-wrap{
+  position:relative!important;
+  width:132px!important;
+  margin:0 auto 13px!important;
+  display:grid!important;
+  place-items:center!important;
+}
+.clean-last-achievement,
+.last-achievement-badge{
+  position:absolute!important;
+  right:0!important;
+  bottom:9px!important;
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  border-radius:50%!important;
+  display:none!important;
+  place-items:center!important;
+  border:1px solid rgba(155,108,255,.65)!important;
+  background:
+    radial-gradient(circle at 35% 28%,rgba(255,213,120,.35),transparent 28%),
+    rgba(15,10,30,.96)!important;
+  color:#ffd166!important;
+  box-shadow:0 0 0 3px rgba(11,15,28,.96),0 0 22px rgba(155,108,255,.38),0 14px 28px rgba(0,0,0,.45)!important;
+  font-size:19px!important;
+  z-index:8!important;
+}
+.clean-last-achievement.show,
+.last-achievement-badge.show{
+  display:grid!important;
+}
+.last-ach-card{
+  margin-top:14px;
+  border:1px solid rgba(155,108,255,.25);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(155,108,255,.10),rgba(255,177,64,.04));
+  padding:12px;
+}
+.last-ach-title{
+  color:#d8ccff;
+  font-size:12px;
+  font-weight:950;
+  margin-bottom:9px;
+}
+.last-ach-body{
+  display:grid;
+  grid-template-columns:42px 1fr;
+  gap:10px;
+  align-items:center;
+}
+.last-ach-body > span{
+  width:42px;height:42px;border-radius:14px;
+  display:grid;place-items:center;
+  background:rgba(155,108,255,.12);
+  border:1px solid rgba(155,108,255,.28);
+  font-size:22px;
+}
+.last-ach-body b{display:block;font-size:13px}
+.last-ach-body small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.account-ach-wide{
+  background:linear-gradient(135deg,rgba(155,108,255,.22),rgba(255,177,64,.08))!important;
+  border-color:rgba(155,108,255,.38)!important;
+}
+@media(max-width:900px){
+  .dashboard-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .achievement-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .path-cards{grid-template-columns:1fr}
+  .path-arrow{transform:rotate(90deg)}
+}
+
 </style>
 </head>
 <body>
@@ -1009,6 +1225,10 @@ input:focus,select:focus{
         <div class="row editable-row"><span>Раздел</span><b id="infoSection">—</b><button class="mini-edit" id="editSectionBtn" title="Изменить раздел">✎</button></div>
         <div class="row level-row"><span>Ступень</span><b id="infoLevel">—</b><button class="mini-edit" id="editLevelBtn" title="Изменить ступень">✎</button></div>
       </div>
+      <div class="last-ach-card" id="lastAchCard">
+        <div class="last-ach-title">Последнее достижение</div>
+        <div class="last-ach-body"><span id="lastAchCardIcon">🏆</span><div><b id="lastAchCardTitle">—</b><small id="lastAchCardDesc">Пока нет достижений</small></div></div>
+      </div>
       <div class="account-progress-card">
         <div class="account-progress-head">
           <div>
@@ -1029,6 +1249,32 @@ input:focus,select:focus{
     </aside>
 
     <section class="flow">
+      <div class="dashboard-tabs">
+        <button class="dash-tab active" data-dash-tab="profile">👤 Профиль</button>
+        <button class="dash-tab" data-dash-tab="achievements">🏆 Достижения</button>
+        <button class="dash-tab" data-dash-tab="academy">🎓 Academy</button>
+        <button class="dash-tab" data-dash-tab="army">⭐ ARMY</button>
+        <button class="dash-tab" data-dash-tab="reports">📋 Отчёты</button>
+      </div>
+
+      <div class="panel dashboard-section" id="dashboardAchievements">
+        <div class="dash-section-head">
+          <div><h2>🏆 Достижения</h2><p>Ваши достижения сохраняются навсегда</p></div>
+          <button class="btn soft" id="openAchievementsHero">Все достижения ↗</button>
+        </div>
+        <div class="achievement-preview-grid" id="achievementPreviewGrid"></div>
+      </div>
+
+      <div class="panel dashboard-section" id="dashboardPathProgress">
+        <h2>Прогресс по текущему пути</h2>
+        <div class="path-cards">
+          <div class="path-card" id="academyPathCard"><b>Academy</b><span id="academyPathStatus">—</span></div>
+          <div class="path-arrow">→</div>
+          <div class="path-card active"><b id="pathCurrentSection">Текущий раздел</b><span id="pathCurrentLevel">—</span></div>
+          <div class="path-arrow">→</div>
+          <div class="path-card locked"><b>Следующий этап</b><span>Скоро...</span></div>
+        </div>
+      </div>
       <div class="panel step" id="orgStep">
         <h2>Выбери организацию</h2>
         <p>После выбора откроется раздел и ступень.</p>
@@ -1173,9 +1419,9 @@ input:focus,select:focus{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v114_stable_save_account_progress';
+const VERSION_KEY='rp_panel_v115_dashboard_ach_badge_ui_theme';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
@@ -1252,7 +1498,7 @@ function load(){
 
     const migrateKeys=[
       VERSION_KEY,
-      'rp_panel_v113_last_ach_badge_usaf_from_3',
+      'rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
       'rp_panel_v112_rank_emblem_nick_settings',
       'rp_panel_v111_achievements_button_last_badge',
       'rp_panel_v110_account_rank_achievements',
@@ -1594,6 +1840,9 @@ function checkAchievements(){
 function renderAccountBlock(){
   checkAchievements();
   renderRankEmblem();
+  renderLastAchievementUI();
+  renderAchievementPreviews();
+  renderPathDashboard();
   const xp=accountXp();
   const lvl=accountLevel();
   const current=xp%100;
@@ -1638,6 +1887,55 @@ function openAchievementsModal(){
 }
 function closeAchievementsModal(){
   $('#achievementsModal').classList.remove('open');
+}
+
+function lastAchievementDef(){
+  const got=achievements();
+  const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]);
+  opened.sort((a,b)=>(got[b.id]?.time||0)-(got[a.id]?.time||0));
+  return opened[0]||null;
+}
+function renderLastAchievementUI(){
+  const last=lastAchievementDef();
+  const badge=$('#lastAchievementBadge');
+  if(badge){
+    badge.classList.toggle('show',!!last);
+    badge.textContent=last?last.icon:'🏆';
+    badge.title=last?`Последнее достижение: ${last.title}`:'Последнее достижение';
+    badge.onclick=openAchievementsModal;
+  }
+  const card=$('#lastAchCard');
+  if(card){
+    card.style.display=last?'block':'none';
+    if(last){
+      $('#lastAchCardIcon').textContent=last.icon;
+      $('#lastAchCardTitle').textContent=last.title;
+      $('#lastAchCardDesc').textContent=last.desc;
+    }
+  }
+}
+function renderAchievementPreviews(){
+  const grid=$('#achievementPreviewGrid');
+  if(!grid) return;
+  const got=achievements();
+  const preview=ACHIEVEMENT_DEFS.slice(0,6);
+  grid.innerHTML=preview.map(a=>{
+    const open=!!got[a.id];
+    return `<div class="achievement-preview ${open?'open':'locked'}">
+      <div class="ap-icon">${open?a.icon:'🔒'}</div>
+      <b>${open?a.title:'Скрыто'}</b>
+      <span>${open?'Получено':'Не получено'}</span>
+    </div>`;
+  }).join('');
+}
+function renderPathDashboard(){
+  const sec=$('#pathCurrentSection'), lvl=$('#pathCurrentLevel'), ac=$('#academyPathStatus');
+  if(sec) sec.textContent=S.section||'Текущий раздел';
+  if(lvl) lvl.textContent=S.level||'—';
+  if(ac){
+    const done=achievements()['academy_finished'];
+    ac.textContent=done?'Завершено 100%':(S.section==='Academy'?'В процессе':'Не начато');
+  }
 }
 function renderAchievements(){
   renderAccountBlock();
@@ -1725,11 +2023,19 @@ $('#infoLevel').onclick=openLevelModal;
 $('#closeLevelModal').onclick=closeLevelModal;
 $('#saveLevelModal').onclick=saveLevelModal;
 $('#openAchievements').onclick=openAchievementsModal;
+const openHero=$('#openAchievementsHero'); if(openHero) openHero.onclick=openAchievementsModal;
 document.addEventListener('click',e=>{
-  if(e.target && (e.target.id==='openAchievements' || e.target.id==='lastAchievementBadge')) openAchievementsModal();
+  if(e.target && (e.target.id==='openAchievements' || e.target.id==='lastAchievementBadge' || e.target.id==='openAchievementsHero')) openAchievementsModal();
 });
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
+document.querySelectorAll('.dash-tab').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.dash-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    if(btn.dataset.dashTab==='achievements') openAchievementsModal();
+  };
+});
 $('#openSettings').onclick=openSettings;
 $('#closeSettings').onclick=closeSettings;
 $('#saveSettings').onclick=saveSettings;
