@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RP Panel v84</title>
+<title>RP Panel v83</title>
 <style>
 :root{--text:#f5f8ff;--muted:#aab6ca;--line:rgba(255,255,255,.12);--card:rgba(12,16,27,.84);--blue:#74a8ff;--cyan:#67e8ff;--green:#76f3c5;--purple:#b28cff;--red:#ff6688;--yellow:#ffd166;--shadow:0 28px 95px rgba(0,0,0,.58)}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#000;color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 50% 8%,rgba(116,168,255,.15),transparent 28%),radial-gradient(circle at 82% 82%,rgba(178,140,255,.12),transparent 34%),linear-gradient(180deg,#02040a,#000)}body.gov{--accent:var(--cyan);--accent2:var(--blue);--glow:rgba(103,232,255,.17)}body.crime{--accent:var(--red);--accent2:var(--purple);--glow:rgba(255,102,136,.17)}
@@ -13,47 +13,45 @@ button,input,select{font:inherit}button{cursor:pointer}body.ready .start-screen{
 </head>
 <body>
 <section class="start-screen"><div class="start-card"><div class="kicker">Первый запуск</div><h1>Создай RP-профиль</h1><p>Только имя, аватар, проект и путь. Организацию и раздел выберешь уже в кабинете.</p><div class="form"><label class="field"><span>Имя / ник</span><input id="firstName" placeholder="Введи свой ник"></label><label class="field"><span>Аватар</span><div class="avatar-grid"><label class="choice"><input type="radio" name="avatar" value="🪖" checked><div class="tile">🪖</div></label><label class="choice"><input type="radio" name="avatar" value="🚓"><div class="tile">🚓</div></label><label class="choice"><input type="radio" name="avatar" value="🏛️"><div class="tile">🏛️</div></label><label class="choice"><input type="radio" name="avatar" value="💼"><div class="tile">💼</div></label><label class="choice"><input type="radio" name="avatar" value="🕶️"><div class="tile">🕶️</div></label><label class="choice"><input type="radio" name="avatar" value="🎮"><div class="tile">🎮</div></label></div></label><label class="field"><span>Проект</span><select id="firstProject"><option>GTA5RP</option><option>Majestic RP</option></select></label><label class="field"><span>Путь</span><div class="path-grid"><label class="choice"><input type="radio" name="path" value="Госка" checked><div class="tile"><b>🏛️ Госка</b>служба и карьера</div></label><label class="choice"><input type="radio" name="path" value="Крайм"><div class="tile"><b>🕶️ Крайм</b>семья / банда / мафия</div></label></div></label><div class="err" id="err">Сначала введи имя.</div><button class="btn" id="start">Открыть личный кабинет</button></div></div></section>
-<div class="app"><main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Ступень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и ступень повышения</h2><p>Названия ступеней взяты из текущей ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="selected-summary"><div><strong id="progressTitle">ARMY</strong><span id="progressDesc">Текущая ступень</span></div><button class="btn soft" id="editSetup">Сменить</button></div><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div></div></div></div><div class="panel step-panel" id="infoStep"><div class="step-title"><div><h2 id="infoTitle">Информация ARMY</h2><p>Инфа разложена по вкладкам, без общей каши.</p></div></div><div class="info-tabs" id="infoTabs"></div><div class="info-grid" id="infoGrid"></div></div></section></main></div>
+<div class="app">
+<main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Уровень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и уровень</h2><p>Выбери раздел и ступень повышения из ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="selected-summary"><div><strong id="progressTitle">ARMY</strong><span id="progressDesc">Текущая ступень</span></div><button class="btn soft" id="editSetup">Сменить</button></div><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div></div></div></div><div class="panel step-panel" id="infoStep"><div class="step-title"><div><h2 id="infoTitle">Информация ARMY</h2><p>Инфа разложена по вкладкам, без общей каши.</p></div></div><div class="info-tabs" id="infoTabs"></div><div class="info-grid" id="infoGrid"></div></div></section></main></div>
 <script>
 const KEY='rp_panel_v83_clean_army_logic';
 const ORGS={Госка:['ARMY','LSPD','LSSD','FIB','EMS','GOV','USSS','PRISON','Weazel News'],Крайм:['Семья','Банда','Мафия','Картель','Нелегал']};
 const SECTIONS={ARMY:['Academy','USAF','MP','DF','SD','RAP','SAS','ED'],defaultGov:['Основной раздел','Стажировка','Шпаргалки'],defaultCrime:['Основной состав','Правила','Шпаргалки']};
 const LEVELS={
-Academy:[
- '1 → 2 — Рядовой',
- '2 → 3 — Специалист'
-],
-USAF:[
- '1 → 2 — Рекрут → Рядовой',
- '2 → 3 — Рядовой → Специалист',
- '3 → 4 — Специалист → Капрал',
- '4 → 5 — Капрал → Сержант',
- '5 → 6 — Сержант → Штаб-сержант',
- '6 → 7 — Штаб-сержант → Уорент-офицер',
- '7 → 8 — Уорент-офицер → Старший уорент-офицер'
-],
-MP:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
-DF:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
-SD:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
-RAP:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
-SAS:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
-ED:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
-default:['1 → 2','2 → 3','3 → 4','4 → 5','5+']
+ Academy:['1 → 2 — Рядовой','2 → 3 — Специалист'],
+ USAF:[
+  '1 → 2 — Рекрут → Рядовой',
+  '2 → 3 — Рядовой → Специалист',
+  '3 → 4 — Специалист → Капрал',
+  '4 → 5 — Капрал → Сержант',
+  '5 → 6 — Сержант → Штаб-сержант',
+  '6 → 7 — Штаб-сержант → Уорент-офицер',
+  '7 → 8 — Уорент-офицер → Старший уорент-офицер'
+ ],
+ MP:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
+ DF:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
+ SD:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
+ RAP:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
+ SAS:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
+ ED:['1 → 2','2 → 3','3 → 4','4 → 5','5 → 6'],
+ default:['1 → 2','2 → 3','3 → 4','4 → 5','5+']
 };
 const PROMO_TASKS={
-Academy:{
- '1 → 2 — Рядовой':['Прослушать первичный инструктаж','Заполнить сейф','Заполнить отчет на повышение'],
- '2 → 3 — Специалист':['Сдать экзамен по Уставу и Тен-кодам','Сдать экзамен по Допуску на КПП','Отстоять 1 час на посту КПП','Выполнить задание: РП-ситуация от 10 строк с отыгровками /me и /do']
-},
-USAF:{
- '1 → 2 — Рекрут → Рядовой':['Пройти первичный инструктаж','Заполнить сейф'],
- '2 → 3 — Рядовой → Специалист':['Сдать экзамен на знание устава и тен-кодов USAF','Участие в 1 ГМП/МФМП/ВФМП или в тренировке от USAF','Участие в CO — 2'],
- '3 → 4 — Специалист → Капрал':['Сдать экзамен на FROGGER','Участие в 2 ГМП/МФМП/ВФМП или в тренировке от USAF','Сдать экзамен по парашютированию','Участие в CO — 3'],
- '4 → 5 — Капрал → Сержант':['Сдать экзамен на знание протоколов USAF','Сдать экзамен по парашютированию — «Пробуждение»','Участие в 2 ГМП/МФМП/ВФМП или в тренировке от USAF','Участие в CO — 4'],
- '5 → 6 — Сержант → Штаб-сержант':['Сдать экзамен по УАК и ПК у командующего состава Military Police','Сдать экзамен на SWIFT','Сдать экзамен по вождению у SD','Сдать экзамен по парашютированию — «Легенда о призраках»','Участие в 3 ГМП/МФМП/ВФМП или в тренировке от USAF','Участие в CO — 5'],
- '6 → 7 — Штаб-сержант → Уорент-офицер':['Сдать экзамен на усложнённый устав USAF','Сдать экзамен по парашютированию — «Виски-Хоутел»','Сдать экзамен на пилотирование и парашютирование','Участие в 3 ГМП/МФМП/ВФМП или в тренировке от USAF','Участие в CO — 6'],
- '7 → 8 — Уорент-офицер → Старший уорент-офицер':['Сдать экзамен на Miljet','Сдать усложнённый экзамен на Miljet','Сдать экзамен по парашютированию — «Небесный избранник»','Сдать экзамен по парашютированию — «Чёрный клевер»','Участие в 4 ГМП/МФМП/ВФМП или в тренировке от USAF','Участие в CO — 7']
-}
+ Academy:{
+  '1 → 2 — Рядовой':['Прослушать первичный инструктаж','Заполнить сейф','Заполнить отчёт на повышение'],
+  '2 → 3 — Специалист':['Сдать экзамен по Уставу и Тен-кодам','Сдать экзамен по Допуску на КПП','Отстоять 1 час на посту КПП','Выполнить РП-ситуацию от 10 строк с /me и /do']
+ },
+ USAF:{
+  '1 → 2 — Рекрут → Рядовой':['Пройти первичный инструктаж','Заполнить сейф'],
+  '2 → 3 — Рядовой → Специалист':['Сдать экзамен на знание устава и тен-кодов USAF','Участие в 1 ГМП/МФМП/ВФМП или тренировке от USAF','Участие в CO — 2'],
+  '3 → 4 — Специалист → Капрал':['Сдать экзамен на FROGGER','Участие в 2 ГМП/МФМП/ВФМП или тренировке от USAF','Сдать экзамен по парашютированию','Участие в CO — 3'],
+  '4 → 5 — Капрал → Сержант':['Сдать экзамен на знание протоколов USAF','Сдать экзамен по парашютированию — «Пробуждение»','Участие в 2 ГМП/МФМП/ВФМП или тренировке от USAF','Участие в CO — 4'],
+  '5 → 6 — Сержант → Штаб-сержант':['Сдать экзамен по УАК и ПК у Military Police','Сдать экзамен на SWIFT','Сдать экзамен по вождению у SD','Сдать экзамен по парашютированию — «Легенда о призраках»','Участие в 3 ГМП/МФМП/ВФМП или тренировке от USAF','Участие в CO — 5'],
+  '6 → 7 — Штаб-сержант → Уорент-офицер':['Сдать экзамен на усложнённый устав USAF','Сдать экзамен по парашютированию — «Виски-Хоутел»','Сдать экзамен на пилотирование и парашютирование','Участие в 3 ГМП/МФМП/ВФМП или тренировке от USAF','Участие в CO — 6'],
+  '7 → 8 — Уорент-офицер → Старший уорент-офицер':['Сдать экзамен на Miljet','Сдать усложнённый экзамен на Miljet','Сдать экзамен по парашютированию — «Небесный избранник»','Сдать экзамен по парашютированию — «Чёрный клевер»','Участие в 4 ГМП/МФМП/ВФМП или тренировке от USAF','Участие в CO — 7']
+ }
 };
 const INFO={
  Academy:{'База Academy':['Термины NG/FZ/СО, подразделения MA/MP/USAF/SAS/DF/RAP/SD/ED/Gen.','Документы, форма, устав, субординация, базовые обязанности военнослужащего.','КПП, рация, доклады, базовые запреты и порядок повышения.'],'КПП':['КПП-1 — дополнительный пункт, не для обычного свободного проезда.','КПП-2 — основной пункт для военнослужащих.','Доклад при заступлении/уходе и регулярные доклады по ситуации.'],'Тен-коды':['Используются для рации и докладов.','Важно знать коды прибытия, заступления, ситуации, запроса помощи и спец.обстановки.'],'Повышение':['Курсант должен двигаться по системе Академии.','Для следующего уровня нужны задания, отчётность и готовность к тестам.']},
@@ -63,7 +61,11 @@ const INFO={
 };
 let S={ready:false,name:'',avatar:'🪖',project:'GTA5RP',path:'Госка',org:'',section:'',level:'',configured:false,tasks:{},infoTab:'Academy'};
 const $=s=>document.querySelector(s);function save(){localStorage.setItem(KEY,JSON.stringify(S))}function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x)S=Object.assign(S,x)}catch(e){}}function theme(){document.body.classList.toggle('ready',S.ready);document.body.classList.toggle('gov',S.path==='Госка');document.body.classList.toggle('crime',S.path==='Крайм')}
-function render(){theme();$('#bigAva').textContent=S.avatar;$('#profileName').textContent=S.name||'Игрок';let path=`${S.project} › ${S.path}${S.org?' › '+S.org:''}${S.configured?' › '+S.section:''}`;$('#profileLine').textContent=path;$('#infoProject').textContent=S.project;$('#infoPath').textContent=S.path;$('#infoOrg').textContent=S.org||'Нужно выбрать справа';$('#infoSection').textContent=S.section||'—';$('#infoLevel').textContent=S.level||'—';$('#orgStep').classList.toggle('show',!S.org);$('#setupStep').classList.toggle('show',!!S.org&&!S.configured);$('#progressStep').classList.toggle('show',!!S.org&&S.configured);$('#infoStep').classList.toggle('show',!!S.org&&S.configured);renderOrgs();renderSetup();renderProgress();renderInfo();renderAch()}
+function render(){theme();
+ $('#bigAva').textContent=S.avatar;
+ $('#profileName').textContent=S.name||'Игрок';
+ let path=`${S.project} › ${S.path}${S.org?' › '+S.org:''}${S.configured?' › '+S.section:''}`;
+ $('#profileLine').textContent=path;$('#infoProject').textContent=S.project;$('#infoPath').textContent=S.path;$('#infoOrg').textContent=S.org||'Нужно выбрать справа';$('#infoSection').textContent=S.section||'—';$('#infoLevel').textContent=S.level||'—';$('#orgStep').classList.toggle('show',!S.org);$('#setupStep').classList.toggle('show',!!S.org&&!S.configured);$('#progressStep').classList.toggle('show',!!S.org&&S.configured);$('#infoStep').classList.toggle('show',!!S.org&&S.configured);renderOrgs();renderSetup();renderProgress();renderInfo();renderAch()}
 function renderOrgs(){let grid=$('#orgGrid');grid.innerHTML=(ORGS[S.path]||[]).map(o=>`<button class="org-btn" data-org="${o}">${o}</button>`).join('');document.querySelectorAll('[data-org]').forEach(b=>b.onclick=()=>{S.org=b.dataset.org;S.section='';S.level='';S.configured=false;S.tasks={};S.infoTab='Academy';save();render()})}
 function secList(){return S.org==='ARMY'?SECTIONS.ARMY:(S.path==='Госка'?SECTIONS.defaultGov:SECTIONS.defaultCrime)}function levList(){return LEVELS[S.section]||LEVELS.default}
 function renderSetup(){if(!S.org)return;$('#chosenOrg').textContent=S.org;if(!S.section)S.section=secList()[0];if(!S.level)S.level=levList()[0];$('#section').innerHTML=secList().map(x=>`<option ${S.section===x?'selected':''}>${x}</option>`).join('');$('#level').innerHTML=levList().map(x=>`<option ${S.level===x?'selected':''}>${x}</option>`).join('')}
@@ -71,7 +73,7 @@ function taskList(){
  if(!S.configured)return[];
  if(PROMO_TASKS[S.section] && PROMO_TASKS[S.section][S.level]) return PROMO_TASKS[S.section][S.level];
  return ['Изучить обязанности раздела','Закрыть активность','Подготовить отчёт','Проверить требования к следующему уровню'];
-}if(S.section==='USAF'){return ['Изучить правила ВТ','Повторить доклады USAF','Закрыть практику/активность','Подготовиться к следующему уровню пилота']}return ['Изучить обязанности раздела','Закрыть активность','Подготовить отчёт','Проверить требования к следующему уровню']}
+}
 function percent(){let t=taskList();if(!t.length)return 0;let d=t.filter(x=>S.tasks[x]).length;return Math.round(d/t.length*100)}
 function renderProgress(){if(!S.configured)return;let p=percent();$('#ring').style.setProperty('--p',p);$('#percent').textContent=p+'%';$('#progressTitle').textContent=`${S.org} › ${S.section}`;$('#progressDesc').textContent=`Уровень: ${S.level}`;$('#nextText').textContent=p<100?'Отмечай, что уже сделал — это прогресс до следующего повышения.':'Уровень закрыт, можно переходить дальше.';$('#tasks').innerHTML=taskList().map(t=>`<label class="task"><input type="checkbox" ${S.tasks[t]?'checked':''} data-task="${t}"><span><b>${t}</b><small>Засчитывается в прогресс повышения.</small></span></label>`).join('');document.querySelectorAll('[data-task]').forEach(i=>i.onchange=()=>{S.tasks[i.dataset.task]=i.checked;save();render()})}
 function availableTabs(){return S.org==='ARMY'?['Academy','USAF','Повышение','Премии','Общее']:[S.org||'Инфо','Премии']}function tabData(tab){if(tab==='Academy')return INFO.Academy;if(tab==='USAF')return INFO.USAF;if(tab==='Премии')return INFO.Premium;if(tab==='Повышение')return {[`Повышение: ${S.section}`]:taskList(), 'Как пользоваться':['Выбери уровень слева сверху, затем отмечай пункты прогресса.','Список задач меняется от раздела: Academy, USAF или другой отдел.']};return INFO.Common}
