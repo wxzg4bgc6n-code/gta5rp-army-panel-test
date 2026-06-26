@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v116</title>
+<title>RP Cabinet v117</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1294,6 +1294,164 @@ body.style-arctic:before,body.style-emerald:before,body.style-violet:before,body
   .progress-layout{grid-template-columns:1fr!important;padding-left:0!important}
 }
 
+
+/* v117: профиль отдельно, правая dashboard-карточка отдельно, цветовые темы восстановлены */
+body.style-arctic{
+  --accent:#7dd3fc!important;
+  --accent2:#60a5fa!important;
+  --glow:rgba(96,165,250,.18)!important;
+  --line:rgba(125,211,252,.16)!important;
+  --themeTint:rgba(96,165,250,.12)!important;
+}
+body.style-emerald{
+  --accent:#86efac!important;
+  --accent2:#2dd4bf!important;
+  --glow:rgba(45,212,191,.16)!important;
+  --line:rgba(134,239,172,.15)!important;
+  --themeTint:rgba(45,212,191,.10)!important;
+}
+body.style-violet{
+  --accent:#b28cff!important;
+  --accent2:#7c5cff!important;
+  --glow:rgba(178,140,255,.18)!important;
+  --line:rgba(178,140,255,.18)!important;
+  --themeTint:rgba(178,140,255,.12)!important;
+}
+body.style-crimson{
+  --accent:#fb7185!important;
+  --accent2:#f472b6!important;
+  --glow:rgba(251,113,133,.15)!important;
+  --line:rgba(251,113,133,.16)!important;
+  --themeTint:rgba(251,113,133,.10)!important;
+}
+body.style-gold{
+  --accent:#facc15!important;
+  --accent2:#f59e0b!important;
+  --glow:rgba(250,204,21,.14)!important;
+  --line:rgba(250,204,21,.16)!important;
+  --themeTint:rgba(250,204,21,.09)!important;
+}
+body::before,
+body.style-arctic:before,
+body.style-emerald:before,
+body.style-violet:before,
+body.style-crimson:before,
+body.style-gold:before{
+  background:
+    radial-gradient(circle at 14% 5%,var(--themeTint),transparent 30%),
+    radial-gradient(circle at 88% 15%,color-mix(in srgb,var(--accent2) 10%, transparent),transparent 27%),
+    linear-gradient(180deg,#060912 0%,#03050a 100%)!important;
+}
+.app{
+  width:min(1620px,calc(100% - 34px))!important;
+}
+.main{
+  display:grid!important;
+  grid-template-columns:360px minmax(0,1fr)!important;
+  gap:18px!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+.profile-card{
+  border:1px solid var(--line)!important;
+  border-radius:24px!important;
+  background:
+    radial-gradient(circle at 20% 0%,var(--themeTint),transparent 34%),
+    linear-gradient(135deg,rgba(18,24,38,.92),rgba(10,14,24,.92))!important;
+  box-shadow:var(--shadow)!important;
+  padding:26px 20px!important;
+  border-right:1px solid var(--line)!important;
+}
+.flow{
+  border:1px solid var(--line)!important;
+  border-radius:24px!important;
+  background:
+    radial-gradient(circle at 15% 0%,var(--themeTint),transparent 34%),
+    linear-gradient(135deg,rgba(18,24,38,.90),rgba(8,12,22,.94))!important;
+  box-shadow:var(--shadow)!important;
+  padding:22px!important;
+  overflow:hidden!important;
+}
+.dashboard-section,
+#progressStep{
+  border-color:color-mix(in srgb,var(--accent) 22%, rgba(255,255,255,.10))!important;
+  background:rgba(5,8,16,.22)!important;
+}
+.dashboard-tabs .dash-tab{
+  border-color:rgba(255,255,255,.12)!important;
+  background:rgba(5,8,16,.42)!important;
+}
+.dashboard-tabs .dash-tab.active,
+.dashboard-tabs .dash-tab:hover{
+  color:var(--text)!important;
+  border-color:color-mix(in srgb,var(--accent) 56%, white 0%)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 20%, transparent),rgba(255,255,255,.045))!important;
+}
+.achievement-preview.open,
+.path-card.active{
+  border-color:color-mix(in srgb,var(--accent) 62%, white 0%)!important;
+  background:radial-gradient(circle at 70% 0%,color-mix(in srgb,var(--accent) 18%, transparent),transparent 42%),rgba(255,255,255,.045)!important;
+  box-shadow:0 0 28px var(--glow)!important;
+}
+.clean-rank-emblem{
+  background:
+    linear-gradient(145deg,color-mix(in srgb,var(--accent) 30%, #111827),#111827 70%)!important;
+  border-color:color-mix(in srgb,var(--accent) 46%, white 0%)!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 18px 42px rgba(0,0,0,.38),0 0 38px var(--glow)!important;
+}
+.clean-rank-emblem span{
+  color:var(--accent)!important;
+  text-shadow:0 0 18px var(--glow)!important;
+}
+.clean-rank-emblem small{
+  background:linear-gradient(135deg,var(--accent),var(--accent2))!important;
+}
+.account-ach-wide,
+#openAchievementsHero,
+.btn:not(.soft):not(.danger){
+  border-color:color-mix(in srgb,var(--accent) 42%, white 0%)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent2) 28%, transparent),color-mix(in srgb,var(--accent) 12%, transparent))!important;
+}
+.ring{
+  box-shadow:0 0 48px var(--glow)!important;
+}
+.ring.progress-pulse{
+  box-shadow:0 0 56px var(--glow),0 0 0 6px color-mix(in srgb,var(--accent) 7%, transparent)!important;
+}
+.task.done{
+  border-color:color-mix(in srgb,var(--accent) 55%, white 0%)!important;
+  background:linear-gradient(135deg,var(--glow),rgba(255,255,255,.035))!important;
+}
+.last-ach-card{
+  border-color:color-mix(in srgb,var(--accent) 26%, white 0%)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, transparent),rgba(255,255,255,.035))!important;
+}
+.last-ach-title{
+  color:color-mix(in srgb,var(--accent) 72%, white 20%)!important;
+}
+.last-ach-body > span{
+  border-color:color-mix(in srgb,var(--accent) 30%, white 0%)!important;
+  background:color-mix(in srgb,var(--accent) 12%, transparent)!important;
+}
+.account-progress-card{
+  border-color:rgba(255,255,255,.11)!important;
+  background:rgba(255,255,255,.045)!important;
+}
+.account-xp-track div{
+  background:linear-gradient(90deg,var(--accent),var(--accent2))!important;
+}
+@media(max-width:900px){
+  .main{
+    grid-template-columns:1fr!important;
+    gap:14px!important;
+  }
+  .profile-card,.flow{
+    border-radius:22px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1545,7 +1703,7 @@ body.style-arctic:before,body.style-emerald:before,body.style-violet:before,body
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v116_wide_dashboard_no_avatar_badge';
+const VERSION_KEY='rp_panel_v117_separate_profile_restore_themes';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -1608,7 +1766,7 @@ const ACHIEVEMENT_DEFS=[
 ];
 let activeAchCategory='Все';
 
-let S={ready:false,name:'',project:'GTA5RP',path:'Госка',style:'style-arctic',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{}}};
+let S={ready:false,name:'',project:'GTA5RP',path:'Госка',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{}}};
 let displayedProgress=0;
 let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
@@ -2103,7 +2261,7 @@ $('#createProfile').onclick=()=>{
   const name=$('#firstName').value.trim();
   if(!name){$('#firstError').classList.add('show');return}
   $('#firstError').classList.remove('show');
-  S={ready:true,name,project:$('#firstProject').value,path:document.querySelector('[name="path"]:checked').value,style:'style-arctic',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{}}};
+  S={ready:true,name,project:$('#firstProject').value,path:document.querySelector('[name="path"]:checked').value,style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{}}};
   save();
   render();
 };
