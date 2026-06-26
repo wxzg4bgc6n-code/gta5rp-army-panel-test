@@ -2611,7 +2611,7 @@ body{
 .profile-card .editable-row,
 .profile-card .level-row{
   display:grid!important;
-  grid-template-columns:118px minmax(0,1fr) 32px!important;
+  grid-template-columns:132px minmax(0,1fr) 32px!important;
   align-items:center!important;
   gap:10px!important;
   min-height:44px!important;
@@ -2676,6 +2676,29 @@ body{
 }
 .profile-card .level-row b{
   white-space:normal!important;
+}
+
+/* KIRI v135: финальное выравнивание колонок профиля.
+   Причина: поздний блок v133 с .profile-card .row перебивал общее правило .row. */
+.profile-card .profile-info .row,
+.profile-card .profile-info .editable-row,
+.profile-card .profile-info .level-row{
+  grid-template-columns:132px minmax(0,1fr) 32px!important;
+}
+.profile-card .profile-info .row span,
+.profile-card .profile-info .row b{
+  justify-self:start!important;
+  text-align:left!important;
+}
+@media(max-width:420px){
+  .profile-card .profile-info .row,
+  .profile-card .profile-info .editable-row,
+  .profile-card .profile-info .level-row{
+    grid-template-columns:132px minmax(0,1fr) 32px!important;
+  }
+  .profile-card .profile-info .row span{
+    grid-column:auto!important;
+  }
 }
 
 </style>
