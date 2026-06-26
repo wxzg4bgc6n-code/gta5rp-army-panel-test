@@ -304,6 +304,137 @@ input:focus,select:focus,textarea:focus{
   .small-btn{flex:1}
   .info-row{grid-template-columns:1fr}
 }
+
+/* v78: компактный выбор организации, круглый прогресс, модальное окно достижений */
+.org-selected-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border:1px solid color-mix(in srgb,var(--accent) 55%, white 0%);
+  background:linear-gradient(135deg,var(--themeGlow),rgba(255,255,255,.04));
+  border-radius:18px;
+  padding:14px;
+  margin-top:12px;
+}
+.org-selected-card strong{display:block;font-size:20px}
+.org-selected-card span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.org-picker.hidden{display:none!important}
+.org-change-btn{
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border-radius:999px;
+  min-height:40px;
+  padding:0 12px;
+  font-size:13px;
+  font-weight:900;
+}
+.progress-wrap{
+  display:grid;
+  grid-template-columns:190px minmax(0,1fr);
+  align-items:center;
+  gap:18px;
+}
+.ring-progress{
+  width:176px;
+  height:176px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:conic-gradient(var(--accent) calc(var(--p)*1%), rgba(255,255,255,.08) 0);
+  box-shadow:0 0 46px var(--themeGlow);
+  position:relative;
+}
+.ring-progress::before{
+  content:"";
+  position:absolute;
+  inset:13px;
+  border-radius:50%;
+  background:#0a0d16;
+  border:1px solid rgba(255,255,255,.10);
+}
+.ring-progress-content{
+  position:relative;
+  text-align:center;
+}
+.ring-progress-content b{
+  display:block;
+  font-size:42px;
+  line-height:1;
+  letter-spacing:-.06em;
+}
+.ring-progress-content span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+}
+.progress-line{display:none!important}
+.ach-short{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.ach-mini{
+  min-width:84px;
+  flex:1;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(255,255,255,.045);
+  text-align:center;
+}
+.ach-mini.locked{opacity:.42;filter:saturate(.35)}
+.ach-mini div{font-size:25px}
+.ach-mini span{display:block;color:var(--muted);font-size:12px;font-weight:850;margin-top:4px}
+.ach-modal{
+  position:fixed;
+  inset:0;
+  z-index:9998;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(14px);
+}
+.ach-modal.open{display:flex}
+.ach-modal-card{
+  width:min(880px,100%);
+  max-height:86vh;
+  overflow:auto;
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025)),rgba(10,13,22,.95);
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+.ach-modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:14px;
+}
+.ach-modal-head h2{margin:0;font-size:30px}
+.close-modal{
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  border-radius:999px;
+  min-height:40px;
+  padding:0 13px;
+  font-weight:950;
+}
+#achievementsInline{display:none!important}
+@media(max-width:700px){
+  .progress-wrap{grid-template-columns:1fr}
+  .ring-progress{margin:auto}
+  .org-selected-card{align-items:flex-start;flex-direction:column}
+  .org-change-btn{width:100%}
+}
+
 </style>
 </head>
 <body>
@@ -386,16 +517,26 @@ input:focus,select:focus,textarea:focus{
     <section class="panel">
       <h2>Прогресс</h2>
       <div class="progress-wrap">
-        <div class="progress-line"><div class="progress-bar" id="progressBar"></div></div>
-        <p><b id="progressText">25%</b> — стартовый прогресс личного кабинета</p>
-        <div class="stages" id="stages"></div>
+        <div class="ring-progress" id="ringProgress" style="--p:25">
+          <div class="ring-progress-content">
+            <b id="progressText">25%</b>
+            <span>общий прогресс</span>
+          </div>
+        </div>
+        <div>
+          <p>Прогресс считается по профилю, выбору организации и открытым разделам информации.</p>
+          <div class="stages" id="stages"></div>
+        </div>
       </div>
     </section>
   </main>
 
   <section class="panel" style="margin-top:16px">
     <h2>Достижения</h2>
-    <div class="section-grid" id="achievements"></div>
+    <p>Кратко показываются последние достижения. Полный список открывается отдельно.</p>
+    <div class="ach-short" id="achievementsShort"></div>
+    <button class="btn" id="openAchievements" style="margin-top:14px;width:100%">Открыть все достижения</button>
+    <div class="section-grid" id="achievementsInline"></div>
   </section>
 
   <section class="panel" style="margin-top:16px" id="infoPanel">
@@ -405,6 +546,19 @@ input:focus,select:focus,textarea:focus{
   </section>
 </div>
 
+
+<div class="ach-modal" id="achModal">
+  <div class="ach-modal-card">
+    <div class="ach-modal-head">
+      <div>
+        <h2>Все достижения</h2>
+        <p>Открываются по мере заполнения кабинета и использования разделов.</p>
+      </div>
+      <button class="close-modal" id="closeAchievements">Закрыть</button>
+    </div>
+    <div class="section-grid" id="achievementsModal"></div>
+  </div>
+</div>
 <script>
 const KEY = "rp_panel_v77_clean_start_reset";
 const orgs = {
@@ -435,7 +589,8 @@ let state = {
   project:"GTA5RP",
   path:"Госка",
   org:"",
-  openedModules:[]
+  openedModules:[],
+  orgChanging:false
 };
 function $(s){return document.querySelector(s)}
 function save(){localStorage.setItem(KEY, JSON.stringify(state))}
@@ -469,12 +624,43 @@ function render(){
 function renderOrg(){
   const box = $("#orgPicker");
   box.innerHTML = "";
+  const warning = document.querySelector("#orgBox .empty");
+
+  if(state.org && !state.orgChanging){
+    box.classList.add("hidden");
+    box.insertAdjacentHTML("afterend", `
+      <div class="org-selected-card" id="orgSelectedCard">
+        <div>
+          <strong>${state.org}</strong>
+          <span>Выбранная организация. Остальные скрыты, чтобы не мешали.</span>
+        </div>
+        <button class="org-change-btn" id="orgChangeInside">Сменить</button>
+      </div>
+    `);
+    const oldCards = document.querySelectorAll("#orgSelectedCard");
+    if(oldCards.length > 1) oldCards[0].remove();
+    if(warning) warning.style.display = "none";
+    setTimeout(()=>{
+      const btn = $("#orgChangeInside");
+      if(btn) btn.onclick = () => {
+        state.orgChanging = true;
+        save();
+        render();
+      };
+    });
+    return;
+  }
+
+  document.querySelectorAll("#orgSelectedCard").forEach(el=>el.remove());
+  box.classList.remove("hidden");
+  if(warning) warning.style.display = "block";
   orgs[state.path].forEach(org=>{
     const btn = document.createElement("button");
     btn.className = "org-card" + (state.org === org ? " active" : "");
     btn.textContent = org;
     btn.onclick = () => {
       state.org = org;
+      state.orgChanging = false;
       if(!state.openedModules) state.openedModules = [];
       save();
       render();
@@ -492,7 +678,8 @@ function progressValue(){
 }
 function renderProgress(){
   const p = progressValue();
-  $("#progressBar").style.width = p + "%";
+  const ring = $("#ringProgress");
+  if(ring) ring.style.setProperty("--p", p);
   $("#progressText").textContent = p + "%";
   const data = [
     ["Профиль", true],
@@ -504,9 +691,9 @@ function renderProgress(){
   ];
   $("#stages").innerHTML = data.map(([t,d])=>`<div class="stage ${d?'done':''}">${d?'✓':'○'} ${t}</div>`).join("");
 }
-function renderAchievements(){
+function getAchievements(){
   const opened = state.openedModules || [];
-  const ach = [
+  return [
     ["🟢","Первый вход","Создал профиль", true],
     ["🧭","Выбор пути",`Выбрал: ${state.path}`, true],
     [state.path==="Госка"?"🏛️":"🕶️","Направление","Определился с направлением", true],
@@ -514,13 +701,30 @@ function renderAchievements(){
     ["📖","Первый раздел","Открой любую карточку информации", opened.length>0],
     ["🏆","Освоение","Открой 3 раздела информации", opened.length>=3],
     ["🔥","Полный старт","Открой 6 разделов информации", opened.length>=6],
+    ["📌","Исследователь","Открой все доступные карточки выбранной организации", state.org && opened.length >= (modules[state.org]||[]).length],
   ];
-  $("#achievements").innerHTML = ach.map(a=>`
+}
+function renderAchievements(){
+  const ach = getAchievements();
+  const cardHtml = ach.map(a=>`
     <div class="achievement ${a[3]?'':'locked'}">
       <div style="font-size:28px">${a[0]}</div>
       <strong>${a[1]}</strong>
       <span>${a[2]}</span>
     </div>`).join("");
+  const inline = $("#achievementsInline");
+  const modal = $("#achievementsModal");
+  if(inline) inline.innerHTML = cardHtml;
+  if(modal) modal.innerHTML = cardHtml;
+
+  const short = $("#achievementsShort");
+  if(short){
+    short.innerHTML = ach.slice(0,4).map(a=>`
+      <div class="ach-mini ${a[3]?'':'locked'}">
+        <div>${a[0]}</div>
+        <span>${a[1]}</span>
+      </div>`).join("");
+  }
 }
 function renderModules(){
   const list = modules[state.org] || [];
@@ -558,16 +762,25 @@ $("#startBtn").onclick = () => {
   state.path = document.querySelector("input[name='path']:checked").value;
   state.org = "";
   state.openedModules = [];
+  state.orgChanging = false;
   save();
   render();
 };
 $("#resetBtn").onclick = () => {
   localStorage.removeItem(KEY);
-  state = {ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",openedModules:[]};
+  state = {ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",openedModules:[],orgChanging:false};
   render();
 };
 $("#changeOrgBtn").onclick = () => {
+  state.orgChanging = true;
+  save();
+  render();
   document.getElementById("orgBox").scrollIntoView({behavior:"smooth",block:"center"});
+};
+$("#openAchievements").onclick = () => $("#achModal").classList.add("open");
+$("#closeAchievements").onclick = () => $("#achModal").classList.remove("open");
+$("#achModal").onclick = (e) => {
+  if(e.target.id === "achModal") $("#achModal").classList.remove("open");
 };
 localStorage.removeItem("rp_panel_v76");
 localStorage.removeItem("rp_panel_v75");
