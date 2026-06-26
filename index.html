@@ -1,69 +1,579 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RP Panel v76</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RP Panel — First Start</title>
 <style>
-body{margin:0;background:#050505;color:#fff;font-family:Inter,Arial,sans-serif}
-.center{display:flex;min-height:100vh;align-items:center;justify-content:center}
-.card{width:min(1100px,95%);background:#111;border:1px solid #2a2a2a;border-radius:24px;padding:24px}
-.grid{display:grid;grid-template-columns:330px 1fr;gap:20px}
-.box{background:#171717;border-radius:18px;padding:18px;border:1px solid #2c2c2c}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-top:16px}
-.item{background:#1d1d1d;border:1px solid #333;border-radius:16px;padding:18px;cursor:pointer}
-.progress{height:18px;background:#2b2b2b;border-radius:999px;overflow:hidden}
-.bar{height:100%;width:28%;background:#4da3ff}
-.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px}
-.badge{padding:14px;border-radius:14px;background:#202020;text-align:center;border:1px solid #333}
-h1,h2,h3,p{margin-top:0}
-small{color:#aaa}
+:root{
+  --bg:#000;
+  --text:#f4f7ff;
+  --muted:#a9b4c7;
+  --line:rgba(255,255,255,.12);
+  --card:rgba(14,18,30,.82);
+  --soft:rgba(255,255,255,.055);
+  --blue:#72a7ff;
+  --cyan:#67e8ff;
+  --green:#76f3c5;
+  --purple:#b28cff;
+  --red:#ff7070;
+  --yellow:#ffd166;
+  --shadow:0 25px 90px rgba(0,0,0,.58);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  background:#000;
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 16%,rgba(114,167,255,.13),transparent 30%),
+    radial-gradient(circle at 80% 75%,rgba(178,140,255,.10),transparent 32%),
+    linear-gradient(180deg,#02040a,#000);
+  pointer-events:none;
+  z-index:-2;
+}
+body.gov{
+  --accent:var(--cyan);
+  --accent2:var(--blue);
+  --themeGlow:rgba(103,232,255,.16);
+}
+body.crime{
+  --accent:#ff5b85;
+  --accent2:var(--purple);
+  --themeGlow:rgba(255,91,133,.16);
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.first-screen{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:18px;
+}
+body.ready .first-screen{display:none}
+body:not(.ready) .app{display:none}
+.launch{
+  width:min(620px,100%);
+  border:1px solid var(--line);
+  border-radius:32px;
+  background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025)),rgba(7,10,18,.88);
+  box-shadow:var(--shadow);
+  padding:26px;
+  backdrop-filter:blur(18px);
+}
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(103,232,255,.25);
+  background:rgba(103,232,255,.08);
+  border-radius:999px;
+  padding:8px 11px;
+  color:#dff7ff;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.kicker::before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 18px rgba(118,243,197,.75);
+}
+h1{
+  margin:18px 0 8px;
+  font-size:clamp(34px,8vw,58px);
+  line-height:.95;
+  letter-spacing:-.06em;
+}
+p{color:var(--muted);margin:0}
+.form{display:grid;gap:15px;margin-top:22px}
+.field{display:grid;gap:7px}
+.field span{font-size:12px;color:var(--muted);font-weight:900}
+input,select,textarea{
+  width:100%;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:16px;
+  background:rgba(0,0,0,.28);
+  color:var(--text);
+  padding:13px 13px;
+  outline:none;
+  font-weight:800;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:rgba(103,232,255,.65);
+  box-shadow:0 0 0 3px rgba(103,232,255,.12);
+}
+.avatar-grid,.path-grid{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:9px;
+}
+.path-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.choice{position:relative;cursor:pointer}
+.choice input{position:absolute;opacity:0;pointer-events:none}
+.tile{
+  min-height:60px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  display:grid;
+  place-items:center;
+  text-align:center;
+  font-size:25px;
+  font-weight:950;
+  transition:.18s;
+}
+.path-grid .tile{
+  min-height:86px;
+  font-size:15px;
+  line-height:1.25;
+}
+.path-grid .tile b{display:block;font-size:22px;margin-bottom:4px}
+.choice:hover .tile{transform:translateY(-2px);border-color:rgba(103,232,255,.35)}
+.choice input:checked + .tile{
+  border-color:rgba(103,232,255,.72);
+  background:linear-gradient(135deg,rgba(103,232,255,.18),rgba(114,167,255,.10));
+  box-shadow:0 0 0 1px rgba(103,232,255,.14);
+}
+.start-btn,.btn{
+  min-height:50px;
+  border:1px solid rgba(103,232,255,.42);
+  border-radius:17px;
+  color:var(--text);
+  background:linear-gradient(135deg,rgba(114,167,255,.35),rgba(103,232,255,.16));
+  font-weight:950;
+}
+.start-btn:hover,.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.error{
+  display:none;
+  padding:11px 12px;
+  border-radius:14px;
+  border:1px solid rgba(255,112,112,.30);
+  background:rgba(255,112,112,.09);
+  color:#ffd2d2;
+  font-size:13px;
+  font-weight:850;
+}
+.error.show{display:block}
+.app{
+  width:min(1240px,calc(100% - 26px));
+  margin:0 auto;
+  padding:18px 0 34px;
+}
+.top{
+  position:sticky;
+  top:10px;
+  z-index:20;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:rgba(5,7,14,.82);
+  backdrop-filter:blur(18px);
+  box-shadow:0 16px 44px rgba(0,0,0,.36);
+  padding:13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.avatar{
+  width:52px;height:52px;border-radius:18px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#06101f;
+  font-size:27px;
+  box-shadow:0 0 30px var(--themeGlow);
+}
+.crumbs{min-width:0}
+.crumbs b{display:block;font-size:16px}
+.crumbs span{
+  color:var(--muted);
+  font-size:13px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:block;
+  margin-top:3px;
+}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.small-btn{
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.055);
+  color:var(--text);
+  border-radius:999px;
+  min-height:40px;
+  padding:0 13px;
+  font-size:13px;
+  font-weight:900;
+}
+.small-btn.danger{border-color:rgba(255,112,112,.28);background:rgba(255,112,112,.09)}
+.hero{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
+  gap:14px;
+}
+.panel{
+  border:1px solid var(--line);
+  border-radius:26px;
+  background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025)),rgba(14,18,30,.78);
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+.profile h2,.panel h2{margin:0 0 12px;font-size:26px;letter-spacing:-.035em}
+.info-row{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.info-row:last-child{border-bottom:0}
+.info-row span{color:var(--muted);font-size:13px;font-weight:850}
+.info-row b{font-size:14px}
+.org-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+.org-card{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  color:var(--text);
+  border-radius:16px;
+  min-height:54px;
+  font-weight:950;
+}
+.org-card.active{
+  border-color:color-mix(in srgb,var(--accent) 70%, white 0%);
+  background:linear-gradient(135deg,var(--themeGlow),rgba(255,255,255,.04));
+}
+.progress-wrap{display:grid;gap:12px}
+.progress-line{height:20px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.09)}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.25s}
+.stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.stage{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+  border-radius:15px;
+  padding:10px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+}
+.stage.done{color:var(--text);border-color:color-mix(in srgb,var(--accent) 55%, white 0%);background:var(--themeGlow)}
+.section-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  margin-top:16px;
+}
+.achievement,.module{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  padding:15px;
+}
+.achievement.locked{opacity:.45;filter:saturate(.3)}
+.achievement strong,.module strong{display:block;margin-top:8px}
+.achievement span,.module span{display:block;color:var(--muted);font-size:13px;margin-top:5px}
+.module{cursor:pointer;min-height:135px}
+.module:hover{border-color:color-mix(in srgb,var(--accent) 55%, white 0%);background:var(--themeGlow);transform:translateY(-2px)}
+.empty{
+  margin-top:12px;
+  border:1px solid rgba(255,209,102,.20);
+  background:rgba(255,209,102,.07);
+  color:#ffe3a1;
+  padding:12px;
+  border-radius:16px;
+  font-size:13px;
+  font-weight:850;
+}
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .section-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stages{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .launch{padding:18px;border-radius:24px}
+  .avatar-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .path-grid,.org-picker,.section-grid{grid-template-columns:1fr}
+  .top{align-items:flex-start;flex-direction:column}
+  .actions{width:100%}
+  .small-btn{flex:1}
+  .info-row{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<div class="center">
-<div class="card">
-<div class="grid">
-<div class="box">
-<h2>Личный кабинет</h2>
-<p><b>Игрок:</b> KIRI</p>
-<p><b>Проект:</b> GTA5RP</p>
-<p><b>Организация:</b> ARMY</p>
-<p><b>Этап:</b> Академия</p>
+<section class="first-screen">
+  <div class="launch">
+    <div class="kicker">Первый запуск</div>
+    <h1>Настрой свой RP-кабинет</h1>
+    <p>Введи имя, выбери аватар, проект и путь. После этого откроется личный кабинет.</p>
 
-<h3>Общий прогресс</h3>
-<div class="progress"><div class="bar"></div></div>
-<small>28% пути</small>
+    <div class="form">
+      <label class="field">
+        <span>Имя / ник</span>
+        <input id="firstName" placeholder="Введи свой ник">
+      </label>
 
-<h3 style="margin-top:22px">Достижения</h3>
-<div class="badges">
-<div class="badge">🏅<br>Профиль</div>
-<div class="badge">🪖<br>ARMY</div>
-<div class="badge">📚<br>Академия</div>
-<div class="badge">🔒<br>???</div>
-<div class="badge">🔒<br>???</div>
-<div class="badge">🔒<br>???</div>
-</div>
+      <label class="field">
+        <span>Аватар</span>
+        <div class="avatar-grid">
+          <label class="choice"><input type="radio" name="avatar" value="🪖" checked><div class="tile">🪖</div></label>
+          <label class="choice"><input type="radio" name="avatar" value="🚓"><div class="tile">🚓</div></label>
+          <label class="choice"><input type="radio" name="avatar" value="🏛️"><div class="tile">🏛️</div></label>
+          <label class="choice"><input type="radio" name="avatar" value="💼"><div class="tile">💼</div></label>
+          <label class="choice"><input type="radio" name="avatar" value="🕶️"><div class="tile">🕶️</div></label>
+          <label class="choice"><input type="radio" name="avatar" value="🎮"><div class="tile">🎮</div></label>
+        </div>
+      </label>
+
+      <label class="field">
+        <span>Проект</span>
+        <select id="firstProject">
+          <option value="GTA5RP">GTA5RP</option>
+          <option value="Majestic RP">Majestic RP</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>Путь</span>
+        <div class="path-grid">
+          <label class="choice"><input type="radio" name="path" value="Госка" checked><div class="tile"><b>🏛️ Госка</b>Служба, структура, карьера</div></label>
+          <label class="choice"><input type="radio" name="path" value="Крайм"><div class="tile"><b>🕶️ Крайм</b>Семья, банда, мафия</div></label>
+        </div>
+      </label>
+
+      <div class="error" id="firstError">Сначала введи имя.</div>
+      <button class="start-btn" id="startBtn">Открыть личный кабинет</button>
+    </div>
+  </div>
+</section>
+
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="avatar" id="cabAvatar">🪖</div>
+      <div class="crumbs">
+        <b id="cabName">Игрок</b>
+        <span id="cabPath">GTA5RP › Госка › организация не выбрана</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="small-btn" id="changeOrgBtn">Выбор организации</button>
+      <button class="small-btn danger" id="resetBtn">Сбросить с нуля</button>
+    </div>
+  </header>
+
+  <main class="hero">
+    <section class="panel profile">
+      <h2 id="cabTitle">Личный кабинет сотрудника</h2>
+      <div class="info-row"><span>Проект</span><b id="infoProject">GTA5RP</b></div>
+      <div class="info-row"><span>Путь</span><b id="infoPath">Госка</b></div>
+      <div class="info-row"><span>Организация</span><b id="infoOrg">Не выбрана</b></div>
+      <div class="info-row"><span>Текущий этап</span><b id="infoStage">Первичная настройка</b></div>
+
+      <div id="orgBox">
+        <h2 style="margin-top:20px">Выбор организации</h2>
+        <div class="org-picker" id="orgPicker"></div>
+        <div class="empty">После выбора организации ниже появится информация именно под неё.</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Прогресс</h2>
+      <div class="progress-wrap">
+        <div class="progress-line"><div class="progress-bar" id="progressBar"></div></div>
+        <p><b id="progressText">25%</b> — стартовый прогресс личного кабинета</p>
+        <div class="stages" id="stages"></div>
+      </div>
+    </section>
+  </main>
+
+  <section class="panel" style="margin-top:16px">
+    <h2>Достижения</h2>
+    <div class="section-grid" id="achievements"></div>
+  </section>
+
+  <section class="panel" style="margin-top:16px" id="infoPanel">
+    <h2 id="modulesTitle">Информация</h2>
+    <p id="modulesHint">Выбери организацию, чтобы открыть нужные карточки.</p>
+    <div class="section-grid" id="modules"></div>
+  </section>
 </div>
 
-<div class="box">
-<h1>Информация ARMY</h1>
-<p>После личного кабинета сразу начинается сама панель. Никакого отдельного «главного хаба» нет.</p>
+<script>
+const KEY = "rp_panel_v77_clean_start_reset";
+const orgs = {
+  "Госка": ["ARMY","LSPD","LSSD","FIB","EMS","GOV","USSS","PRISON","Weazel News"],
+  "Крайм": ["Семья","Банда","Мафия","Картель","Нелегал","Общие правила крайма"]
+};
+const modules = {
+  "ARMY": ["Академия","КПП","Тен-коды","Повышение","Устав","Подразделения","USAF","Воздушный транспорт","Шпаргалки"],
+  "LSPD": ["Патруль","Коды","Процесс задержания","Доклады","Шпаргалки"],
+  "LSSD": ["Патруль","Юрисдикция","Коды","Доклады","Шпаргалки"],
+  "FIB": ["Процедуры","Ордера","Рация","Операции","Шпаргалки"],
+  "EMS": ["Вызовы","Лечение","Доклады","Правила","Шпаргалки"],
+  "GOV": ["Заявления","Законы","Должности","Документы","Шпаргалки"],
+  "USSS": ["Охрана","Сопровождение","Первые лица","Доклады","Шпаргалки"],
+  "PRISON": ["Посты","Конвой","Доклады","Правила","Шпаргалки"],
+  "Weazel News": ["Эфиры","Объявления","Интервью","Правила","Шпаргалки"],
+  "Семья": ["Правила семьи","Роли","Ситуации","Шпаргалки"],
+  "Банда": ["Правила банды","Районы","Ситуации","Шпаргалки"],
+  "Мафия": ["Правила мафии","Дипломатия","Ситуации","Шпаргалки"],
+  "Картель": ["Структура","Ситуации","Шпаргалки"],
+  "Нелегал": ["Общие правила","Риски","Шпаргалки"],
+  "Общие правила крайма": ["Похищения","Ограбления","Войны","Ситуации"]
+};
+let state = {
+  ready:false,
+  name:"",
+  avatar:"🪖",
+  project:"GTA5RP",
+  path:"Госка",
+  org:"",
+  openedModules:[]
+};
+function $(s){return document.querySelector(s)}
+function save(){localStorage.setItem(KEY, JSON.stringify(state))}
+function load(){
+  try{
+    const data = JSON.parse(localStorage.getItem(KEY));
+    if(data) state = Object.assign(state,data);
+  }catch(e){}
+}
+function applyTheme(){
+  document.body.classList.toggle("ready", !!state.ready);
+  document.body.classList.toggle("gov", state.path === "Госка");
+  document.body.classList.toggle("crime", state.path === "Крайм");
+}
+function render(){
+  applyTheme();
+  $("#cabAvatar").textContent = state.avatar;
+  $("#cabName").textContent = state.name || "Игрок";
+  $("#cabPath").textContent = `${state.project} › ${state.path} › ${state.org || "организация не выбрана"}`;
+  $("#infoProject").textContent = state.project;
+  $("#infoPath").textContent = state.path;
+  $("#infoOrg").textContent = state.org || "Не выбрана";
+  $("#cabTitle").textContent = state.path === "Госка" ? "Личный кабинет сотрудника" : "Личный кабинет участника";
+  $("#infoStage").textContent = state.org ? "Раздел выбран" : "Выбор организации";
 
-<div class="cards">
-<div class="item">📖 Академия</div>
-<div class="item">🎖 Повышение</div>
-<div class="item">📡 Тен-коды</div>
-<div class="item">🚧 КПП</div>
-<div class="item">✈️ USAF</div>
-<div class="item">🛡 Устав</div>
-<div class="item">📂 Подразделения</div>
-<div class="item">📝 Шпаргалки</div>
-<div class="item">🚁 Воздушный транспорт</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+  renderOrg();
+  renderProgress();
+  renderAchievements();
+  renderModules();
+}
+function renderOrg(){
+  const box = $("#orgPicker");
+  box.innerHTML = "";
+  orgs[state.path].forEach(org=>{
+    const btn = document.createElement("button");
+    btn.className = "org-card" + (state.org === org ? " active" : "");
+    btn.textContent = org;
+    btn.onclick = () => {
+      state.org = org;
+      if(!state.openedModules) state.openedModules = [];
+      save();
+      render();
+    };
+    box.appendChild(btn);
+  });
+}
+function progressValue(){
+  let p = 25;
+  if(state.org) p += 25;
+  if((state.openedModules||[]).length > 0) p += 20;
+  if((state.openedModules||[]).length >= 3) p += 15;
+  if((state.openedModules||[]).length >= 6) p += 15;
+  return Math.min(100,p);
+}
+function renderProgress(){
+  const p = progressValue();
+  $("#progressBar").style.width = p + "%";
+  $("#progressText").textContent = p + "%";
+  const data = [
+    ["Профиль", true],
+    ["Путь", true],
+    ["Организация", !!state.org],
+    ["Инфа", (state.openedModules||[]).length > 0],
+    ["Активность", (state.openedModules||[]).length >= 3],
+    ["Освоение", (state.openedModules||[]).length >= 6]
+  ];
+  $("#stages").innerHTML = data.map(([t,d])=>`<div class="stage ${d?'done':''}">${d?'✓':'○'} ${t}</div>`).join("");
+}
+function renderAchievements(){
+  const opened = state.openedModules || [];
+  const ach = [
+    ["🟢","Первый вход","Создал профиль", true],
+    ["🧭","Выбор пути",`Выбрал: ${state.path}`, true],
+    [state.path==="Госка"?"🏛️":"🕶️","Направление","Определился с направлением", true],
+    ["⭐","Организация",state.org ? `Выбрал ${state.org}` : "Выбери организацию", !!state.org],
+    ["📖","Первый раздел","Открой любую карточку информации", opened.length>0],
+    ["🏆","Освоение","Открой 3 раздела информации", opened.length>=3],
+    ["🔥","Полный старт","Открой 6 разделов информации", opened.length>=6],
+  ];
+  $("#achievements").innerHTML = ach.map(a=>`
+    <div class="achievement ${a[3]?'':'locked'}">
+      <div style="font-size:28px">${a[0]}</div>
+      <strong>${a[1]}</strong>
+      <span>${a[2]}</span>
+    </div>`).join("");
+}
+function renderModules(){
+  const list = modules[state.org] || [];
+  $("#modulesTitle").textContent = state.org ? `Информация — ${state.org}` : "Информация";
+  $("#modulesHint").textContent = state.org ? "Карточки пока пустые, но активные. При открытии засчитываются в прогресс и достижения." : "Выбери организацию, чтобы открыть нужные карточки.";
+  $("#modules").innerHTML = list.map(name=>{
+    const opened = (state.openedModules||[]).includes(name);
+    return `<div class="module" data-module="${name}">
+      <div style="font-size:28px">${opened?'🏆':'📌'}</div>
+      <strong>${name}</strong>
+      <span>${opened?'Открыто и засчитано':'Нажми, чтобы открыть и засчитать'}</span>
+    </div>`;
+  }).join("");
+  document.querySelectorAll(".module").forEach(el=>{
+    el.onclick = () => {
+      const name = el.dataset.module;
+      if(!state.openedModules) state.openedModules = [];
+      if(!state.openedModules.includes(name)) state.openedModules.push(name);
+      save();
+      render();
+    };
+  });
+}
+$("#startBtn").onclick = () => {
+  const name = $("#firstName").value.trim();
+  if(!name){
+    $("#firstError").classList.add("show");
+    return;
+  }
+  $("#firstError").classList.remove("show");
+  state.ready = true;
+  state.name = name;
+  state.avatar = document.querySelector("input[name='avatar']:checked").value;
+  state.project = $("#firstProject").value;
+  state.path = document.querySelector("input[name='path']:checked").value;
+  state.org = "";
+  state.openedModules = [];
+  save();
+  render();
+};
+$("#resetBtn").onclick = () => {
+  localStorage.removeItem(KEY);
+  state = {ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",openedModules:[]};
+  render();
+};
+$("#changeOrgBtn").onclick = () => {
+  document.getElementById("orgBox").scrollIntoView({behavior:"smooth",block:"center"});
+};
+localStorage.removeItem("rp_panel_v76");
+localStorage.removeItem("rp_panel_v75");
+localStorage.removeItem("rp_clean_panel_v1");
+load();
+render();
+</script>
 </body>
 </html>
