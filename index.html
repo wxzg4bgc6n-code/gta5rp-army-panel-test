@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v120</title>
+<title>RP Cabinet v121</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1740,6 +1740,75 @@ body{
   grid-template-columns:1fr!important;
 }
 
+
+/* v121: последнее достижение вернули в профиль + профиль липкий при прокрутке */
+.profile-card{
+  position:sticky!important;
+  top:16px!important;
+  align-self:start!important;
+  max-height:calc(100vh - 32px)!important;
+  overflow:auto!important;
+  scrollbar-width:thin;
+}
+.profile-card::-webkit-scrollbar{
+  width:6px;
+}
+.profile-card::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.16);
+  border-radius:999px;
+}
+.last-ach-card{
+  display:block!important;
+  margin-top:14px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.09))!important;
+  border-radius:18px!important;
+  background:rgba(255,255,255,.035)!important;
+  padding:12px!important;
+}
+.last-ach-title{
+  color:color-mix(in srgb,var(--accent) 72%, white 18%)!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  margin-bottom:9px!important;
+}
+.last-ach-body{
+  display:grid!important;
+  grid-template-columns:42px 1fr!important;
+  gap:10px!important;
+  align-items:center!important;
+}
+.last-ach-body > span{
+  width:42px!important;
+  height:42px!important;
+  border-radius:14px!important;
+  display:grid!important;
+  place-items:center!important;
+  background:rgba(255,255,255,.045)!important;
+  border:1px solid color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.08))!important;
+  font-size:22px!important;
+}
+.last-ach-body b{
+  display:block!important;
+  font-size:13px!important;
+}
+.last-ach-body small{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:11px!important;
+  margin-top:3px!important;
+}
+.account-progress-card{
+  display:none!important;
+}
+@media(max-width:900px){
+  .profile-card{
+    position:relative!important;
+    top:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1991,7 +2060,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v120_no_account_level_direction_emblem';
+const VERSION_KEY='rp_panel_v121_sticky_profile_last_achievement';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
