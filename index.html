@@ -435,6 +435,175 @@ input:focus,select:focus,textarea:focus{
   .org-change-btn{width:100%}
 }
 
+
+/* v79: профиль с авой + прогрессом, отдельный прогресс службы после выбора организации */
+.profile-main-card{
+  display:grid;
+  grid-template-columns:82px minmax(0,1fr);
+  gap:14px;
+  align-items:center;
+  padding:14px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:20px;
+  background:rgba(255,255,255,.04);
+  margin-bottom:14px;
+}
+.profile-main-card .big-avatar{
+  width:82px;
+  height:82px;
+  border-radius:24px;
+  display:grid;
+  place-items:center;
+  font-size:42px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  box-shadow:0 0 34px var(--themeGlow);
+}
+.profile-main-card h2{margin:0 0 5px!important}
+.profile-main-card p{font-size:13px}
+.profile-mini-progress{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:76px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+}
+.profile-mini-ring{
+  width:76px;
+  height:76px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:conic-gradient(var(--accent) calc(var(--p)*1%), rgba(255,255,255,.08) 0);
+  position:relative;
+}
+.profile-mini-ring::before{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border-radius:50%;
+  background:#0a0d16;
+  border:1px solid rgba(255,255,255,.09);
+}
+.profile-mini-ring b{
+  position:relative;
+  font-size:17px;
+  letter-spacing:-.05em;
+}
+.profile-ach-row{
+  margin-top:10px;
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+.profile-ach-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.045);
+  border-radius:999px;
+  padding:6px 8px;
+  font-size:12px;
+  color:var(--muted);
+  font-weight:850;
+}
+.service-setup{
+  margin-top:14px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:20px;
+  background:rgba(255,255,255,.04);
+  padding:14px;
+}
+.service-setup h3{margin:0 0 10px}
+.service-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.service-grid .field{min-width:0}
+.service-progress-card{
+  margin-top:16px;
+  border:1px solid color-mix(in srgb,var(--accent) 40%, white 0%);
+  border-radius:24px;
+  background:linear-gradient(135deg,var(--themeGlow),rgba(255,255,255,.035));
+  padding:16px;
+}
+.service-progress-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  margin-bottom:14px;
+}
+.service-progress-head h2{margin:0}
+.service-progress-layout{
+  display:grid;
+  grid-template-columns:170px minmax(0,1fr);
+  gap:16px;
+  align-items:center;
+}
+.service-ring{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:conic-gradient(var(--accent) calc(var(--p)*1%), rgba(255,255,255,.08) 0);
+  position:relative;
+  box-shadow:0 0 42px var(--themeGlow);
+}
+.service-ring::before{
+  content:"";
+  position:absolute;
+  inset:13px;
+  border-radius:50%;
+  background:#0a0d16;
+  border:1px solid rgba(255,255,255,.10);
+}
+.service-ring-content{position:relative;text-align:center}
+.service-ring-content b{display:block;font-size:38px;line-height:1;letter-spacing:-.06em}
+.service-ring-content span{font-size:12px;color:var(--muted);font-weight:900}
+.service-path{
+  display:grid;
+  gap:8px;
+}
+.service-step{
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(0,0,0,.16);
+  border-radius:14px;
+  padding:10px 11px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:850;
+}
+.service-step.done{
+  color:var(--text);
+  border-color:color-mix(in srgb,var(--accent) 55%, white 0%);
+  background:var(--themeGlow);
+}
+.service-achievements{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin-top:14px;
+}
+.service-ach{
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:15px;
+  background:rgba(0,0,0,.16);
+  padding:11px;
+  text-align:center;
+}
+.service-ach.locked{opacity:.42;filter:saturate(.35)}
+.service-ach div{font-size:24px}
+.service-ach span{display:block;margin-top:5px;color:var(--muted);font-size:12px;font-weight:850}
+@media(max-width:760px){
+  .profile-main-card,.profile-mini-progress,.service-progress-layout{grid-template-columns:1fr}
+  .profile-main-card .big-avatar,.profile-mini-ring,.service-ring{margin:auto}
+  .service-grid,.service-achievements{grid-template-columns:1fr}
+  .service-progress-head{flex-direction:column}
+}
+
 </style>
 </head>
 <body>
@@ -501,16 +670,75 @@ input:focus,select:focus,textarea:focus{
 
   <main class="hero">
     <section class="panel profile">
-      <h2 id="cabTitle">Личный кабинет сотрудника</h2>
-      <div class="info-row"><span>Проект</span><b id="infoProject">GTA5RP</b></div>
-      <div class="info-row"><span>Путь</span><b id="infoPath">Госка</b></div>
-      <div class="info-row"><span>Организация</span><b id="infoOrg">Не выбрана</b></div>
-      <div class="info-row"><span>Текущий этап</span><b id="infoStage">Первичная настройка</b></div>
+      <div class="profile-main-card">
+        <div class="big-avatar" id="profileBigAvatar">🪖</div>
+        <div>
+          <h2 id="cabTitle">Личный кабинет сотрудника</h2>
+          <p id="profileSubline">GTA5RP › Госка › организация не выбрана</p>
+          <div class="profile-mini-progress">
+            <div class="profile-mini-ring" id="profileMiniRing" style="--p:25"><b id="profileMiniPercent">25%</b></div>
+            <div>
+              <div class="info-row"><span>Проект</span><b id="infoProject">GTA5RP</b></div>
+              <div class="info-row"><span>Путь</span><b id="infoPath">Госка</b></div>
+              <div class="info-row"><span>Организация</span><b id="infoOrg">Не выбрана</b></div>
+              <div class="info-row"><span>Текущий этап</span><b id="infoStage">Первичная настройка</b></div>
+            </div>
+          </div>
+          <div class="profile-ach-row" id="profileAchChips"></div>
+        </div>
+      </div>
 
       <div id="orgBox">
         <h2 style="margin-top:20px">Выбор организации</h2>
         <div class="org-picker" id="orgPicker"></div>
         <div class="empty">После выбора организации ниже появится информация именно под неё.</div>
+      </div>
+
+      <div class="service-setup" id="serviceSetup" style="display:none">
+        <h3>Этап внутри организации</h3>
+        <div class="service-grid">
+          <label class="field">
+            <span>Где ты сейчас</span>
+            <select id="serviceStage">
+              <option value="academy">Академия</option>
+              <option value="department">В отделе</option>
+              <option value="senior">Старший состав</option>
+            </select>
+          </label>
+          <label class="field" id="academyLevelField">
+            <span>Уровень Академии</span>
+            <select id="academyLevel">
+              <option value="start">Начал Академию</option>
+              <option value="kpp">Готовлю КПП</option>
+              <option value="exam">Сдаю тесты</option>
+              <option value="promotion">Готов к повышению</option>
+            </select>
+          </label>
+          <label class="field" id="departmentField">
+            <span>Отдел</span>
+            <select id="departmentSelect">
+              <option value="USAF">USAF</option>
+              <option value="MP">MP</option>
+              <option value="DF">DF</option>
+              <option value="SD">SD</option>
+              <option value="RAP">RAP</option>
+              <option value="SAS">SAS</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Текущий ранг / уровень</span>
+            <select id="rankLevel">
+              <option value="1">1 — старт</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6+</option>
+              <option value="10">10+</option>
+              <option value="14">14+</option>
+            </select>
+          </label>
+        </div>
       </div>
     </section>
 
@@ -530,6 +758,28 @@ input:focus,select:focus,textarea:focus{
       </div>
     </section>
   </main>
+
+  <section class="service-progress-card" id="serviceProgressCard" style="display:none">
+    <div class="service-progress-head">
+      <div>
+        <h2>Прогресс службы</h2>
+        <p id="serviceProgressHint">Отдельный прогресс появляется после выбора организации и этапа.</p>
+      </div>
+      <button class="small-btn" id="saveServiceBtn">Сохранить этап</button>
+    </div>
+    <div class="service-progress-layout">
+      <div class="service-ring" id="serviceRing" style="--p:0">
+        <div class="service-ring-content">
+          <b id="servicePercent">0%</b>
+          <span>служба</span>
+        </div>
+      </div>
+      <div>
+        <div class="service-path" id="servicePath"></div>
+        <div class="service-achievements" id="serviceAchievements"></div>
+      </div>
+    </div>
+  </section>
 
   <section class="panel" style="margin-top:16px">
     <h2>Достижения</h2>
@@ -590,7 +840,8 @@ let state = {
   path:"Госка",
   org:"",
   openedModules:[],
-  orgChanging:false
+  orgChanging:false,
+  service:{stage:"academy",academyLevel:"start",department:"USAF",rank:"1"}
 };
 function $(s){return document.querySelector(s)}
 function save(){localStorage.setItem(KEY, JSON.stringify(state))}
@@ -610,6 +861,8 @@ function render(){
   $("#cabAvatar").textContent = state.avatar;
   $("#cabName").textContent = state.name || "Игрок";
   $("#cabPath").textContent = `${state.project} › ${state.path} › ${state.org || "организация не выбрана"}`;
+  $("#profileSubline").textContent = `${state.project} › ${state.path} › ${state.org || "организация не выбрана"}`;
+  $("#profileBigAvatar").textContent = state.avatar;
   $("#infoProject").textContent = state.project;
   $("#infoPath").textContent = state.path;
   $("#infoOrg").textContent = state.org || "Не выбрана";
@@ -617,8 +870,10 @@ function render(){
   $("#infoStage").textContent = state.org ? "Раздел выбран" : "Выбор организации";
 
   renderOrg();
+  renderServiceSetup();
   renderProgress();
   renderAchievements();
+  renderServiceProgress();
   renderModules();
 }
 function renderOrg(){
@@ -680,7 +935,11 @@ function renderProgress(){
   const p = progressValue();
   const ring = $("#ringProgress");
   if(ring) ring.style.setProperty("--p", p);
+  const miniRing = $("#profileMiniRing");
+  if(miniRing) miniRing.style.setProperty("--p", p);
   $("#progressText").textContent = p + "%";
+  const miniPercent = $("#profileMiniPercent");
+  if(miniPercent) miniPercent.textContent = p + "%";
   const data = [
     ["Профиль", true],
     ["Путь", true],
@@ -725,6 +984,90 @@ function renderAchievements(){
         <span>${a[1]}</span>
       </div>`).join("");
   }
+  const chips = $("#profileAchChips");
+  if(chips){
+    chips.innerHTML = ach.filter(a=>a[3]).slice(0,4).map(a=>`<span class="profile-ach-chip">${a[0]} ${a[1]}</span>`).join("");
+  }
+}
+
+function renderServiceSetup(){
+  const visible = state.org === "ARMY";
+  const setup = $("#serviceSetup");
+  if(setup) setup.style.display = visible ? "block" : "none";
+  const card = $("#serviceProgressCard");
+  if(card) card.style.display = visible ? "block" : "none";
+  if(!visible) return;
+  if(!state.service) state.service = {stage:"academy",academyLevel:"start",department:"USAF",rank:"1"};
+  $("#serviceStage").value = state.service.stage || "academy";
+  $("#academyLevel").value = state.service.academyLevel || "start";
+  $("#departmentSelect").value = state.service.department || "USAF";
+  $("#rankLevel").value = state.service.rank || "1";
+  const isAcademy = (state.service.stage || "academy") === "academy";
+  $("#academyLevelField").style.display = isAcademy ? "grid" : "none";
+  $("#departmentField").style.display = isAcademy ? "none" : "grid";
+}
+function servicePercent(){
+  if(state.org !== "ARMY") return 0;
+  const s = state.service || {};
+  let p = 15;
+  const rank = Number(s.rank || 1);
+  if(s.stage === "academy"){
+    const levels = {start:25,kpp:40,exam:55,promotion:70};
+    p = levels[s.academyLevel || "start"] || 25;
+  } else if(s.stage === "department"){
+    p = 70 + Math.min(20, rank * 2);
+  } else if(s.stage === "senior"){
+    p = 92 + (rank >= 14 ? 8 : 0);
+  }
+  return Math.min(100,p);
+}
+function renderServiceProgress(){
+  const card = $("#serviceProgressCard");
+  if(!card || state.org !== "ARMY") return;
+  const p = servicePercent();
+  $("#serviceRing").style.setProperty("--p", p);
+  $("#servicePercent").textContent = p + "%";
+  const s = state.service || {};
+  let label = "Академия";
+  if(s.stage === "department") label = "Отдел " + (s.department || "USAF");
+  if(s.stage === "senior") label = "Старший состав";
+  $("#serviceProgressHint").textContent = `${state.org} › ${label} › ранг/уровень ${s.rank || "1"}`;
+  $("#infoStage").textContent = label;
+
+  const steps = [
+    ["Профиль создан", true],
+    ["Организация выбрана", !!state.org],
+    ["Академия начата", state.org === "ARMY"],
+    ["КПП/база", p >= 40],
+    ["Тесты/повышение", p >= 55],
+    ["Отдел", s.stage === "department" || s.stage === "senior"],
+    ["Старший состав", s.stage === "senior"],
+  ];
+  $("#servicePath").innerHTML = steps.map(([t,d])=>`<div class="service-step ${d?'done':''}">${d?'✓':'○'} ${t}</div>`).join("");
+
+  const ach = [
+    ["🪖","Боец ARMY", state.org==="ARMY"],
+    ["📚","Курсант", state.org==="ARMY" && s.stage==="academy"],
+    ["🚧","КПП", p>=40],
+    ["📝","Тесты", p>=55],
+    ["🎖","Повышение", p>=70],
+    ["✈️","Отдел", s.stage==="department" || s.stage==="senior"],
+    ["⭐","Старший", s.stage==="senior"],
+    ["🏆","Путь ARMY", p>=100],
+  ];
+  $("#serviceAchievements").innerHTML = ach.map(a=>`
+    <div class="service-ach ${a[2]?'':'locked'}">
+      <div>${a[0]}</div><span>${a[1]}</span>
+    </div>`).join("");
+}
+function saveServiceFromForm(){
+  if(!state.service) state.service = {};
+  state.service.stage = $("#serviceStage").value;
+  state.service.academyLevel = $("#academyLevel").value;
+  state.service.department = $("#departmentSelect").value;
+  state.service.rank = $("#rankLevel").value;
+  save();
+  render();
 }
 function renderModules(){
   const list = modules[state.org] || [];
@@ -768,7 +1111,7 @@ $("#startBtn").onclick = () => {
 };
 $("#resetBtn").onclick = () => {
   localStorage.removeItem(KEY);
-  state = {ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",openedModules:[],orgChanging:false};
+  state = {ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",openedModules:[],orgChanging:false,service:{stage:"academy",academyLevel:"start",department:"USAF",rank:"1"}};
   render();
 };
 $("#changeOrgBtn").onclick = () => {
@@ -777,6 +1120,11 @@ $("#changeOrgBtn").onclick = () => {
   render();
   document.getElementById("orgBox").scrollIntoView({behavior:"smooth",block:"center"});
 };
+$("#saveServiceBtn").onclick = saveServiceFromForm;
+["serviceStage","academyLevel","departmentSelect","rankLevel"].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.onchange = saveServiceFromForm;
+});
 $("#openAchievements").onclick = () => $("#achModal").classList.add("open");
 $("#closeAchievements").onclick = () => $("#achModal").classList.remove("open");
 $("#achModal").onclick = (e) => {
