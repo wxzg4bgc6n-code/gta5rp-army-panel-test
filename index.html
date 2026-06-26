@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v121</title>
+<title>RP Cabinet v122</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1809,6 +1809,73 @@ body{
   }
 }
 
+
+/* v122: значок профиля выбирается из открытых достижений */
+.profile-achievement-icon{
+  cursor:pointer!important;
+  border:none;
+}
+.profile-achievement-icon:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.08);
+}
+.profile-achievement-icon #rankIcon{
+  font-size:48px!important;
+}
+.profile-achievement-icon #rankTier{
+  min-width:30px!important;
+  height:24px!important;
+  font-size:12px!important;
+}
+.profile-icon-modal-card{
+  width:min(720px,100%);
+}
+.profile-icon-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-top:16px;
+}
+.profile-icon-choice{
+  min-height:116px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:12px;
+}
+.profile-icon-choice:hover,
+.profile-icon-choice.active{
+  border-color:color-mix(in srgb,var(--accent) 56%, white 0%);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 12%, rgba(255,255,255,.035)),rgba(255,255,255,.035));
+}
+.profile-icon-choice .icon{
+  font-size:32px;
+  margin-bottom:7px;
+}
+.profile-icon-choice b{
+  display:block;
+  font-size:12px;
+  line-height:1.2;
+}
+.profile-icon-empty{
+  grid-column:1/-1;
+  border:1px dashed rgba(255,255,255,.15);
+  border-radius:18px;
+  padding:18px;
+  color:var(--muted);
+  text-align:center;
+  background:rgba(255,255,255,.025);
+}
+@media(max-width:700px){
+  .profile-icon-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1851,10 +1918,10 @@ body{
     <aside class="panel profile-card">
       <div class="profile-head">
         <div class="avatar-wrap">
-          <div class="initial rank-emblem clean-rank-emblem" id="profileInitial">
-            <span id="rankIcon">👤</span>
-            <small id="rankTier">RP</small>
-          </div>
+          <button class="initial rank-emblem clean-rank-emblem profile-achievement-icon" id="profileInitial" title="Изменить значок профиля">
+            <span id="rankIcon">＋</span>
+            <small id="rankTier">✎</small>
+          </button>
         </div>
         <h2 id="profileName">Игрок</h2>
         <p id="profilePath">GTA5RP › Госка</p>
@@ -1959,6 +2026,19 @@ body{
 
 
 
+
+<div class="modal" id="profileIconModal">
+  <div class="modal-card profile-icon-modal-card">
+    <h2>Значок профиля</h2>
+    <p>Можно поставить значок из уже открытых достижений.</p>
+    <div class="profile-icon-grid" id="profileIconGrid"></div>
+    <div class="modal-actions">
+      <button class="btn soft" id="clearProfileIcon">Убрать значок</button>
+      <button class="btn" id="closeProfileIcon">Закрыть</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="achievementsModal">
   <div class="modal-card achievements-modal">
     <h2>Коллекция достижений</h2>
@@ -2060,7 +2140,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v121_sticky_profile_last_achievement';
+const VERSION_KEY='rp_panel_v122_profile_icon_from_achievements';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -2457,8 +2537,71 @@ function renderDirectionEmblem(){
   if(title) title.textContent=d.title;
   if(sub) sub.textContent=d.sub;
 }
+
+function selectedProfileIconDef(){
+  const id=S.account && S.account.profileIconAchievementId;
+  if(!id) return null;
+  const got=achievements();
+  const def=ACHIEVEMENT_DEFS.find(a=>a.id===id);
+  return def && got[id] ? def : null;
+}
+function renderProfileIcon(){
+  const def=selectedProfileIconDef();
+  const icon=$('#rankIcon');
+  const tag=$('#rankTier');
+  if(!icon || !tag) return;
+  if(def){
+    icon.textContent=def.icon;
+    tag.textContent='✎';
+    $('#profileInitial').title=`Значок профиля: ${def.title}`;
+  }else{
+    icon.textContent='＋';
+    tag.textContent='✎';
+    $('#profileInitial').title='Выбрать значок профиля';
+  }
+}
+function openProfileIconModal(){
+  renderProfileIconModal();
+  $('#profileIconModal').classList.add('open');
+}
+function closeProfileIconModal(){
+  $('#profileIconModal').classList.remove('open');
+}
+function setProfileIcon(id){
+  if(!S.account) S.account={achievements:{}};
+  S.account.profileIconAchievementId=id;
+  save();
+  renderProfileIcon();
+  closeProfileIconModal();
+  showToast('Значок обновлён','Профиль изменён');
+}
+function clearProfileIcon(){
+  if(!S.account) S.account={achievements:{}};
+  delete S.account.profileIconAchievementId;
+  save();
+  renderProfileIcon();
+  renderProfileIconModal();
+}
+function renderProfileIconModal(){
+  const grid=$('#profileIconGrid');
+  if(!grid) return;
+  const got=achievements();
+  const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]);
+  if(!opened.length){
+    grid.innerHTML='<div class="profile-icon-empty">Достижений пока нет. Когда откроешь достижение, его значок можно будет поставить в профиль.</div>';
+    return;
+  }
+  const selected=S.account?.profileIconAchievementId||'';
+  grid.innerHTML=opened.map(a=>`<button class="profile-icon-choice ${selected===a.id?'active':''}" data-profile-icon="${a.id}">
+    <div><div class="icon">${a.icon}</div><b>${a.title}</b></div>
+  </button>`).join('');
+  document.querySelectorAll('[data-profile-icon]').forEach(btn=>{
+    btn.onclick=()=>setProfileIcon(btn.dataset.profileIcon);
+  });
+}
 function renderRankEmblem(){
   renderDirectionEmblem();
+  renderProfileIcon();
 }
 function unlockAchievement(id){
   const got=achievements();
@@ -2673,6 +2816,10 @@ $('#editLevelBtn').onclick=openLevelModal;
 $('#infoLevel').onclick=openLevelModal;
 $('#closeLevelModal').onclick=closeLevelModal;
 $('#saveLevelModal').onclick=saveLevelModal;
+$('#profileInitial').onclick=openProfileIconModal;
+$('#closeProfileIcon').onclick=closeProfileIconModal;
+$('#clearProfileIcon').onclick=clearProfileIcon;
+$('#profileIconModal').onclick=e=>{if(e.target.id==='profileIconModal')closeProfileIconModal()};
 $('#openAchievements').onclick=openAchievementsModal;
 const openHero=$('#openAchievementsHero'); if(openHero) openHero.onclick=openAchievementsModal;
 const openHeroMini=$('#openAchievementsHeroMini'); if(openHeroMini) openHeroMini.onclick=openAchievementsModal;
