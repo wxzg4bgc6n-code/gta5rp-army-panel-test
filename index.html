@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v102</title>
+<title>RP Cabinet v103</title>
 <style>
 :root{
   --bg:#02040a;
@@ -426,6 +426,69 @@ input:focus,select:focus{
   .level-row span{grid-column:1/-1}
 }
 
+
+/* v103: сохранение, одна общая рамка профиля и прогресса */
+.main{
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025)),rgba(18,23,35,.86);
+  box-shadow:var(--shadow);
+  padding:0;
+  overflow:hidden;
+  grid-template-columns:360px minmax(0,1fr)!important;
+  gap:0!important;
+}
+.profile-card{
+  position:relative!important;
+  top:auto!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  border-right:1px solid rgba(255,255,255,.10)!important;
+}
+.flow{
+  padding:20px;
+}
+.flow > .panel{
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+#progressStep{
+  min-height:100%;
+}
+.profile-head{
+  padding-top:10px;
+}
+#profilePath{
+  display:none!important;
+}
+#nextText{
+  display:none!important;
+}
+.task small{
+  display:none!important;
+}
+.task{
+  min-height:58px;
+  align-items:center;
+}
+.task span{
+  align-self:center;
+}
+@media(max-width:900px){
+  .main{
+    grid-template-columns:1fr!important;
+  }
+  .profile-card{
+    border-right:0!important;
+    border-bottom:1px solid rgba(255,255,255,.10)!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -503,7 +566,7 @@ input:focus,select:focus{
         <div class="progress-layout">
           <div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div>
           <div>
-            <p id="nextText">Отмечай выполненное — это прогресс до следующей ступени.</p>
+            <p id="nextText"></p>
             <div class="tasks" id="tasks" style="margin-top:12px"></div>
             <div class="next-box" id="nextBox">
               <strong>🏆 Повышение доступно</strong>
@@ -563,16 +626,12 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v102_level_edit_profile';
-const OLD_KEYS=[
- 'rp_panel_v83_clean_army_logic','rp_panel_v84_real_levels','rp_panel_v85_fixed_login_section_only',
- 'rp_panel_v86_smooth_progress','rp_panel_v87_auto_next_level','rp_panel_v88_theme_level_picker',
- 'rp_panel_v89_fresh_edit_project_levels','rp_panel_v90_fresh_theme_bg_level_picker',
- 'rp_panel_v91_clean_settings_themes_level','rp_panel_v92_no_info_theme_swatch_level',
- 'rp_panel_v93_info_removed_level_fixed','rp_panel_v94_true_fresh_start','rp_panel_v100_clean_base','rp_panel_v101_clean_flow_promotion'
+const KEY='rp_panel_v103_persist_unified';
+const FALLBACK_KEYS=[
+ 'rp_panel_v102_level_edit_profile',
+ 'rp_panel_v101_clean_flow_promotion',
+ 'rp_panel_v100_clean_base'
 ];
-OLD_KEYS.forEach(k=>localStorage.removeItem(k));
-
 const ORGS={
   'Госка':['ARMY','LSPD','LSSD','FIB','EMS','GOV','USSS','PRISON','Weazel News'],
   'Крайм':['Семья','Банда','Мафия','Картель','Нелегал']
@@ -616,7 +675,22 @@ let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
 
 function save(){localStorage.setItem(KEY,JSON.stringify(S))}
-function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}}
+function load(){
+  try{
+    let raw=localStorage.getItem(KEY);
+    if(!raw){
+      for(const key of FALLBACK_KEYS){
+        raw=localStorage.getItem(key);
+        if(raw) break;
+      }
+    }
+    const d=raw?JSON.parse(raw):null;
+    if(d){
+      S=Object.assign(S,d);
+      save();
+    }
+  }catch(e){}
+}
 function theme(){
   document.body.classList.toggle('ready',!!S.ready);
   ['style-arctic','style-emerald','style-violet','style-crimson','style-gold'].forEach(c=>document.body.classList.remove(c));
@@ -638,7 +712,7 @@ function render(){
   const path=[S.project,S.path,S.org,S.section].filter(Boolean).join(' › ');
   $('#profileInitial').textContent=(S.name||'R').slice(0,1).toUpperCase();
   $('#profileName').textContent=S.name||'Игрок';
-  $('#profilePath').textContent=path||`${S.project} › ${S.path}`;
+  $('#profilePath').textContent='';
   $('#infoProject').textContent=S.project;
   $('#infoPath').textContent=S.path;
   $('#infoOrg').textContent=S.org||'Нужно выбрать';
@@ -722,7 +796,7 @@ function renderProgress(){
 
   $('#tasks').innerHTML=tasks().map(t=>`<label class="task ${S.tasks[t]?'done':''}">
     <input type="checkbox" ${S.tasks[t]?'checked':''} data-task="${t}">
-    <span><b>${t}</b><small>Засчитывается в прогресс повышения.</small></span>
+    <span><b>${t}</b></span>
   </label>`).join('');
   document.querySelectorAll('[data-task]').forEach(input=>{
     input.onchange=()=>{
@@ -739,7 +813,7 @@ function renderProgress(){
   $('#nextLevelText').textContent=next?`Следующая ступень: ${next}`:'Это последняя ступень выбранного раздела.';
   $('#claimPromotion').style.display=next?'block':'none';
   $('#claimPromotion').onclick=()=>claimPromotion();
-  $('#nextText').textContent=p<100?'Отмечай выполненное — это прогресс до следующей ступени.':'Ступень закрыта. Можно перейти дальше.';
+  $('#nextText').textContent='';
 }
 
 function openLevelModal(){
