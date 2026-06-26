@@ -2605,6 +2605,30 @@ body{
   }
 }
 
+
+/* v133 profile alignment */
+.row{
+  grid-template-columns:120px 1fr 30px !important;
+}
+.row b{
+  justify-self:start !important;
+  text-align:left !important;
+}
+.mini-edit{
+  width:30px !important;
+  height:30px !important;
+  min-width:30px !important;
+  border-radius:8px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:0 !important;
+}
+.mini-edit::before{
+  font-size:13px !important;
+  line-height:1 !important;
+}
+
 </style>
 </head>
 <body>
@@ -2627,7 +2651,7 @@ body{
         <span>Путь</span>
         <div class="choice-grid">
           <label class="choice">
-            <input type="radio" name="path" value="Госка" checked>
+            <input type="radio" name="path" value="Государственная служба" checked>
             <div class="choice-card"><b>Госструктуры</b><span>служба и карьера</span></div>
           </label>
           <label class="choice">
@@ -2653,7 +2677,7 @@ body{
           </button>
         </div>
         <h2 id="profileName">Игрок</h2>
-        <p id="profilePath">GTA5RP › Госка</p>
+        <p id="profilePath">GTA5RP › Государственная служба</p>
       </div>
       <div class="profile-info">
         <div class="row"><span>Проект</span><b id="infoProject">—</b></div>
@@ -2851,7 +2875,7 @@ body{
     <div class="settings-grid">
       <label class="field"><span>Имя / ник</span><input id="settingsName" placeholder="Введи ник"></label>
       <label class="field"><span>Проект</span><select id="settingsProject"><option>GTA5RP</option><option>Majestic RP</option></select></label>
-      <label class="field"><span>Путь</span><select id="settingsPath"><option>Госка</option><option>Крайм</option></select></label>
+      <label class="field"><span>Путь</span><select id="settingsPath"><option>Государственная служба</option><option>Крайм</option></select></label>
       <label class="field">
         <span>Стиль панели</span>
         <div class="theme-cards" id="themeCards">
@@ -2885,7 +2909,7 @@ const FALLBACK_KEYS=[
  'rp_panel_v100_clean_base'
 ];
 const ORGS={
-  'Госка':['ARMY','LSPD','LSSD','FIB','EMS','GOV','USSS','PRISON','Weazel News'],
+  'Государственная служба':['ARMY','LSPD','LSSD','FIB','EMS','GOV','USSS','PRISON','Weazel News'],
   'Крайм':['Семья','Банда','Мафия','Картель','Нелегал']
 };
 const SECTIONS={
@@ -2987,7 +3011,7 @@ const ACHIEVEMENT_DEFS=[
 ];
 let activeAchCategory='Все';
 
-let S={ready:false,name:'',project:'GTA5RP',path:'Госка',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now()}};
+let S={ready:false,name:'',project:'GTA5RP',path:'Государственная служба',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now()}};
 let displayedProgress=0;
 let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
@@ -3042,7 +3066,7 @@ function theme(){
   ['style-arctic','style-emerald','style-violet','style-crimson','style-gold'].forEach(c=>document.body.classList.remove(c));
   document.body.classList.add(S.style||'style-arctic');
 }
-function sections(){return SECTIONS[S.org] || (S.path==='Госка'?SECTIONS.defaultGov:SECTIONS.defaultCrime)}
+function sections(){return SECTIONS[S.org] || (S.path==='Государственная служба'?SECTIONS.defaultGov:SECTIONS.defaultCrime)}
 function levels(){return LEVELS[S.section] || LEVELS.default}
 function tasks(){
   if(PROMO_TASKS[S.section] && PROMO_TASKS[S.section][S.level]) return PROMO_TASKS[S.section][S.level];
@@ -3200,7 +3224,7 @@ function renderProgress(){
 
 
 function modalSectionsForOrg(org){
-  return SECTIONS[org] || (S.path==='Госка'?SECTIONS.defaultGov:SECTIONS.defaultCrime);
+  return SECTIONS[org] || (S.path==='Государственная служба'?SECTIONS.defaultGov:SECTIONS.defaultCrime);
 }
 function modalLevelsForSection(section){
   return LEVELS[section] || LEVELS.default;
@@ -3309,7 +3333,7 @@ function directionInfo(){
   if(S.section==='Academy') return {icon:'🎓',tag:'AC',title:'Academy',sub:'Академия и подготовка'};
   if(S.org==='ARMY') return {icon:'🪖',tag:'ARMY',title:'ARMY',sub:S.section?`Текущий раздел: ${S.section}`:'Военная организация'};
   if(S.path==='Крайм') return {icon:'🕶️',tag:'CR',title:'Крайм',sub:S.org||'Криминальный путь'};
-  if(S.path==='Госка') return {icon:'🏛️',tag:'GOV',title:'Госструктуры',sub:S.org||'Государственный путь'};
+  if(S.path==='Государственная служба') return {icon:'🏛️',tag:'GOV',title:'Госструктуры',sub:S.org||'Государственный путь'};
   return {icon:'👤',tag:'RP',title:'RP-профиль',sub:'Выбери направление'};
 }
 function renderDirectionEmblem(){
@@ -3420,7 +3444,7 @@ function checkAchievements(){
   if(!S.account.finishedSections) S.account.finishedSections={};
 
   unlockAchievement('profile_created');
-  if(S.path==='Госка') unlockAchievement('path_gov');
+  if(S.path==='Государственная служба') unlockAchievement('path_gov');
   if(S.path==='Крайм') unlockAchievement('path_crime');
   if(S.project==='GTA5RP') unlockAchievement('project_gta5rp');
   if(S.project==='Majestic RP') unlockAchievement('project_majestic');
