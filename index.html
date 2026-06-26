@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v101</title>
+<title>RP Cabinet v102</title>
 <style>
 :root{
   --bg:#02040a;
@@ -392,6 +392,40 @@ input:focus,select:focus{
   margin-top:16px;
 }
 
+
+/* v102: ручной выбор ступени перенесён в профиль */
+.level-row{
+  grid-template-columns:112px 1fr 38px;
+  align-items:center;
+}
+.mini-edit{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.055);
+  color:var(--text);
+  font-weight:950;
+  display:none;
+}
+.mini-edit.show{
+  display:block;
+}
+.mini-edit:hover{
+  border-color:color-mix(in srgb,var(--accent) 48%, white 0%);
+  background:color-mix(in srgb,var(--accent) 10%, transparent);
+}
+#infoLevel{
+  cursor:pointer;
+}
+.level-modal-card{
+  width:min(560px,100%);
+}
+@media(max-width:620px){
+  .level-row{grid-template-columns:1fr 38px}
+  .level-row span{grid-column:1/-1}
+}
+
 </style>
 </head>
 <body>
@@ -442,7 +476,7 @@ input:focus,select:focus{
         <div class="row"><span>Путь</span><b id="infoPath">—</b></div>
         <div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать</b></div>
         <div class="row"><span>Раздел</span><b id="infoSection">—</b></div>
-        <div class="row"><span>Ступень</span><b id="infoLevel">—</b></div>
+        <div class="row level-row"><span>Ступень</span><b id="infoLevel">—</b><button class="mini-edit" id="editLevelBtn" title="Изменить ступень">✎</button></div>
       </div>
       <div class="ach-strip" id="achievements"></div>
       <button class="btn soft profile-settings" id="openSettings">Настройки профиля</button>
@@ -478,14 +512,27 @@ input:focus,select:focus{
             </div>
           </div>
         </div>
-
-        <div class="level-picker">
-          <label class="field"><span>Выбрать ступень вручную</span><select id="manualLevelSelect"></select></label>
-
-        </div>
-      </div>
+</div>
     </section>
   </main>
+</div>
+
+
+<div class="modal" id="levelModal">
+  <div class="modal-card level-modal-card">
+    <h2>Изменить ступень</h2>
+    <p>Выбери нужную ступень вручную. Задачи прогресса обновятся под выбранный уровень.</p>
+    <div class="settings-grid">
+      <label class="field">
+        <span>Ступень</span>
+        <select id="modalLevelSelect"></select>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn soft" id="closeLevelModal">Отмена</button>
+      <button class="btn" id="saveLevelModal">Сохранить ступень</button>
+    </div>
+  </div>
 </div>
 
 <div class="modal" id="settingsModal">
@@ -516,13 +563,13 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v101_clean_flow_promotion';
+const KEY='rp_panel_v102_level_edit_profile';
 const OLD_KEYS=[
  'rp_panel_v83_clean_army_logic','rp_panel_v84_real_levels','rp_panel_v85_fixed_login_section_only',
  'rp_panel_v86_smooth_progress','rp_panel_v87_auto_next_level','rp_panel_v88_theme_level_picker',
  'rp_panel_v89_fresh_edit_project_levels','rp_panel_v90_fresh_theme_bg_level_picker',
  'rp_panel_v91_clean_settings_themes_level','rp_panel_v92_no_info_theme_swatch_level',
- 'rp_panel_v93_info_removed_level_fixed','rp_panel_v94_true_fresh_start','rp_panel_v100_clean_base'
+ 'rp_panel_v93_info_removed_level_fixed','rp_panel_v94_true_fresh_start','rp_panel_v100_clean_base','rp_panel_v101_clean_flow_promotion'
 ];
 OLD_KEYS.forEach(k=>localStorage.removeItem(k));
 
@@ -597,6 +644,7 @@ function render(){
   $('#infoOrg').textContent=S.org||'Нужно выбрать';
   $('#infoSection').textContent=S.configured?(S.section||'—'):'—';
   $('#infoLevel').textContent=S.configured?(S.level||'—'):'—';
+  $('#editLevelBtn').classList.toggle('show',!!S.configured);
 
   $('#orgStep').classList.toggle('show',!S.org);
   $('#setupStep').classList.toggle('show',!!S.org && !S.configured);
@@ -685,7 +733,6 @@ function renderProgress(){
     };
   });
 
-  renderManualLevelPicker();
 
   const next=nextLevel();
   $('#nextBox').classList.toggle('show',p>=100);
@@ -694,19 +741,21 @@ function renderProgress(){
   $('#claimPromotion').onclick=()=>claimPromotion();
   $('#nextText').textContent=p<100?'Отмечай выполненное — это прогресс до следующей ступени.':'Ступень закрыта. Можно перейти дальше.';
 }
-function renderManualLevelPicker(){
-  const select=$('#manualLevelSelect');
-  if(!select || !S.section || !S.configured) return;
+
+function openLevelModal(){
+  if(!S.org || !S.section || !S.level || !S.configured) return;
+  const select=$('#modalLevelSelect');
   const list=levels();
   select.innerHTML=list.map(v=>`<option value="${v}" ${S.level===v?'selected':''}>${v}</option>`).join('');
-  select.onchange=()=>{
-    S.level=select.value;
-    S.tasks={};
-    displayedProgress=0;
-    save();
-    render();
-    showToast('Ступень изменена','Задачи обновлены');
-  };
+  $('#levelModal').classList.add('open');
+}
+function closeLevelModal(){
+  $('#levelModal').classList.remove('open');
+}
+function saveLevelModal(){
+  const selected=$('#modalLevelSelect').value;
+  if(selected) setLevel(selected);
+  closeLevelModal();
 }
 function setLevel(level){
   S.level=level;
@@ -793,10 +842,15 @@ $('#saveSetup').onclick=()=>{
   render();
 };
 
+$('#editLevelBtn').onclick=openLevelModal;
+$('#infoLevel').onclick=openLevelModal;
+$('#closeLevelModal').onclick=closeLevelModal;
+$('#saveLevelModal').onclick=saveLevelModal;
 $('#openSettings').onclick=openSettings;
 $('#closeSettings').onclick=closeSettings;
 $('#saveSettings').onclick=saveSettings;
 $('#settingsModal').onclick=e=>{if(e.target.id==='settingsModal')closeSettings()};
+$('#levelModal').onclick=e=>{if(e.target.id==='levelModal')closeLevelModal()};
 document.querySelectorAll('.theme-card').forEach(card=>{
   card.onclick=()=>{
     document.querySelectorAll('.theme-card').forEach(c=>c.classList.remove('active'));
