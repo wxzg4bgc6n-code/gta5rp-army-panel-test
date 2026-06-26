@@ -9,12 +9,87 @@
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:#000;color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 50% 8%,rgba(116,168,255,.15),transparent 28%),radial-gradient(circle at 82% 82%,rgba(178,140,255,.12),transparent 34%),linear-gradient(180deg,#02040a,#000)}body.gov{--accent:var(--cyan);--accent2:var(--blue);--glow:rgba(103,232,255,.17)}body.crime{--accent:var(--red);--accent2:var(--purple);--glow:rgba(255,102,136,.17)}
 button,input,select{font:inherit}button{cursor:pointer}body.ready .start-screen{display:none}body:not(.ready) .app{display:none}.start-screen{min-height:100vh;display:grid;place-items:center;padding:18px}.start-card{width:min(650px,100%);border:1px solid var(--line);border-radius:34px;background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.025)),rgba(7,10,18,.92);box-shadow:var(--shadow);padding:28px}.kicker{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(103,232,255,.25);border-radius:999px;background:rgba(103,232,255,.08);padding:8px 11px;font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}.kicker:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(118,243,197,.75)}h1{margin:18px 0 8px;font-size:clamp(36px,8vw,62px);line-height:.92;letter-spacing:-.065em}p{margin:0;color:var(--muted)}.form{display:grid;gap:15px;margin-top:23px}.field{display:grid;gap:7px}.field span{color:var(--muted);font-size:12px;font-weight:900}input,select{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:17px;background:rgba(0,0,0,.30);color:var(--text);padding:13px;outline:none;font-weight:850}.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}.path-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.choice{position:relative;cursor:pointer}.choice input{position:absolute;opacity:0}.tile{min-height:62px;border:1px solid rgba(255,255,255,.13);border-radius:19px;background:rgba(255,255,255,.045);display:grid;place-items:center;text-align:center;font-size:26px;font-weight:950;transition:.18s}.path-grid .tile{min-height:92px;font-size:15px;line-height:1.25}.path-grid b{display:block;font-size:23px;margin-bottom:4px}.choice input:checked+.tile{border-color:rgba(103,232,255,.72);background:linear-gradient(135deg,rgba(103,232,255,.18),rgba(116,168,255,.10));box-shadow:0 0 0 1px rgba(103,232,255,.14)}.btn{min-height:49px;border:1px solid rgba(103,232,255,.40);border-radius:18px;background:linear-gradient(135deg,rgba(116,168,255,.34),rgba(103,232,255,.15));color:var(--text);font-weight:950}.btn.soft{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.13)}.err{display:none;color:#ffd2d2;background:rgba(255,102,136,.09);border:1px solid rgba(255,102,136,.28);border-radius:14px;padding:10px;font-size:13px;font-weight:850}.err.show{display:block}.app{width:min(1240px,calc(100% - 26px));margin:auto;padding:18px 0 36px}.top{position:sticky;top:10px;z-index:20;border:1px solid var(--line);border-radius:25px;background:rgba(5,7,14,.84);backdrop-filter:blur(18px);box-shadow:0 16px 44px rgba(0,0,0,.36);padding:13px;display:flex;align-items:center;gap:12px}.top-ava{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:27px;box-shadow:0 0 30px var(--glow)}.top b{display:block}.top span{display:block;color:var(--muted);font-size:13px;margin-top:3px}.main{margin-top:16px;display:grid;grid-template-columns:360px minmax(0,1fr);gap:15px;align-items:start}.panel{border:1px solid var(--line);border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025)),var(--card);box-shadow:var(--shadow);padding:20px;overflow:hidden}.profile-card{position:relative}.profile-card:before{content:"";position:absolute;inset:-80px -80px auto auto;width:190px;height:190px;background:radial-gradient(circle,var(--glow),transparent 65%);pointer-events:none}.profile-hero{position:relative;display:grid;justify-items:center;text-align:center;padding:10px 0 16px;border-bottom:1px solid rgba(255,255,255,.08)}.big-ava{width:112px;height:112px;border-radius:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:56px;box-shadow:0 0 42px var(--glow);margin-bottom:13px}.profile-hero h2{margin:0;font-size:30px;letter-spacing:-.04em}.profile-hero p{margin-top:5px;font-size:14px}.profile-info{padding-top:12px}.row{display:grid;grid-template-columns:112px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.075)}.row:last-child{border-bottom:0}.row span{color:var(--muted);font-size:13px;font-weight:850}.row b{font-size:14px}.ach-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.ach{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(255,255,255,.11);border-radius:999px;background:rgba(255,255,255,.045);padding:7px 9px;color:var(--muted);font-size:12px;font-weight:900}.right-flow{display:grid;gap:15px}.step-panel{display:none}.step-panel.show{display:block}.step-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.step-title h2{margin:0;font-size:30px;letter-spacing:-.04em}.step-title p{margin-top:6px}.org-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.org-btn{min-height:66px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.045);color:var(--text);font-weight:950;transition:.18s}.org-btn:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--accent) 55%,white 0%);background:var(--glow)}.selected-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid color-mix(in srgb,var(--accent) 55%,white 0%);border-radius:22px;background:linear-gradient(135deg,var(--glow),rgba(255,255,255,.04));padding:16px}.selected-summary strong{display:block;font-size:22px}.selected-summary span{display:block;color:var(--muted);font-size:13px;margin-top:3px}.setup-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:14px}.progress-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:18px;align-items:center}.ring{width:178px;height:178px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),rgba(255,255,255,.08) 0);position:relative;box-shadow:0 0 48px var(--glow)}.ring:before{content:"";position:absolute;inset:14px;border-radius:50%;background:#0a0d16;border:1px solid rgba(255,255,255,.1)}.ring div{position:relative;text-align:center}.ring b{display:block;font-size:43px;line-height:1;letter-spacing:-.06em}.ring span{color:var(--muted);font-size:12px;font-weight:900}.tasks{display:grid;gap:9px}.task{display:grid;grid-template-columns:23px 1fr;gap:9px;border:1px solid rgba(255,255,255,.11);border-radius:15px;background:rgba(0,0,0,.16);padding:11px}.task input{width:18px;height:18px;accent-color:#67e8ff}.task b{display:block;font-size:13px}.task small{display:block;color:var(--muted);font-size:12px;margin-top:3px}.info-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.info-tab{border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.055);color:var(--muted);min-height:38px;padding:0 12px;font-weight:900}.info-tab.active{color:var(--text);border-color:color-mix(in srgb,var(--accent) 60%,white 0%);background:var(--glow)}.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.info-card{border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.045);padding:15px}.info-card strong{display:block;margin-bottom:7px}.info-card p,.info-card li{font-size:13px;color:var(--muted);line-height:1.45}.info-card ul{margin:0;padding-left:18px}.premium{border-color:rgba(255,209,102,.28);background:rgba(255,209,102,.07)}
 @media(max-width:900px){.main,.progress-layout{grid-template-columns:1fr}.org-grid,.info-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.avatar-grid{grid-template-columns:repeat(3,1fr)}.path-grid,.org-grid,.setup-grid,.info-grid{grid-template-columns:1fr}.top{align-items:flex-start}.row{grid-template-columns:1fr}.selected-summary{flex-direction:column;align-items:flex-start}.selected-summary button{width:100%}.ring{margin:auto}}
+
+/* v86: плавная анимация прогресса и выполненных пунктов */
+.ring {
+  transition: background .75s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+}
+.ring.progress-pulse {
+  box-shadow:
+    0 0 56px var(--glow),
+    0 0 0 6px rgba(103,232,255,.055);
+}
+.task {
+  transition:
+    border-color .22s ease,
+    background .22s ease,
+    transform .18s ease,
+    box-shadow .22s ease,
+    opacity .22s ease;
+}
+.task input {
+  transition: transform .16s ease;
+}
+.task.done {
+  border-color: color-mix(in srgb, var(--accent) 58%, white 0%);
+  background: linear-gradient(135deg, var(--glow), rgba(255,255,255,.035));
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+.task.just-done {
+  transform: scale(1.018);
+  animation: taskDonePop .34s ease;
+}
+.task.done b { color: var(--text); }
+.task.done small { color: rgba(220,235,255,.74); }
+.task.done input { transform: scale(1.08); }
+@keyframes taskDonePop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.025); }
+  100% { transform: scale(1.018); }
+}
+.progress-toast {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 9999;
+  min-width: 230px;
+  max-width: min(360px, calc(100vw - 30px));
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, white 0%);
+  border-radius: 18px;
+  background: rgba(8,12,22,.94);
+  box-shadow: 0 18px 45px rgba(0,0,0,.45);
+  backdrop-filter: blur(16px);
+  padding: 13px 14px;
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity .24s ease, transform .24s ease;
+}
+.progress-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.progress-toast b {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 3px;
+}
+.progress-toast span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+@media(max-width:620px){
+  .progress-toast { right: 12px; bottom: 12px; }
+}
+
 </style>
 </head>
 <body>
 <section class="start-screen"><div class="start-card"><div class="kicker">Первый запуск</div><h1>Создай RP-профиль</h1><p>Только имя, аватар, проект и путь. Организацию и раздел выберешь уже в кабинете.</p><div class="form"><label class="field"><span>Имя / ник</span><input id="firstName" placeholder="Введи свой ник"></label><label class="field"><span>Аватар</span><div class="avatar-grid"><label class="choice"><input type="radio" name="avatar" value="🪖" checked><div class="tile">🪖</div></label><label class="choice"><input type="radio" name="avatar" value="🚓"><div class="tile">🚓</div></label><label class="choice"><input type="radio" name="avatar" value="🏛️"><div class="tile">🏛️</div></label><label class="choice"><input type="radio" name="avatar" value="💼"><div class="tile">💼</div></label><label class="choice"><input type="radio" name="avatar" value="🕶️"><div class="tile">🕶️</div></label><label class="choice"><input type="radio" name="avatar" value="🎮"><div class="tile">🎮</div></label></div></label><label class="field"><span>Проект</span><select id="firstProject"><option>GTA5RP</option><option>Majestic RP</option></select></label><label class="field"><span>Путь</span><div class="path-grid"><label class="choice"><input type="radio" name="path" value="Госка" checked><div class="tile"><b>🏛️ Госка</b>служба и карьера</div></label><label class="choice"><input type="radio" name="path" value="Крайм"><div class="tile"><b>🕶️ Крайм</b>семья / банда / мафия</div></label></div></label><div class="err" id="err">Сначала введи имя.</div><button class="btn" id="start">Открыть личный кабинет</button></div></div></section>
 <div class="app">
 <main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Уровень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и уровень</h2><p>Выбери раздел и ступень повышения из ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="selected-summary"><div><strong id="progressTitle">ARMY</strong><span id="progressDesc">Текущая ступень</span></div><button class="btn soft" id="editSetup">Сменить</button></div><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div></div></div></div><div class="panel step-panel" id="infoStep"><div class="step-title"><div><h2 id="infoTitle">Информация ARMY</h2><p>Инфа разложена по вкладкам, без общей каши.</p></div></div><div class="info-tabs" id="infoTabs"></div><div class="info-grid" id="infoGrid"></div></div></section></main></div>
+<div class="progress-toast" id="progressToast"><b>Прогресс обновлён</b><span id="progressToastText">+0%</span></div>
 <script>
 const KEY='rp_panel_v83_clean_army_logic';
 const ORGS={Госка:['ARMY','LSPD','LSSD','FIB','EMS','GOV','USSS','PRISON','Weazel News'],Крайм:['Семья','Банда','Мафия','Картель','Нелегал']};
@@ -59,6 +134,8 @@ const INFO={
  Premium:{'Премии':['Премия — отдельная часть личного прогресса, не смешивается с повышением.','Можно отмечать активность, отчёты, дежурства, помощь и выполненные задачи.','Позже сюда можно добавить расчёт суммы или список норм.']},
  Common:{'Устав':['Основные требования, субординация, поведение, форма, запреты и обязанности.'],'Подразделения':['Academy, MP, USAF, SAS, DF, RAP, SD, ED, Gen.'],'Шпаргалки':['Краткие ответы, быстрые подсказки, правила докладов и важные исключения.']}
 };
+let displayedProgress=0;
+let progressAnimationFrame=null;
 let S={ready:false,name:'',avatar:'🪖',project:'GTA5RP',path:'Госка',org:'',section:'',level:'',configured:false,tasks:{},infoTab:'Academy'};
 const $=s=>document.querySelector(s);function save(){localStorage.setItem(KEY,JSON.stringify(S))}function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x)S=Object.assign(S,x)}catch(e){}}function theme(){document.body.classList.toggle('ready',S.ready);document.body.classList.toggle('gov',S.path==='Госка');document.body.classList.toggle('crime',S.path==='Крайм')}
 function render(){theme();
@@ -75,13 +152,67 @@ function taskList(){
  return ['Изучить обязанности раздела','Закрыть активность','Подготовить отчёт','Проверить требования к следующему уровню'];
 }
 function percent(){let t=taskList();if(!t.length)return 0;let d=t.filter(x=>S.tasks[x]).length;return Math.round(d/t.length*100)}
-function renderProgress(){if(!S.configured)return;let p=percent();$('#ring').style.setProperty('--p',p);$('#percent').textContent=p+'%';$('#progressTitle').textContent=`${S.org} › ${S.section}`;$('#progressDesc').textContent=`Уровень: ${S.level}`;$('#nextText').textContent=p<100?'Отмечай, что уже сделал — это прогресс до следующего повышения.':'Уровень закрыт, можно переходить дальше.';$('#tasks').innerHTML=taskList().map(t=>`<label class="task"><input type="checkbox" ${S.tasks[t]?'checked':''} data-task="${t}"><span><b>${t}</b><small>Засчитывается в прогресс повышения.</small></span></label>`).join('');document.querySelectorAll('[data-task]').forEach(i=>i.onchange=()=>{S.tasks[i.dataset.task]=i.checked;save();render()})}
+function animateProgressTo(target){
+ const ring=$('#ring');
+ const percentEl=$('#percent');
+ if(!ring || !percentEl) return;
+ const from=Number(displayedProgress)||0;
+ const to=Number(target)||0;
+ if(progressAnimationFrame) cancelAnimationFrame(progressAnimationFrame);
+ const startTime=performance.now();
+ const duration=720;
+ ring.classList.add('progress-pulse');
+ function frame(now){
+  const t=Math.min(1,(now-startTime)/duration);
+  const eased=1-Math.pow(1-t,3);
+  const val=Math.round(from+(to-from)*eased);
+  ring.style.setProperty('--p',val);
+  percentEl.textContent=val+'%';
+  if(t<1){
+   progressAnimationFrame=requestAnimationFrame(frame);
+  }else{
+   displayedProgress=to;
+   ring.style.setProperty('--p',to);
+   percentEl.textContent=to+'%';
+   setTimeout(()=>ring.classList.remove('progress-pulse'),240);
+  }
+ }
+ progressAnimationFrame=requestAnimationFrame(frame);
+}
+function showProgressToast(text){
+ const toast=$('#progressToast');
+ const toastText=$('#progressToastText');
+ if(!toast || !toastText) return;
+ toastText.textContent=text;
+ toast.classList.add('show');
+ clearTimeout(showProgressToast.timer);
+ showProgressToast.timer=setTimeout(()=>toast.classList.remove('show'),1800);
+}
+function renderProgress(){
+ if(!S.configured)return;
+ let p=percent();
+ animateProgressTo(p);
+ $('#progressTitle').textContent=`${S.org} › ${S.section}`;
+ $('#progressDesc').textContent=`Уровень: ${S.level}`;
+ $('#nextText').textContent=p<100?'Отмечай, что уже сделал — это прогресс до следующего повышения.':'Повышение закрыто. Можно переходить дальше.';
+ $('#tasks').innerHTML=taskList().map(t=>`<label class="task ${S.tasks[t]?'done':''}"><input type="checkbox" ${S.tasks[t]?'checked':''} data-task="${t}"><span><b>${t}</b><small>Засчитывается в прогресс повышения.</small></span></label>`).join('');
+ document.querySelectorAll('[data-task]').forEach(i=>i.onchange=()=>{
+  const was=!!S.tasks[i.dataset.task];
+  S.tasks[i.dataset.task]=i.checked;
+  if(i.checked && !was){
+   i.closest('.task')?.classList.add('just-done');
+   showProgressToast('Задача засчитана, прогресс растёт');
+  }
+  save();
+  render();
+ });
+}
 function availableTabs(){return S.org==='ARMY'?['Academy','USAF','Повышение','Премии','Общее']:[S.org||'Инфо','Премии']}function tabData(tab){if(tab==='Academy')return INFO.Academy;if(tab==='USAF')return INFO.USAF;if(tab==='Премии')return INFO.Premium;if(tab==='Повышение')return {[`Повышение: ${S.section}`]:taskList(), 'Как пользоваться':['Выбери уровень слева сверху, затем отмечай пункты прогресса.','Список задач меняется от раздела: Academy, USAF или другой отдел.']};return INFO.Common}
 function renderInfo(){if(!S.configured)return;let tabs=availableTabs();if(!tabs.includes(S.infoTab))S.infoTab=tabs[0];$('#infoTitle').textContent=`Информация — ${S.org}`;$('#infoTabs').innerHTML=tabs.map(t=>`<button class="info-tab ${S.infoTab===t?'active':''}" data-tab="${t}">${t}</button>`).join('');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.infoTab=b.dataset.tab;save();render()});let data=tabData(S.infoTab);$('#infoGrid').innerHTML=Object.entries(data).map(([title,items])=>`<div class="info-card ${S.infoTab==='Премии'?'premium':''}"><strong>${title}</strong><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}
 function renderAch(){let a=[];if(S.ready)a.push(['🟢','Профиль']);if(S.path)a.push([S.path==='Госка'?'🏛️':'🕶️',S.path]);if(S.org)a.push(['⭐',S.org]);if(S.configured)a.push(['📌',S.section]);if(percent()>=50)a.push(['🎖','50%']);if(percent()>=100)a.push(['🏆','Готово']);$('#achievements').innerHTML=a.map(x=>`<span class="ach">${x[0]} ${x[1]}</span>`).join('')}
 $('#start').onclick=()=>{let n=$('#firstName').value.trim();if(!n){$('#err').classList.add('show');return}S={ready:true,name:n,avatar:document.querySelector('[name=avatar]:checked').value,project:$('#firstProject').value,path:document.querySelector('[name=path]:checked').value,org:'',section:'',level:'',configured:false,tasks:{},infoTab:'Academy'};save();render()};
-$('#reselectOrg').onclick=()=>{S.org='';S.section='';S.level='';S.configured=false;S.tasks={};save();render()};
-$('#editSetup').onclick=()=>{S.configured=false;S.tasks={};save();render()};
+$('#reselectOrg').onclick=()=>{S.org='';S.section='';S.level='';S.configured=false;S.tasks={};displayedProgress=0;save();render()};
+$('#editSetup').onclick=()=>{S.configured=false;S.tasks={};displayedProgress=0;save();render()};
 $('#saveSetup').onclick=()=>{S.section=$('#section').value;S.level=$('#level').value;S.configured=true;S.tasks={};S.infoTab=S.section==='USAF'?'USAF':'Academy';save();render()};
 document.addEventListener('change',e=>{if(e.target.id==='section'){S.section=$('#section').value;S.level=(LEVELS[S.section]||LEVELS.default)[0];renderSetup()}if(e.target.id==='level'){S.level=$('#level').value}});
 load();render();
