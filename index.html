@@ -3,219 +3,229 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RP Cabinet v80</title>
+<title>RP Panel v81</title>
 <style>
 :root{
-  --text:#f4f7ff;--muted:#aab5c8;--line:rgba(255,255,255,.12);
-  --card:rgba(13,17,29,.86);--soft:rgba(255,255,255,.055);
-  --blue:#74a8ff;--cyan:#67e8ff;--green:#76f3c5;--purple:#b28cff;
-  --red:#ff6688;--yellow:#ffd166;--shadow:0 25px 90px rgba(0,0,0,.55)
+  --text:#f5f8ff;--muted:#aab6ca;--line:rgba(255,255,255,.12);
+  --soft:rgba(255,255,255,.055);--card:rgba(12,16,27,.84);
+  --blue:#74a8ff;--cyan:#67e8ff;--green:#76f3c5;--purple:#b28cff;--red:#ff6688;--yellow:#ffd166;
+  --shadow:0 28px 95px rgba(0,0,0,.58)
 }
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:#000;color:var(--text);font-family:Inter,Arial,sans-serif}
-body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 50% 12%,rgba(116,168,255,.13),transparent 28%),radial-gradient(circle at 82% 78%,rgba(178,140,255,.10),transparent 32%),#000}
-body.gov{--accent:var(--cyan);--accent2:var(--blue);--glow:rgba(103,232,255,.16)}
-body.crime{--accent:var(--red);--accent2:var(--purple);--glow:rgba(255,102,136,.16)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#000;color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 50% 8%,rgba(116,168,255,.15),transparent 28%),radial-gradient(circle at 82% 82%,rgba(178,140,255,.12),transparent 34%),linear-gradient(180deg,#02040a,#000)}
+body.gov{--accent:var(--cyan);--accent2:var(--blue);--glow:rgba(103,232,255,.17);--name:"Госка"}
+body.crime{--accent:var(--red);--accent2:var(--purple);--glow:rgba(255,102,136,.17);--name:"Крайм"}
 button,input,select{font:inherit}button{cursor:pointer}
-body.ready .first{display:none}body:not(.ready) .app{display:none}
-.first{min-height:100vh;display:grid;place-items:center;padding:18px}
-.launch{width:min(620px,100%);border:1px solid var(--line);border-radius:32px;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025)),rgba(7,10,18,.9);box-shadow:var(--shadow);padding:26px}
+body.ready .start-screen{display:none}body:not(.ready) .app{display:none}
+.start-screen{min-height:100vh;display:grid;place-items:center;padding:18px}
+.start-card{width:min(650px,100%);border:1px solid var(--line);border-radius:34px;background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.025)),rgba(7,10,18,.92);box-shadow:var(--shadow);padding:28px}
 .kicker{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(103,232,255,.25);border-radius:999px;background:rgba(103,232,255,.08);padding:8px 11px;font-size:12px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
-.kicker:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(118,243,197,.7)}
-h1{margin:18px 0 8px;font-size:clamp(34px,8vw,58px);line-height:.95;letter-spacing:-.06em}p{margin:0;color:var(--muted)}
-.form{display:grid;gap:15px;margin-top:22px}.field{display:grid;gap:7px}.field span{font-size:12px;color:var(--muted);font-weight:900}
-input,select{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(0,0,0,.28);color:var(--text);padding:13px;font-weight:850;outline:none}
-.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}.path-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.choice{position:relative;cursor:pointer}.choice input{position:absolute;opacity:0}.tile{min-height:60px;border:1px solid rgba(255,255,255,.13);border-radius:18px;background:rgba(255,255,255,.045);display:grid;place-items:center;text-align:center;font-weight:950;font-size:25px;transition:.18s}.path-grid .tile{min-height:86px;font-size:15px}.path-grid b{display:block;font-size:22px;margin-bottom:4px}.choice input:checked+.tile{border-color:rgba(103,232,255,.7);background:linear-gradient(135deg,rgba(103,232,255,.18),rgba(116,168,255,.1))}
-.btn{min-height:48px;border:1px solid rgba(103,232,255,.38);border-radius:17px;background:linear-gradient(135deg,rgba(116,168,255,.32),rgba(103,232,255,.14));color:var(--text);font-weight:950}.btn.soft{background:rgba(255,255,255,.055);border-color:rgba(255,255,255,.13)}.btn.danger{background:rgba(255,102,136,.09);border-color:rgba(255,102,136,.28)}
-.err{display:none;color:#ffd2d2;background:rgba(255,102,136,.09);border:1px solid rgba(255,102,136,.28);border-radius:14px;padding:10px;font-weight:850;font-size:13px}.err.show{display:block}
-.app{width:min(1240px,calc(100% - 26px));margin:0 auto;padding:18px 0 34px}
-.top{position:sticky;top:10px;z-index:10;border:1px solid var(--line);border-radius:24px;background:rgba(5,7,14,.84);backdrop-filter:blur(18px);box-shadow:0 16px 44px rgba(0,0,0,.36);padding:13px;display:flex;justify-content:space-between;gap:12px;align-items:center}
-.brand{display:flex;gap:12px;align-items:center}.ava{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:27px;box-shadow:0 0 30px var(--glow)}.crumb b{display:block}.crumb span{display:block;color:var(--muted);font-size:13px;margin-top:3px}.actions{display:flex;gap:8px;flex-wrap:wrap}
-.layout{margin-top:16px;display:grid;grid-template-columns:minmax(330px,.72fr) minmax(0,1.28fr);gap:14px;align-items:start}
-.panel{border:1px solid var(--line);border-radius:26px;background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025)),var(--card);box-shadow:var(--shadow);padding:20px}
-.profile-head{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:center;margin-bottom:14px}.bigava{width:92px;height:92px;border-radius:26px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:46px;box-shadow:0 0 40px var(--glow)}h2{margin:0 0 12px;font-size:28px;letter-spacing:-.035em}.profile-head h2{margin:0 0 6px}.row{display:grid;grid-template-columns:125px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08)}.row:last-child{border-bottom:0}.row span{color:var(--muted);font-size:13px;font-weight:850}.row b{font-size:14px}
-.ach-opened{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.ach-chip{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045);border-radius:999px;padding:7px 9px;font-size:12px;color:var(--muted);font-weight:900}
-.setup-card,.progress-card{border:1px solid rgba(255,255,255,.11);border-radius:22px;background:rgba(255,255,255,.04);padding:16px}.setup-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.org-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}.org{border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.045);color:var(--text);min-height:54px;font-weight:950}.org.active{border-color:color-mix(in srgb,var(--accent) 60%,white 0%);background:linear-gradient(135deg,var(--glow),rgba(255,255,255,.04))}
-.selected{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid color-mix(in srgb,var(--accent) 55%,white 0%);border-radius:18px;background:linear-gradient(135deg,var(--glow),rgba(255,255,255,.04));padding:14px;margin-top:10px}.selected strong{font-size:20px}.selected span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
-.progress-card{margin-top:14px;display:none}.progress-card.show{display:block}.progress-wrap{display:grid;grid-template-columns:172px 1fr;gap:16px;align-items:center}.ring{width:162px;height:162px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),rgba(255,255,255,.08) 0);position:relative;box-shadow:0 0 44px var(--glow)}.ring:before{content:"";position:absolute;inset:13px;border-radius:50%;background:#0a0d16;border:1px solid rgba(255,255,255,.1)}.ring div{position:relative;text-align:center}.ring b{display:block;font-size:38px;line-height:1}.ring span{color:var(--muted);font-size:12px;font-weight:900}
-.tasks{display:grid;gap:8px}.task{display:grid;grid-template-columns:22px 1fr;gap:9px;align-items:start;border:1px solid rgba(255,255,255,.11);background:rgba(0,0,0,.16);border-radius:14px;padding:10px}.task input{width:18px;height:18px;accent-color:#67e8ff}.task b{display:block;font-size:13px}.task small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
-.modules{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.module{border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.045);padding:15px;min-height:120px}.module strong{display:block;margin-top:8px}.module span{display:block;color:var(--muted);font-size:13px;margin-top:5px}
-@media(max-width:900px){.layout,.progress-wrap{grid-template-columns:1fr}.org-grid,.modules{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:620px){.avatar-grid{grid-template-columns:repeat(3,1fr)}.path-grid,.setup-grid,.org-grid,.modules,.profile-head{grid-template-columns:1fr}.top{flex-direction:column;align-items:flex-start}.actions,.actions button{width:100%}.selected{flex-direction:column;align-items:flex-start}.selected button{width:100%}}
+.kicker:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(118,243,197,.75)}
+h1{margin:18px 0 8px;font-size:clamp(36px,8vw,62px);line-height:.92;letter-spacing:-.065em}
+p{margin:0;color:var(--muted)}
+.form{display:grid;gap:15px;margin-top:23px}.field{display:grid;gap:7px}.field span{color:var(--muted);font-size:12px;font-weight:900}
+input,select{width:100%;border:1px solid rgba(255,255,255,.14);border-radius:17px;background:rgba(0,0,0,.30);color:var(--text);padding:13px;outline:none;font-weight:850}
+.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}.path-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.choice{position:relative;cursor:pointer}.choice input{position:absolute;opacity:0}.tile{min-height:62px;border:1px solid rgba(255,255,255,.13);border-radius:19px;background:rgba(255,255,255,.045);display:grid;place-items:center;text-align:center;font-size:26px;font-weight:950;transition:.18s}.path-grid .tile{min-height:92px;font-size:15px;line-height:1.25}.path-grid b{display:block;font-size:23px;margin-bottom:4px}.choice input:checked+.tile{border-color:rgba(103,232,255,.72);background:linear-gradient(135deg,rgba(103,232,255,.18),rgba(116,168,255,.10));box-shadow:0 0 0 1px rgba(103,232,255,.14)}
+.btn{min-height:49px;border:1px solid rgba(103,232,255,.40);border-radius:18px;background:linear-gradient(135deg,rgba(116,168,255,.34),rgba(103,232,255,.15));color:var(--text);font-weight:950}.btn.soft{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.13)}.btn.danger{background:rgba(255,102,136,.09);border-color:rgba(255,102,136,.28)}
+.err{display:none;color:#ffd2d2;background:rgba(255,102,136,.09);border:1px solid rgba(255,102,136,.28);border-radius:14px;padding:10px;font-size:13px;font-weight:850}.err.show{display:block}
+.app{width:min(1240px,calc(100% - 26px));margin:auto;padding:18px 0 36px}
+.top{position:sticky;top:10px;z-index:20;border:1px solid var(--line);border-radius:25px;background:rgba(5,7,14,.84);backdrop-filter:blur(18px);box-shadow:0 16px 44px rgba(0,0,0,.36);padding:13px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top-left{display:flex;align-items:center;gap:12px}.top-ava{width:52px;height:52px;border-radius:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:27px;box-shadow:0 0 30px var(--glow)}.top b{display:block}.top span{display:block;color:var(--muted);font-size:13px;margin-top:3px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.main{margin-top:16px;display:grid;grid-template-columns:360px minmax(0,1fr);gap:15px;align-items:start}
+.panel{border:1px solid var(--line);border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025)),var(--card);box-shadow:var(--shadow);padding:20px;overflow:hidden}
+.profile-card{position:relative}.profile-card:before{content:"";position:absolute;inset:-80px -80px auto auto;width:190px;height:190px;background:radial-gradient(circle,var(--glow),transparent 65%);pointer-events:none}
+.profile-hero{position:relative;display:grid;justify-items:center;text-align:center;padding:10px 0 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.big-ava{width:112px;height:112px;border-radius:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:56px;box-shadow:0 0 42px var(--glow);margin-bottom:13px}
+.profile-hero h2{margin:0;font-size:30px;letter-spacing:-.04em}.profile-hero p{margin-top:5px;font-size:14px}
+.profile-info{padding-top:12px}.row{display:grid;grid-template-columns:112px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.075)}.row:last-child{border-bottom:0}.row span{color:var(--muted);font-size:13px;font-weight:850}.row b{font-size:14px}
+.ach-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.ach{display:inline-flex;gap:6px;align-items:center;border:1px solid rgba(255,255,255,.11);border-radius:999px;background:rgba(255,255,255,.045);padding:7px 9px;color:var(--muted);font-size:12px;font-weight:900}
+.right-flow{display:grid;gap:15px}
+.step-panel{display:none}.step-panel.show{display:block}
+.step-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.step-title h2{margin:0;font-size:30px;letter-spacing:-.04em}.step-title p{margin-top:6px}
+.org-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.org-btn{min-height:66px;border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.045);color:var(--text);font-weight:950;transition:.18s}.org-btn:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--accent) 55%,white 0%);background:var(--glow)}
+.selected-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid color-mix(in srgb,var(--accent) 55%,white 0%);border-radius:22px;background:linear-gradient(135deg,var(--glow),rgba(255,255,255,.04));padding:16px}
+.selected-summary strong{display:block;font-size:22px}.selected-summary span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+.setup-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:14px}
+.progress-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:18px;align-items:center}.ring{width:178px;height:178px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),rgba(255,255,255,.08) 0);position:relative;box-shadow:0 0 48px var(--glow)}.ring:before{content:"";position:absolute;inset:14px;border-radius:50%;background:#0a0d16;border:1px solid rgba(255,255,255,.1)}.ring div{position:relative;text-align:center}.ring b{display:block;font-size:43px;line-height:1;letter-spacing:-.06em}.ring span{color:var(--muted);font-size:12px;font-weight:900}
+.tasks{display:grid;gap:9px}.task{display:grid;grid-template-columns:23px 1fr;gap:9px;border:1px solid rgba(255,255,255,.11);border-radius:15px;background:rgba(0,0,0,.16);padding:11px}.task input{width:18px;height:18px;accent-color:#67e8ff}.task b{display:block;font-size:13px}.task small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.module{border:1px solid rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.045);min-height:126px;padding:15px}.module div{font-size:28px}.module strong{display:block;margin-top:8px}.module span{display:block;color:var(--muted);font-size:13px;margin-top:5px}
+@media(max-width:900px){.main,.progress-layout{grid-template-columns:1fr}.org-grid,.modules{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.avatar-grid{grid-template-columns:repeat(3,1fr)}.path-grid,.org-grid,.setup-grid,.modules{grid-template-columns:1fr}.top{flex-direction:column;align-items:flex-start}.actions,.actions button{width:100%}.row{grid-template-columns:1fr}.selected-summary{flex-direction:column;align-items:flex-start}.selected-summary button{width:100%}.ring{margin:auto}}
 </style>
 </head>
 <body>
-<section class="first">
- <div class="launch">
-  <div class="kicker">Первый запуск</div>
-  <h1>Настрой RP-кабинет</h1>
-  <p>Сначала только имя, аватар, проект и путь. Остальное довыбирается уже в кабинете.</p>
-  <div class="form">
-   <label class="field"><span>Имя / ник</span><input id="firstName" placeholder="Введи свой ник"></label>
-   <label class="field"><span>Аватар</span><div class="avatar-grid">
-    <label class="choice"><input type="radio" name="avatar" value="🪖" checked><div class="tile">🪖</div></label>
-    <label class="choice"><input type="radio" name="avatar" value="🚓"><div class="tile">🚓</div></label>
-    <label class="choice"><input type="radio" name="avatar" value="🏛️"><div class="tile">🏛️</div></label>
-    <label class="choice"><input type="radio" name="avatar" value="💼"><div class="tile">💼</div></label>
-    <label class="choice"><input type="radio" name="avatar" value="🕶️"><div class="tile">🕶️</div></label>
-    <label class="choice"><input type="radio" name="avatar" value="🎮"><div class="tile">🎮</div></label>
-   </div></label>
-   <label class="field"><span>Проект</span><select id="firstProject"><option>GTA5RP</option><option>Majestic RP</option></select></label>
-   <label class="field"><span>Путь</span><div class="path-grid">
-    <label class="choice"><input type="radio" name="path" value="Госка" checked><div class="tile"><b>🏛️ Госка</b>организации и служба</div></label>
-    <label class="choice"><input type="radio" name="path" value="Крайм"><div class="tile"><b>🕶️ Крайм</b>семья / банда / мафия</div></label>
-   </div></label>
-   <div class="err" id="err">Сначала введи имя.</div>
-   <button class="btn" id="start">Открыть кабинет</button>
+<section class="start-screen">
+  <div class="start-card">
+    <div class="kicker">Первый запуск</div>
+    <h1>Создай RP-профиль</h1>
+    <p>Только имя, аватар, проект и путь. Организацию и этап выберешь уже в кабинете.</p>
+    <div class="form">
+      <label class="field"><span>Имя / ник</span><input id="firstName" placeholder="Введи свой ник"></label>
+      <label class="field"><span>Аватар</span><div class="avatar-grid">
+        <label class="choice"><input type="radio" name="avatar" value="🪖" checked><div class="tile">🪖</div></label>
+        <label class="choice"><input type="radio" name="avatar" value="🚓"><div class="tile">🚓</div></label>
+        <label class="choice"><input type="radio" name="avatar" value="🏛️"><div class="tile">🏛️</div></label>
+        <label class="choice"><input type="radio" name="avatar" value="💼"><div class="tile">💼</div></label>
+        <label class="choice"><input type="radio" name="avatar" value="🕶️"><div class="tile">🕶️</div></label>
+        <label class="choice"><input type="radio" name="avatar" value="🎮"><div class="tile">🎮</div></label>
+      </div></label>
+      <label class="field"><span>Проект</span><select id="firstProject"><option>GTA5RP</option><option>Majestic RP</option></select></label>
+      <label class="field"><span>Путь</span><div class="path-grid">
+        <label class="choice"><input type="radio" name="path" value="Госка" checked><div class="tile"><b>🏛️ Госка</b>служба и карьера</div></label>
+        <label class="choice"><input type="radio" name="path" value="Крайм"><div class="tile"><b>🕶️ Крайм</b>семья / банда / мафия</div></label>
+      </div></label>
+      <div class="err" id="err">Сначала введи имя.</div>
+      <button class="btn" id="start">Открыть личный кабинет</button>
+    </div>
   </div>
- </div>
 </section>
 
 <div class="app">
- <header class="top">
-  <div class="brand"><div class="ava" id="topAva">🪖</div><div class="crumb"><b id="topName">Игрок</b><span id="topPath">GTA5RP › Госка</span></div></div>
-  <div class="actions"><button class="btn soft" id="editSetup">Изменить выбор</button><button class="btn danger" id="reset">Сбросить с нуля</button></div>
- </header>
+  <header class="top">
+    <div class="top-left"><div class="top-ava" id="topAva">🪖</div><div><b id="topName">Игрок</b><span id="topPath">GTA5RP › Госка</span></div></div>
+    <div class="actions"><button class="btn soft" id="changeAll">Изменить выбор</button><button class="btn danger" id="reset">Сбросить с нуля</button></div>
+  </header>
 
- <main class="layout">
-  <aside class="panel">
-   <div class="profile-head"><div class="bigava" id="bigAva">🪖</div><div><h2 id="cabTitle">Личный кабинет</h2><p id="cabSub">Информация появляется после выбора справа.</p></div></div>
-   <div class="row"><span>Проект</span><b id="pProject">—</b></div>
-   <div class="row"><span>Путь</span><b id="pPath">—</b></div>
-   <div class="row"><span>Организация</span><b id="pOrg">Не выбрана</b></div>
-   <div class="row"><span>Статус</span><b id="pStatus">Нужно довыбрать справа</b></div>
-   <div class="row"><span>Ранг / этап</span><b id="pRank">—</b></div>
-   <div class="ach-opened" id="openedAchievements"></div>
-  </aside>
+  <main class="main">
+    <aside class="panel profile-card">
+      <div class="profile-hero">
+        <div class="big-ava" id="bigAva">🪖</div>
+        <h2 id="profileName">Игрок</h2>
+        <p id="profileLine">GTA5RP › Госка</p>
+      </div>
+      <div class="profile-info">
+        <div class="row"><span>Проект</span><b id="infoProject">—</b></div>
+        <div class="row"><span>Путь</span><b id="infoPath">—</b></div>
+        <div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div>
+        <div class="row"><span>Этап</span><b id="infoStage">—</b></div>
+        <div class="row"><span>Ранг / уровень</span><b id="infoRank">—</b></div>
+      </div>
+      <div class="ach-strip" id="achievements"></div>
+    </aside>
 
-  <section>
-   <div class="setup-card" id="setupCard">
-    <h2>Довыбор профиля</h2>
-    <p>Выбери конкретную организацию. После выбора можно будет указать этап, ранг и задачи для прогресса.</p>
-    <div id="orgArea"></div>
-    <div class="setup-grid" id="stageArea" style="margin-top:14px;display:none">
-     <label class="field"><span>Где ты сейчас</span><select id="stageSelect"></select></label>
-     <label class="field"><span>Ранг / уровень</span><select id="rankSelect"></select></label>
-     <label class="field" id="subStageField"><span>Подэтап</span><select id="subStageSelect"></select></label>
-     <label class="field" id="deptField"><span>Отдел</span><select id="deptSelect"></select></label>
-    </div>
-    <button class="btn" id="saveSetup" style="margin-top:12px;width:100%">Сохранить выбор</button>
-   </div>
+    <section class="right-flow">
+      <div class="panel step-panel" id="orgStep">
+        <div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора этот блок пропадёт и появится следующий шаг.</p></div></div>
+        <div class="org-grid" id="orgGrid"></div>
+      </div>
 
-   <div class="progress-card" id="progressCard">
-    <h2>Прогресс до следующего этапа</h2>
-    <div class="progress-wrap">
-     <div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>уровень</span></div></div>
-     <div>
-      <p id="nextText">Выбери организацию и этап.</p>
-      <div class="tasks" id="tasks"></div>
-     </div>
-    </div>
-   </div>
+      <div class="panel step-panel" id="stageStep">
+        <div class="selected-summary">
+          <div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div>
+          <button class="btn soft" id="reselectOrg">Сменить организацию</button>
+        </div>
+        <div class="step-title" style="margin-top:16px"><div><h2>Уточни этап</h2><p>Выбери, где ты сейчас: Академия, отдел или старший состав.</p></div></div>
+        <div class="setup-grid">
+          <label class="field"><span>Этап</span><select id="stage"></select></label>
+          <label class="field"><span>Ранг / уровень</span><select id="rank"></select></label>
+          <label class="field" id="subWrap"><span>Подэтап</span><select id="sub"></select></label>
+          <label class="field" id="deptWrap"><span>Отдел</span><select id="dept"></select></label>
+        </div>
+        <button class="btn" id="saveStage" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button>
+      </div>
 
-   <div class="panel" id="infoPanel" style="margin-top:14px;display:none">
-    <h2 id="infoTitle">Информация</h2>
-    <p>Карточки разделов будут наполняться правилами и шпаргалками.</p>
-    <div class="modules" id="modules"></div>
-   </div>
-  </section>
- </main>
+      <div class="panel step-panel" id="progressStep">
+        <div class="selected-summary">
+          <div><strong id="progressTitle">ARMY › Академия</strong><span id="progressDesc">Твой текущий путь. Можно изменить этап.</span></div>
+          <button class="btn soft" id="editStage">Изменить этап</button>
+        </div>
+        <div class="progress-layout" style="margin-top:16px">
+          <div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до следующего</span></div></div>
+          <div>
+            <p id="nextText">Отмечай выполненное, чтобы рос прогресс.</p>
+            <div class="tasks" id="tasks"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel step-panel" id="modulesStep">
+        <div class="step-title"><div><h2 id="modulesTitle">Информация</h2><p>Здесь будут карточки с инфой выбранной организации.</p></div></div>
+        <div class="modules" id="modules"></div>
+      </div>
+    </section>
+  </main>
 </div>
+
 <script>
-const KEY="rp_panel_v80_clean_logic";
-const orgs={
- "Госка":["ARMY","LSPD","LSSD","FIB","EMS","GOV","USSS","PRISON","Weazel News"],
- "Крайм":["Семья","Банда","Мафия","Картель","Нелегал"]
+const KEY="rp_panel_v81_polished_flow";
+const ORGS={Госка:["ARMY","LSPD","LSSD","FIB","EMS","GOV","USSS","PRISON","Weazel News"],Крайм:["Семья","Банда","Мафия","Картель","Нелегал"]};
+const DATA={
+ ARMY:{stages:["Академия","В отделе","Старший состав"],ranks:["1","2","3","4","5","6+","10+","14+"],subs:["Начал Академию","Готовлю КПП","Сдаю тесты","Готов к повышению"],depts:["USAF","MP","DF","SD","RAP","SAS"],mods:["Академия","КПП","Тен-коды","Повышение","Устав","Подразделения","USAF","Шпаргалки"]},
+ GOV:{stages:["Стажировка","В отделе","Старший состав"],ranks:["1","2","3","4","5+","10+"],subs:["Начало","Практика","Тесты","Повышение"],depts:["Основной отдел"],mods:["Правила","Документы","Должности","Шпаргалки"]},
+ CRIME:{stages:["Новичок","Участник","Старший"],ranks:["1","2","3","4","5+"],subs:["Вступление","Правила","Активность","Повышение"],depts:["Основной состав"],mods:["Правила","Ситуации","Роли","Шпаргалки"]}
 };
-const stageData={
- "ARMY":{
-  stages:["Академия","В отделе","Старший состав"],
-  ranks:["1","2","3","4","5","6+","10+","14+"],
-  sub:["Начал Академию","Готовлю КПП","Сдаю тесты","Готов к повышению"],
-  depts:["USAF","MP","DF","SD","RAP","SAS"],
-  modules:["Академия","КПП","Тен-коды","Повышение","Устав","Подразделения","USAF","Шпаргалки"]
- },
- "defaultGov":{stages:["Стажировка","В отделе","Старший состав"],ranks:["1","2","3","4","5+","10+"],sub:["Начало","Практика","Тесты","Повышение"],depts:["Основной отдел"],modules:["Правила","Рация","Повышение","Шпаргалки"]},
- "defaultCrime":{stages:["Новичок","Участник","Старший"],ranks:["1","2","3","4","5+"],sub:["Вступление","Правила","Активность","Повышение"],depts:["Основной состав"],modules:["Правила","Ситуации","Роли","Шпаргалки"]}
-};
-let state={ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",stage:"",rank:"",subStage:"",dept:"",tasks:{}};
-function $(s){return document.querySelector(s)}
-function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d)state=Object.assign(state,d)}catch(e){}}
-function data(){return stageData[state.org] || (state.path==="Госка"?stageData.defaultGov:stageData.defaultCrime)}
-function theme(){document.body.classList.toggle("ready",!!state.ready);document.body.classList.toggle("gov",state.path==="Госка");document.body.classList.toggle("crime",state.path==="Крайм")}
+let S={ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",stage:"",rank:"",sub:"",dept:"",configured:false,tasks:{}};
+const $=s=>document.querySelector(s);
+function d(){return S.org==="ARMY"?DATA.ARMY:S.path==="Госка"?DATA.GOV:DATA.CRIME}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x)S=Object.assign(S,x)}catch(e){}}
+function theme(){document.body.classList.toggle("ready",S.ready);document.body.classList.toggle("gov",S.path==="Госка");document.body.classList.toggle("crime",S.path==="Крайм")}
 function render(){
  theme();
- $("#topAva").textContent=$("#bigAva").textContent=state.avatar;
- $("#topName").textContent=state.name||"Игрок";
- $("#topPath").textContent=`${state.project} › ${state.path}${state.org?' › '+state.org:''}`;
- $("#cabTitle").textContent=state.path==="Госка"?"Личный кабинет сотрудника":"Личный кабинет участника";
- $("#cabSub").textContent=state.org?"Выбранная информация сохраняется здесь.":"Сначала выбери организацию справа.";
- $("#pProject").textContent=state.project;$("#pPath").textContent=state.path;$("#pOrg").textContent=state.org||"Не выбрана";
- $("#pStatus").textContent=state.stage||"Нужно довыбрать справа";$("#pRank").textContent=state.rank?(state.rank+(state.subStage?" · "+state.subStage:"")):"—";
- renderOrg();renderStage();renderProgress();renderAchievements();renderModules();
+ $("#topAva").textContent=$("#bigAva").textContent=S.avatar;
+ $("#topName").textContent=$("#profileName").textContent=S.name||"Игрок";
+ let path=`${S.project} › ${S.path}${S.org?' › '+S.org:''}${S.configured?' › '+S.stage:''}`;
+ $("#topPath").textContent=$("#profileLine").textContent=path;
+ $("#infoProject").textContent=S.project;$("#infoPath").textContent=S.path;$("#infoOrg").textContent=S.org||"Нужно выбрать справа";
+ $("#infoStage").textContent=S.configured?S.stage:(S.org?"Нужно уточнить справа":"—");
+ $("#infoRank").textContent=S.configured?`${S.rank}${S.sub?' · '+S.sub:''}${S.dept&&S.stage==="В отделе"?' · '+S.dept:''}`:"—";
+ $("#orgStep").classList.toggle("show",!S.org);
+ $("#stageStep").classList.toggle("show",!!S.org&&!S.configured);
+ $("#progressStep").classList.toggle("show",!!S.org&&S.configured);
+ $("#modulesStep").classList.toggle("show",!!S.org&&S.configured);
+ renderOrgs();renderStageForm();renderProgress();renderModules();renderAch();
 }
-function renderOrg(){
- const area=$("#orgArea");area.innerHTML="";
- if(state.org && !state.changeOrg){
-  area.innerHTML=`<div class="selected"><div><strong>${state.org}</strong><span>Остальные скрыты, но можно сменить.</span></div><button class="btn soft" id="changeOrg">Сменить</button></div>`;
-  setTimeout(()=>$("#changeOrg").onclick=()=>{state.changeOrg=true;save();render()});
-  return;
- }
- area.innerHTML=`<div class="org-grid">${orgs[state.path].map(o=>`<button class="org ${state.org===o?'active':''}" data-org="${o}">${o}</button>`).join("")}</div>`;
- document.querySelectorAll(".org").forEach(b=>b.onclick=()=>{state.org=b.dataset.org;state.changeOrg=false;state.stage="";state.rank="";state.subStage="";state.dept="";state.tasks={};save();render()});
+function renderOrgs(){
+ $("#orgGrid").innerHTML=ORGS[S.path].map(o=>`<button class="org-btn" data-org="${o}">${o}</button>`).join("");
+ document.querySelectorAll("[data-org]").forEach(b=>b.onclick=()=>{S.org=b.dataset.org;S.configured=false;S.stage="";S.rank="";S.sub="";S.dept="";S.tasks={};save();render()});
 }
-function renderStage(){
- const show=!!state.org;$("#stageArea").style.display=show?"grid":"none"; if(!show)return;
- const d=data();
- if(!state.stage)state.stage=d.stages[0]; if(!state.rank)state.rank=d.ranks[0]; if(!state.subStage)state.subStage=d.sub[0]; if(!state.dept)state.dept=d.depts[0];
- $("#stageSelect").innerHTML=d.stages.map(x=>`<option ${state.stage===x?'selected':''}>${x}</option>`).join("");
- $("#rankSelect").innerHTML=d.ranks.map(x=>`<option ${state.rank===x?'selected':''}>${x}</option>`).join("");
- $("#subStageSelect").innerHTML=d.sub.map(x=>`<option ${state.subStage===x?'selected':''}>${x}</option>`).join("");
- $("#deptSelect").innerHTML=d.depts.map(x=>`<option ${state.dept===x?'selected':''}>${x}</option>`).join("");
- $("#subStageField").style.display=state.stage.includes("Академ")||state.stage.includes("Стаж")||state.stage.includes("Нович")?"grid":"none";
- $("#deptField").style.display=state.stage.includes("отдел")||state.stage.includes("Отдел")?"grid":"none";
+function renderStageForm(){
+ if(!S.org)return;
+ let x=d(); if(!S.stage)S.stage=x.stages[0]; if(!S.rank)S.rank=x.ranks[0]; if(!S.sub)S.sub=x.subs[0]; if(!S.dept)S.dept=x.depts[0];
+ $("#chosenOrg").textContent=S.org;
+ $("#stage").innerHTML=x.stages.map(v=>`<option ${S.stage===v?'selected':''}>${v}</option>`).join("");
+ $("#rank").innerHTML=x.ranks.map(v=>`<option ${S.rank===v?'selected':''}>${v}</option>`).join("");
+ $("#sub").innerHTML=x.subs.map(v=>`<option ${S.sub===v?'selected':''}>${v}</option>`).join("");
+ $("#dept").innerHTML=x.depts.map(v=>`<option ${S.dept===v?'selected':''}>${v}</option>`).join("");
+ $("#subWrap").style.display=(S.stage==="Академия"||S.stage==="Стажировка"||S.stage==="Новичок")?"grid":"none";
+ $("#deptWrap").style.display=S.stage==="В отделе"?"grid":"none";
 }
 function taskList(){
- if(!state.org)return[];
- if(state.stage.includes("Академ"))return["Изучить базовую информацию","Открыть раздел КПП","Повторить тен-коды","Подготовиться к повышению"];
- if(state.stage.includes("отдел")||state.stage.includes("Отдел"))return["Выбрать отдел","Изучить обязанности отдела","Закрыть норму","Подготовить отчёт"];
- if(state.stage.includes("Стар"))return["Контролировать состав","Закрыть недельную активность","Помочь младшему составу","Проверить отчёты"];
+ if(!S.configured)return[];
+ if(S.stage==="Академия")return["Изучить базу Академии","Открыть КПП","Повторить тен-коды","Подготовиться к повышению"];
+ if(S.stage==="В отделе")return["Изучить обязанности отдела","Закрыть норму","Подготовить отчёт","Отметить активность"];
+ if(S.stage==="Старший состав")return["Проверить состав","Помочь младшим","Закрыть недельную активность","Проверить отчёты"];
+ if(S.stage==="Новичок")return["Изучить правила","Выбрать роль","Закрыть первую активность"];
  return["Изучить правила","Закрыть активность","Подготовиться к повышению"];
 }
-function progress(){
- const list=taskList(); if(!list.length)return 0;
- const done=list.filter(t=>state.tasks[t]).length;
- let base= state.org?20:0;
- return Math.min(100,base+Math.round(done/list.length*80));
-}
+function percent(){let t=taskList();if(!t.length)return 0;let done=t.filter(v=>S.tasks[v]).length;return Math.round(done/t.length*100)}
 function renderProgress(){
- const show=!!state.org && !!state.stage;$("#progressCard").classList.toggle("show",show); if(!show)return;
- const p=progress();$("#ring").style.setProperty("--p",p);$("#percent").textContent=p+"%";
- $("#nextText").textContent=p<100?"Отмечай выполненные пункты — так будет расти прогресс до следующего этапа.":"Этап закрыт, можно переходить дальше.";
- $("#tasks").innerHTML=taskList().map(t=>`<label class="task"><input type="checkbox" ${state.tasks[t]?'checked':''} data-task="${t}"><span><b>${t}</b><small>Отметь, если уже сделал.</small></span></label>`).join("");
- document.querySelectorAll("[data-task]").forEach(i=>i.onchange=()=>{state.tasks[i.dataset.task]=i.checked;save();render()});
-}
-function renderAchievements(){
- const ach=[];
- if(state.ready)ach.push(["🟢","Профиль"]);
- if(state.path)ach.push([state.path==="Госка"?"🏛️":"🕶️",state.path]);
- if(state.org)ach.push(["⭐",state.org]);
- if(state.stage)ach.push(["📌",state.stage]);
- if(progress()>=50)ach.push(["🎖","Половина"]);
- if(progress()>=100)ach.push(["🏆","Этап закрыт"]);
- $("#openedAchievements").innerHTML=ach.map(a=>`<span class="ach-chip">${a[0]} ${a[1]}</span>`).join("");
+ if(!S.configured)return;
+ let p=percent();$("#ring").style.setProperty("--p",p);$("#percent").textContent=p+"%";
+ $("#progressTitle").textContent=`${S.org} › ${S.stage}`;
+ $("#progressDesc").textContent=S.stage==="В отделе"?`Отдел: ${S.dept}`:`Ранг/уровень: ${S.rank}`;
+ $("#nextText").textContent=p<100?"Отмечай выполненные пункты — это прогресс до следующего этапа.":"Этап закрыт, можно переходить дальше.";
+ $("#tasks").innerHTML=taskList().map(t=>`<label class="task"><input type="checkbox" ${S.tasks[t]?'checked':''} data-task="${t}"><span><b>${t}</b><small>Отметь, если уже сделал.</small></span></label>`).join("");
+ document.querySelectorAll("[data-task]").forEach(i=>i.onchange=()=>{S.tasks[i.dataset.task]=i.checked;save();render()});
 }
 function renderModules(){
- const show=!!state.org;$("#infoPanel").style.display=show?"block":"none"; if(!show)return;
- $("#infoTitle").textContent=`Информация — ${state.org}`;
- $("#modules").innerHTML=data().modules.map(m=>`<div class="module"><div style="font-size:28px">📌</div><strong>${m}</strong><span>Пустая активная карточка под будущую инфу.</span></div>`).join("");
+ if(!S.configured)return;
+ $("#modulesTitle").textContent=`Информация — ${S.org}`;
+ $("#modules").innerHTML=d().mods.map(m=>`<div class="module"><div>📌</div><strong>${m}</strong><span>Сюда позже добавим нужную инфу.</span></div>`).join("");
 }
-$("#start").onclick=()=>{const n=$("#firstName").value.trim();if(!n){$("#err").classList.add("show");return}$("#err").classList.remove("show");state={ready:true,name:n,avatar:document.querySelector("[name=avatar]:checked").value,project:$("#firstProject").value,path:document.querySelector("[name=path]:checked").value,org:"",stage:"",rank:"",subStage:"",dept:"",tasks:{}};save();render()}
-$("#saveSetup").onclick=()=>{if(state.org){state.stage=$("#stageSelect").value;state.rank=$("#rankSelect").value;state.subStage=$("#subStageSelect").value;state.dept=$("#deptSelect").value;save();render()}}
-["stageSelect","rankSelect","subStageSelect","deptSelect"].forEach(id=>document.addEventListener("change",e=>{if(e.target.id===id){state.stage=$("#stageSelect").value;state.rank=$("#rankSelect").value;state.subStage=$("#subStageSelect").value;state.dept=$("#deptSelect").value;save();render()}}));
-$("#editSetup").onclick=()=>document.getElementById("setupCard").scrollIntoView({behavior:"smooth",block:"center"});
-$("#reset").onclick=()=>{localStorage.removeItem(KEY);state={ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",stage:"",rank:"",subStage:"",dept:"",tasks:{}};render()}
+function renderAch(){
+ let a=[]; if(S.ready)a.push(["🟢","Профиль"]); if(S.path)a.push([S.path==="Госка"?"🏛️":"🕶️",S.path]); if(S.org)a.push(["⭐",S.org]); if(S.configured)a.push(["📌",S.stage]); if(percent()>=50)a.push(["🎖","50%"]); if(percent()>=100)a.push(["🏆","Этап закрыт"]);
+ $("#achievements").innerHTML=a.map(x=>`<span class="ach">${x[0]} ${x[1]}</span>`).join("");
+}
+$("#start").onclick=()=>{let n=$("#firstName").value.trim();if(!n){$("#err").classList.add("show");return}S={ready:true,name:n,avatar:document.querySelector("[name=avatar]:checked").value,project:$("#firstProject").value,path:document.querySelector("[name=path]:checked").value,org:"",stage:"",rank:"",sub:"",dept:"",configured:false,tasks:{}};save();render()}
+$("#reselectOrg").onclick=()=>{S.org="";S.configured=false;S.tasks={};save();render()}
+$("#editStage").onclick=()=>{S.configured=false;save();render()}
+$("#saveStage").onclick=()=>{S.stage=$("#stage").value;S.rank=$("#rank").value;S.sub=$("#sub").value;S.dept=$("#dept").value;S.configured=true;S.tasks={};save();render()}
+["stage","rank","sub","dept"].forEach(id=>document.addEventListener("change",e=>{if(e.target.id===id){S.stage=$("#stage").value;S.rank=$("#rank").value;S.sub=$("#sub").value;S.dept=$("#dept").value;renderStageForm()}}))
+$("#changeAll").onclick=()=>{S.configured=false;save();render()}
+$("#reset").onclick=()=>{localStorage.removeItem(KEY);S={ready:false,name:"",avatar:"🪖",project:"GTA5RP",path:"Госка",org:"",stage:"",rank:"",sub:"",dept:"",configured:false,tasks:{}};render()}
 load();render();
 </script>
 </body>
