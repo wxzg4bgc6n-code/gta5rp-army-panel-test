@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v115</title>
+<title>RP Cabinet v116</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1167,6 +1167,133 @@ body.style-arctic:before,body.style-emerald:before,body.style-violet:before,body
   .path-arrow{transform:rotate(90deg)}
 }
 
+
+/* v116: широкая dashboard-сборка ближе к макету, без медальки у аватара */
+.app{
+  width:min(1620px,calc(100% - 32px))!important;
+  padding-top:16px!important;
+}
+.main{
+  max-width:none!important;
+  width:100%!important;
+  grid-template-columns:360px minmax(0,1fr)!important;
+  border-radius:24px!important;
+}
+.profile-card{
+  padding:26px 20px!important;
+}
+.flow{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  align-content:start!important;
+  padding:22px!important;
+}
+.dashboard-tabs{
+  order:1;
+  grid-template-columns:repeat(5,minmax(130px,1fr))!important;
+  gap:8px!important;
+  margin-bottom:14px!important;
+}
+.dashboard-section{
+  order:2;
+}
+#dashboardPathProgress{
+  order:3;
+}
+#orgStep{order:4}
+#setupStep{order:5}
+#progressStep{
+  order:6;
+  border:1px solid rgba(169,139,255,.18)!important;
+  border-radius:22px!important;
+  background:rgba(5,8,16,.26)!important;
+  padding:18px!important;
+  margin-top:0!important;
+}
+.dashboard-tabs .dash-tab{
+  min-height:54px!important;
+  border-radius:15px!important;
+  background:rgba(4,7,14,.55)!important;
+}
+.dash-section-head{
+  align-items:center!important;
+}
+.dash-section-head h2{
+  font-size:28px!important;
+}
+.achievement-preview-grid{
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  gap:14px!important;
+}
+.achievement-preview{
+  min-height:142px!important;
+  border-radius:18px!important;
+}
+.achievement-preview .ap-icon{
+  font-size:36px!important;
+}
+.path-cards{
+  grid-template-columns:minmax(0,1fr) 40px minmax(0,1.2fr) 40px minmax(0,1fr)!important;
+}
+.path-card{
+  min-height:118px!important;
+  border-radius:18px!important;
+}
+.progress-layout{
+  grid-template-columns:260px minmax(0,1fr)!important;
+  gap:28px!important;
+  align-items:center!important;
+}
+.ring{
+  width:190px!important;
+  height:190px!important;
+}
+.tasks{
+  gap:10px!important;
+}
+.task{
+  min-height:74px!important;
+  border-radius:17px!important;
+  padding:15px!important;
+}
+.avatar-wrap{
+  width:112px!important;
+}
+.clean-rank-emblem{
+  width:112px!important;
+  height:112px!important;
+  border-radius:30px!important;
+}
+.last-achievement-badge,
+.clean-last-achievement,
+#lastAchievementBadge{
+  display:none!important;
+}
+.last-ach-card{
+  border-color:rgba(155,108,255,.32)!important;
+  background:linear-gradient(135deg,rgba(155,108,255,.12),rgba(255,177,64,.05))!important;
+}
+.account-progress-card{
+  background:rgba(255,255,255,.045)!important;
+  border-color:rgba(169,139,255,.16)!important;
+}
+@media(min-width:1400px){
+  .main{grid-template-columns:380px minmax(0,1fr)!important}
+  .achievement-preview-grid{grid-template-columns:repeat(6,minmax(130px,1fr))!important}
+}
+@media(max-width:1150px){
+  .achievement-preview-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .dashboard-tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:900px){
+  .app{width:min(100% - 20px,760px)!important}
+  .main{grid-template-columns:1fr!important}
+  .flow{padding:16px!important}
+  .dashboard-tabs{grid-template-columns:1fr 1fr!important}
+  .achievement-preview-grid{grid-template-columns:1fr 1fr!important}
+  .progress-layout{grid-template-columns:1fr!important;padding-left:0!important}
+}
+
 </style>
 </head>
 <body>
@@ -1213,7 +1340,6 @@ body.style-arctic:before,body.style-emerald:before,body.style-violet:before,body
             <span id="rankIcon">◇</span>
             <small id="rankTier">I</small>
           </div>
-          <button class="last-achievement-badge clean-last-achievement" id="lastAchievementBadge" title="Последнее достижение">🏆</button>
         </div>
         <h2 id="profileName">Игрок</h2>
         <p id="profilePath">GTA5RP › Госка</p>
@@ -1419,7 +1545,7 @@ body.style-arctic:before,body.style-emerald:before,body.style-violet:before,body
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v115_dashboard_ach_badge_ui_theme';
+const VERSION_KEY='rp_panel_v116_wide_dashboard_no_avatar_badge';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -1897,13 +2023,6 @@ function lastAchievementDef(){
 }
 function renderLastAchievementUI(){
   const last=lastAchievementDef();
-  const badge=$('#lastAchievementBadge');
-  if(badge){
-    badge.classList.toggle('show',!!last);
-    badge.textContent=last?last.icon:'🏆';
-    badge.title=last?`Последнее достижение: ${last.title}`:'Последнее достижение';
-    badge.onclick=openAchievementsModal;
-  }
   const card=$('#lastAchCard');
   if(card){
     card.style.display=last?'block':'none';
@@ -2025,7 +2144,7 @@ $('#saveLevelModal').onclick=saveLevelModal;
 $('#openAchievements').onclick=openAchievementsModal;
 const openHero=$('#openAchievementsHero'); if(openHero) openHero.onclick=openAchievementsModal;
 document.addEventListener('click',e=>{
-  if(e.target && (e.target.id==='openAchievements' || e.target.id==='lastAchievementBadge' || e.target.id==='openAchievementsHero')) openAchievementsModal();
+  if(e.target && (e.target.id==='openAchievements' || e.target.id==='openAchievementsHero')) openAchievementsModal();
 });
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
