@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v113</title>
+<title>RP Cabinet v114</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1172,9 +1172,10 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v113_last_ach_badge_usaf_from_3';
+const KEY='rp_panel_account_profile_STABLE';
+const VERSION_KEY='rp_panel_v114_stable_save_account_progress';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
@@ -1240,16 +1241,41 @@ let displayedProgress=0;
 let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
 
-function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function save(){
+  const data=JSON.stringify(S);
+  localStorage.setItem(KEY,data);
+  localStorage.setItem(VERSION_KEY,data);
+}
 function load(){
   try{
     let raw=localStorage.getItem(KEY);
+
+    const migrateKeys=[
+      VERSION_KEY,
+      'rp_panel_v113_last_ach_badge_usaf_from_3',
+      'rp_panel_v112_rank_emblem_nick_settings',
+      'rp_panel_v111_achievements_button_last_badge',
+      'rp_panel_v110_account_rank_achievements',
+      'rp_panel_v109_academy_department_fixed',
+      'rp_panel_v108_academy_to_department_flow',
+      'rp_panel_v105_ring_crop_fix_glow_restore',
+      'rp_panel_v104_edit_org_section_ring_fix',
+      'rp_panel_v103_persist_unified',
+      'rp_panel_v102_level_edit_profile',
+      'rp_panel_v101_clean_flow_promotion',
+      'rp_panel_v100_clean_base'
+    ];
+
     if(!raw){
-      for(const key of FALLBACK_KEYS){
-        raw=localStorage.getItem(key);
-        if(raw) break;
+      for(const key of migrateKeys){
+        const old=localStorage.getItem(key);
+        if(old){
+          raw=old;
+          break;
+        }
       }
     }
+
     const d=raw?JSON.parse(raw):null;
     if(d){
       S=Object.assign(S,d);
