@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v112</title>
+<title>RP Cabinet v113</title>
 <style>
 :root{
   --bg:#02040a;
@@ -920,6 +920,37 @@ input:focus,select:focus{
   margin-top:4px;
 }
 
+
+/* v113: аккуратный значок последнего достижения у эмблемы */
+.avatar-wrap{
+  position:relative;
+  width:112px;
+  margin:0 auto 13px;
+}
+.clean-last-achievement{
+  position:absolute!important;
+  right:-13px!important;
+  bottom:12px!important;
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  border-radius:14px!important;
+  display:none!important;
+  place-items:center!important;
+  border:1px solid color-mix(in srgb,var(--accent) 38%, white 0%)!important;
+  background:rgba(8,12,22,.94)!important;
+  color:var(--text)!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.38)!important;
+  font-size:17px!important;
+  z-index:5!important;
+}
+.clean-last-achievement.show{
+  display:grid!important;
+}
+.clean-last-achievement:hover{
+  background:color-mix(in srgb,var(--accent) 12%, rgba(8,12,22,.94))!important;
+}
+
 </style>
 </head>
 <body>
@@ -966,6 +997,7 @@ input:focus,select:focus{
             <span id="rankIcon">◇</span>
             <small id="rankTier">I</small>
           </div>
+          <button class="last-achievement-badge clean-last-achievement" id="lastAchievementBadge" title="Последнее достижение">🏆</button>
         </div>
         <h2 id="profileName">Игрок</h2>
         <p id="profilePath">GTA5RP › Госка</p>
@@ -1140,9 +1172,9 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v112_rank_emblem_nick_settings';
+const KEY='rp_panel_v113_last_ach_badge_usaf_from_3';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
@@ -1158,8 +1190,6 @@ const SECTIONS={
 const LEVELS={
   Academy:['1 → 2 — Рядовой','2 → 3 — Специалист'],
   USAF:[
-    '1 → 2 — Рекрут → Рядовой',
-    '2 → 3 — Рядовой → Специалист',
     '3 → 4 — Специалист → Капрал',
     '4 → 5 — Капрал → Сержант',
     '5 → 6 — Сержант → Штаб-сержант',
@@ -1180,8 +1210,7 @@ const PROMO_TASKS={
     '2 → 3 — Специалист':['Сдать экзамен по Уставу и Тен-кодам','Сдать экзамен по Допуску на КПП','Отстоять 1 час на КПП','Выполнить РП-ситуацию от 10 строк']
   },
   USAF:{
-    '1 → 2 — Рекрут → Рядовой':['Пройти первичный инструктаж','Заполнить сейф'],
-    '2 → 3 — Рядовой → Специалист':['Сдать устав и тен-коды USAF','Участие в 1 ГМП/МФМП/ВФМП или тренировке','Участие в CO — 2'],
+
     '3 → 4 — Специалист → Капрал':['Сдать FROGGER','Участие в 2 ГМП/МФМП/ВФМП или тренировке','Сдать парашютирование','Участие в CO — 3'],
     '4 → 5 — Капрал → Сержант':['Сдать протоколы USAF','Сдать парашютирование — «Пробуждение»','Участие в 2 ГМП/МФМП/ВФМП или тренировке','Участие в CO — 4'],
     '5 → 6 — Сержант → Штаб-сержант':['Сдать УАК и ПК у MP','Сдать SWIFT','Сдать вождение у SD','Сдать парашютирование — «Легенда о призраках»','Участие в 3 ГМП/МФМП/ВФМП или тренировке','Участие в CO — 5'],
@@ -1671,7 +1700,7 @@ $('#closeLevelModal').onclick=closeLevelModal;
 $('#saveLevelModal').onclick=saveLevelModal;
 $('#openAchievements').onclick=openAchievementsModal;
 document.addEventListener('click',e=>{
-  if(e.target && e.target.id==='openAchievements') openAchievementsModal();
+  if(e.target && (e.target.id==='openAchievements' || e.target.id==='lastAchievementBadge')) openAchievementsModal();
 });
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
