@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v103</title>
+<title>RP Cabinet v104</title>
 <style>
 :root{
   --bg:#02040a;
@@ -489,6 +489,44 @@ input:focus,select:focus{
   }
 }
 
+
+/* v104: исправление круга и редактирование организации/раздела */
+.editable-row{
+  grid-template-columns:112px 1fr 38px;
+  align-items:center;
+}
+.editable-row .mini-edit{
+  display:block;
+}
+#infoOrg,#infoSection{
+  cursor:pointer;
+}
+.ring{
+  overflow:visible!important;
+  box-shadow:
+    0 0 0 14px rgba(255,255,255,.045),
+    0 0 52px var(--glow)!important;
+}
+.ring::after{
+  content:"";
+  position:absolute;
+  inset:-18px;
+  border-radius:50%;
+  background:radial-gradient(circle, var(--glow), transparent 64%);
+  z-index:-1;
+  pointer-events:none;
+  opacity:.78;
+}
+.ring.progress-pulse{
+  box-shadow:
+    0 0 0 14px rgba(255,255,255,.05),
+    0 0 62px var(--glow)!important;
+}
+@media(max-width:620px){
+  .editable-row{grid-template-columns:1fr 38px}
+  .editable-row span{grid-column:1/-1}
+}
+
 </style>
 </head>
 <body>
@@ -537,8 +575,8 @@ input:focus,select:focus{
       <div class="profile-info">
         <div class="row"><span>Проект</span><b id="infoProject">—</b></div>
         <div class="row"><span>Путь</span><b id="infoPath">—</b></div>
-        <div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать</b></div>
-        <div class="row"><span>Раздел</span><b id="infoSection">—</b></div>
+        <div class="row editable-row"><span>Организация</span><b id="infoOrg">Нужно выбрать</b><button class="mini-edit" id="editOrgBtn" title="Изменить организацию">✎</button></div>
+        <div class="row editable-row"><span>Раздел</span><b id="infoSection">—</b><button class="mini-edit" id="editSectionBtn" title="Изменить раздел">✎</button></div>
         <div class="row level-row"><span>Ступень</span><b id="infoLevel">—</b><button class="mini-edit" id="editLevelBtn" title="Изменить ступень">✎</button></div>
       </div>
       <div class="ach-strip" id="achievements"></div>
@@ -580,6 +618,32 @@ input:focus,select:focus{
   </main>
 </div>
 
+
+
+<div class="modal" id="orgSectionModal">
+  <div class="modal-card level-modal-card">
+    <h2>Изменить организацию и раздел</h2>
+    <p>При смене организации или раздела задачи прогресса будут обновлены.</p>
+    <div class="settings-grid">
+      <label class="field">
+        <span>Организация</span>
+        <select id="modalOrgSelect"></select>
+      </label>
+      <label class="field">
+        <span>Раздел</span>
+        <select id="modalSectionSelect"></select>
+      </label>
+      <label class="field">
+        <span>Ступень</span>
+        <select id="modalOrgLevelSelect"></select>
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="btn soft" id="closeOrgSectionModal">Отмена</button>
+      <button class="btn" id="saveOrgSectionModal">Сохранить</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="levelModal">
   <div class="modal-card level-modal-card">
@@ -626,9 +690,9 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v103_persist_unified';
+const KEY='rp_panel_v104_edit_org_section_ring_fix';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
@@ -719,6 +783,8 @@ function render(){
   $('#infoSection').textContent=S.configured?(S.section||'—'):'—';
   $('#infoLevel').textContent=S.configured?(S.level||'—'):'—';
   $('#editLevelBtn').classList.toggle('show',!!S.configured);
+  $('#editOrgBtn').classList.toggle('show',!!S.ready);
+  $('#editSectionBtn').classList.toggle('show',!!S.org);
 
   $('#orgStep').classList.toggle('show',!S.org);
   $('#setupStep').classList.toggle('show',!!S.org && !S.configured);
@@ -816,6 +882,55 @@ function renderProgress(){
   $('#nextText').textContent='';
 }
 
+
+function modalSectionsForOrg(org){
+  return SECTIONS[org] || (S.path==='Госка'?SECTIONS.defaultGov:SECTIONS.defaultCrime);
+}
+function modalLevelsForSection(section){
+  return LEVELS[section] || LEVELS.default;
+}
+function fillOrgSectionModal(){
+  const orgSelect=$('#modalOrgSelect');
+  const sectionSelect=$('#modalSectionSelect');
+  const levelSelect=$('#modalOrgLevelSelect');
+  const orgList=ORGS[S.path]||[];
+  const selectedOrg=orgList.includes(S.org)?S.org:(orgList[0]||'');
+  orgSelect.innerHTML=orgList.map(v=>`<option value="${v}" ${v===selectedOrg?'selected':''}>${v}</option>`).join('');
+
+  const secList=modalSectionsForOrg(selectedOrg);
+  const selectedSection=secList.includes(S.section)?S.section:(secList[0]||'');
+  sectionSelect.innerHTML=secList.map(v=>`<option value="${v}" ${v===selectedSection?'selected':''}>${v}</option>`).join('');
+
+  const lvlList=modalLevelsForSection(selectedSection);
+  const selectedLevel=lvlList.includes(S.level)?S.level:(lvlList[0]||'');
+  levelSelect.innerHTML=lvlList.map(v=>`<option value="${v}" ${v===selectedLevel?'selected':''}>${v}</option>`).join('');
+}
+function openOrgSectionModal(){
+  if(!S.ready) return;
+  fillOrgSectionModal();
+  $('#orgSectionModal').classList.add('open');
+}
+function closeOrgSectionModal(){
+  $('#orgSectionModal').classList.remove('open');
+}
+function saveOrgSectionModal(){
+  const newOrg=$('#modalOrgSelect').value;
+  const newSection=$('#modalSectionSelect').value;
+  const newLevel=$('#modalOrgLevelSelect').value;
+  const changed = newOrg!==S.org || newSection!==S.section || newLevel!==S.level;
+  S.org=newOrg;
+  S.section=newSection;
+  S.level=newLevel;
+  S.configured=!!(S.org && S.section && S.level);
+  if(changed){
+    S.tasks={};
+    displayedProgress=0;
+  }
+  save();
+  closeOrgSectionModal();
+  render();
+  showToast('Выбор обновлён','Прогресс пересчитан');
+}
 function openLevelModal(){
   if(!S.org || !S.section || !S.level || !S.configured) return;
   const select=$('#modalLevelSelect');
@@ -916,6 +1031,25 @@ $('#saveSetup').onclick=()=>{
   render();
 };
 
+
+$('#editOrgBtn').onclick=openOrgSectionModal;
+$('#editSectionBtn').onclick=openOrgSectionModal;
+$('#infoOrg').onclick=openOrgSectionModal;
+$('#infoSection').onclick=openOrgSectionModal;
+$('#closeOrgSectionModal').onclick=closeOrgSectionModal;
+$('#saveOrgSectionModal').onclick=saveOrgSectionModal;
+$('#modalOrgSelect').onchange=()=>{
+  const org=$('#modalOrgSelect').value;
+  const secList=modalSectionsForOrg(org);
+  $('#modalSectionSelect').innerHTML=secList.map(v=>`<option value="${v}">${v}</option>`).join('');
+  const lvlList=modalLevelsForSection($('#modalSectionSelect').value);
+  $('#modalOrgLevelSelect').innerHTML=lvlList.map(v=>`<option value="${v}">${v}</option>`).join('');
+};
+$('#modalSectionSelect').onchange=()=>{
+  const lvlList=modalLevelsForSection($('#modalSectionSelect').value);
+  $('#modalOrgLevelSelect').innerHTML=lvlList.map(v=>`<option value="${v}">${v}</option>`).join('');
+};
+
 $('#editLevelBtn').onclick=openLevelModal;
 $('#infoLevel').onclick=openLevelModal;
 $('#closeLevelModal').onclick=closeLevelModal;
@@ -925,6 +1059,7 @@ $('#closeSettings').onclick=closeSettings;
 $('#saveSettings').onclick=saveSettings;
 $('#settingsModal').onclick=e=>{if(e.target.id==='settingsModal')closeSettings()};
 $('#levelModal').onclick=e=>{if(e.target.id==='levelModal')closeLevelModal()};
+$('#orgSectionModal').onclick=e=>{if(e.target.id==='orgSectionModal')closeOrgSectionModal()};
 document.querySelectorAll('.theme-card').forEach(card=>{
   card.onclick=()=>{
     document.querySelectorAll('.theme-card').forEach(c=>c.classList.remove('active'));
