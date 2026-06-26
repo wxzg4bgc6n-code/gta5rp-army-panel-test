@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v108</title>
+<title>RP Cabinet v109</title>
 <style>
 :root{
   --bg:#02040a;
@@ -565,19 +565,17 @@ input:focus,select:focus{
 }
 
 
-/* v108: переход из Academy в отдел */
+/* v109: финальный переход Academy -> отдел */
 .department-unlock{
   display:none;
   margin-top:14px;
   padding:15px;
   border-radius:18px;
-  border:1px solid color-mix(in srgb,var(--accent) 36%, white 0%);
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 11%, transparent),rgba(255,255,255,.035));
+  border:1px solid color-mix(in srgb,var(--accent) 38%, white 0%);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 12%, transparent),rgba(255,255,255,.035));
   animation: departmentReveal .28s ease;
 }
-.department-unlock.show{
-  display:block;
-}
+.department-unlock.show{display:block}
 .department-unlock strong{
   display:block;
   font-size:16px;
@@ -595,7 +593,7 @@ input:focus,select:focus{
   gap:8px;
 }
 .department-btn{
-  min-height:48px;
+  min-height:50px;
   border:1px solid rgba(255,255,255,.13);
   border-radius:15px;
   background:rgba(255,255,255,.055);
@@ -698,6 +696,12 @@ input:focus,select:focus{
               <span id="nextLevelText">Следующая ступень готова.</span>
               <button class="btn" id="claimPromotion" style="width:100%">Получить повышение</button>
             </div>
+
+            <div class="department-unlock" id="departmentUnlock">
+              <strong>🎉 Академия закрыта</strong>
+              <span>Поздравляю. Теперь выбери отдел — прогресс начнётся уже с выбранного направления.</span>
+              <div class="department-grid" id="departmentGrid"></div>
+            </div>
           </div>
         </div>
 </div>
@@ -777,9 +781,9 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v108_academy_to_department_flow';
+const KEY='rp_panel_v109_academy_department_fixed';
 const FALLBACK_KEYS=[
- 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore',
+ 'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow',
  'rp_panel_v101_clean_flow_promotion',
  'rp_panel_v100_clean_base'
 ];
