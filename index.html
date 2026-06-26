@@ -83,12 +83,48 @@ button,input,select{font:inherit}button{cursor:pointer}body.ready .start-screen{
   .progress-toast { right: 12px; bottom: 12px; }
 }
 
+
+/* v87: следующий уровень и аккуратная смена выбора */
+.next-level-box {
+  display: none;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(118,243,197,.34);
+  background: linear-gradient(135deg, rgba(118,243,197,.12), rgba(255,255,255,.035));
+}
+.next-level-box.show {
+  display: block;
+}
+.next-level-box strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 15px;
+}
+.next-level-box span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 11px;
+}
+.profile-change-link {
+  width: 100%;
+  margin-top: 14px;
+  min-height: 40px;
+  border-radius: 14px;
+  font-size: 13px;
+  opacity: .82;
+}
+.profile-change-link:hover {
+  opacity: 1;
+}
+
 </style>
 </head>
 <body>
 <section class="start-screen"><div class="start-card"><div class="kicker">Первый запуск</div><h1>Создай RP-профиль</h1><p>Только имя, аватар, проект и путь. Организацию и раздел выберешь уже в кабинете.</p><div class="form"><label class="field"><span>Имя / ник</span><input id="firstName" placeholder="Введи свой ник"></label><label class="field"><span>Аватар</span><div class="avatar-grid"><label class="choice"><input type="radio" name="avatar" value="🪖" checked><div class="tile">🪖</div></label><label class="choice"><input type="radio" name="avatar" value="🚓"><div class="tile">🚓</div></label><label class="choice"><input type="radio" name="avatar" value="🏛️"><div class="tile">🏛️</div></label><label class="choice"><input type="radio" name="avatar" value="💼"><div class="tile">💼</div></label><label class="choice"><input type="radio" name="avatar" value="🕶️"><div class="tile">🕶️</div></label><label class="choice"><input type="radio" name="avatar" value="🎮"><div class="tile">🎮</div></label></div></label><label class="field"><span>Проект</span><select id="firstProject"><option>GTA5RP</option><option>Majestic RP</option></select></label><label class="field"><span>Путь</span><div class="path-grid"><label class="choice"><input type="radio" name="path" value="Госка" checked><div class="tile"><b>🏛️ Госка</b>служба и карьера</div></label><label class="choice"><input type="radio" name="path" value="Крайм"><div class="tile"><b>🕶️ Крайм</b>семья / банда / мафия</div></label></div></label><div class="err" id="err">Сначала введи имя.</div><button class="btn" id="start">Открыть личный кабинет</button></div></div></section>
 <div class="app">
-<main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Уровень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и уровень</h2><p>Выбери раздел и ступень повышения из ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="selected-summary"><div><strong id="progressTitle">ARMY</strong><span id="progressDesc">Текущая ступень</span></div><button class="btn soft" id="editSetup">Сменить</button></div><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div></div></div></div><div class="panel step-panel" id="infoStep"><div class="step-title"><div><h2 id="infoTitle">Информация ARMY</h2><p>Инфа разложена по вкладкам, без общей каши.</p></div></div><div class="info-tabs" id="infoTabs"></div><div class="info-grid" id="infoGrid"></div></div></section></main></div>
+<main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Уровень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div><button class="btn soft profile-change-link" id="editSetup">Изменить раздел / ступень</button></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и уровень</h2><p>Выбери раздел и ступень повышения из ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="selected-summary"><div><strong id="progressTitle">ARMY</strong><span id="progressDesc">Текущая ступень</span></div></div><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div><div class="next-level-box" id="nextLevelBox"><strong>Этап закрыт</strong><span id="nextLevelText">Можно перейти дальше.</span><button class="btn" id="goNextLevel" style="width:100%">Перейти на следующий уровень</button></div></div></div></div><div class="panel step-panel" id="infoStep"><div class="step-title"><div><h2 id="infoTitle">Информация ARMY</h2><p>Инфа разложена по вкладкам, без общей каши.</p></div></div><div class="info-tabs" id="infoTabs"></div><div class="info-grid" id="infoGrid"></div></div></section></main></div>
 <div class="progress-toast" id="progressToast"><b>Прогресс обновлён</b><span id="progressToastText">+0%</span></div>
 <script>
 const KEY='rp_panel_v83_clean_army_logic';
@@ -188,6 +224,26 @@ function showProgressToast(text){
  clearTimeout(showProgressToast.timer);
  showProgressToast.timer=setTimeout(()=>toast.classList.remove('show'),1800);
 }
+
+function currentLevelList(){
+ return LEVELS[S.section] || LEVELS.default || [];
+}
+function nextLevelValue(){
+ const list=currentLevelList();
+ const idx=list.indexOf(S.level);
+ if(idx>=0 && idx<list.length-1) return list[idx+1];
+ return "";
+}
+function goNextLevel(){
+ const next=nextLevelValue();
+ if(!next) return;
+ S.level=next;
+ S.tasks={};
+ displayedProgress=0;
+ save();
+ render();
+ showProgressToast('Открыт следующий уровень');
+}
 function renderProgress(){
  if(!S.configured)return;
  let p=percent();
@@ -206,6 +262,20 @@ function renderProgress(){
   save();
   render();
  });
+ const nextBox=$('#nextLevelBox');
+ const nextText=$('#nextLevelText');
+ const nextBtn=$('#goNextLevel');
+ const next=nextLevelValue();
+ if(nextBox){
+  nextBox.classList.toggle('show', p>=100);
+ }
+ if(nextText){
+  nextText.textContent = next ? `Следующая ступень: ${next}` : 'Это последняя ступень в выбранном разделе.';
+ }
+ if(nextBtn){
+  nextBtn.style.display = next ? 'block' : 'none';
+  nextBtn.onclick=goNextLevel;
+ }
 }
 function availableTabs(){return S.org==='ARMY'?['Academy','USAF','Повышение','Премии','Общее']:[S.org||'Инфо','Премии']}function tabData(tab){if(tab==='Academy')return INFO.Academy;if(tab==='USAF')return INFO.USAF;if(tab==='Премии')return INFO.Premium;if(tab==='Повышение')return {[`Повышение: ${S.section}`]:taskList(), 'Как пользоваться':['Выбери уровень слева сверху, затем отмечай пункты прогресса.','Список задач меняется от раздела: Academy, USAF или другой отдел.']};return INFO.Common}
 function renderInfo(){if(!S.configured)return;let tabs=availableTabs();if(!tabs.includes(S.infoTab))S.infoTab=tabs[0];$('#infoTitle').textContent=`Информация — ${S.org}`;$('#infoTabs').innerHTML=tabs.map(t=>`<button class="info-tab ${S.infoTab===t?'active':''}" data-tab="${t}">${t}</button>`).join('');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.infoTab=b.dataset.tab;save();render()});let data=tabData(S.infoTab);$('#infoGrid').innerHTML=Object.entries(data).map(([title,items])=>`<div class="info-card ${S.infoTab==='Премии'?'premium':''}"><strong>${title}</strong><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}
