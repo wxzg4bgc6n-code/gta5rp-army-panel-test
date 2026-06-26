@@ -282,6 +282,63 @@ body.theme-gold:before{
   .level-buttons{grid-template-columns:1fr}
 }
 
+
+/* v92 финальные правки: без инфо-блока, рабочий выбор ступени, темы без чужих цветов */
+body.theme-blue{--accent:#7dd3fc;--accent2:#60a5fa;--glow:rgba(96,165,250,.18);--success:#7dd3fc}
+body.theme-green{--accent:#86efac;--accent2:#2dd4bf;--glow:rgba(45,212,191,.16);--success:#86efac}
+body.theme-purple{--accent:#c4b5fd;--accent2:#818cf8;--glow:rgba(129,140,248,.18);--success:#c4b5fd}
+body.theme-red{--accent:#fb7185;--accent2:#f472b6;--glow:rgba(244,114,182,.15);--success:#fb7185}
+body.theme-gold{--accent:#facc15;--accent2:#f59e0b;--glow:rgba(250,204,21,.14);--success:#facc15}
+.kicker:before{background:var(--accent)!important;box-shadow:0 0 18px var(--glow)!important}
+.ach:first-child::before,
+.ach-chip:first-child::before{background:var(--accent)!important}
+input[type="checkbox"]{accent-color:var(--accent)!important}
+.btn{
+  border-color: color-mix(in srgb,var(--accent) 46%, white 0%)!important;
+}
+.btn:not(.soft):not(.danger){
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent2) 40%, transparent),color-mix(in srgb,var(--accent) 18%, transparent))!important;
+}
+.btn.soft{
+  background:rgba(255,255,255,.055)!important;
+  border-color:rgba(255,255,255,.13)!important;
+}
+.ring{
+  background:conic-gradient(var(--accent) calc(var(--p)*1%),rgba(255,255,255,.08) 0)!important;
+}
+.next-level-box{
+  border-color:color-mix(in srgb,var(--accent) 36%, white 0%)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 12%, transparent),rgba(255,255,255,.035))!important;
+}
+.task.done{
+  border-color:color-mix(in srgb,var(--accent) 58%, white 0%)!important;
+  background:linear-gradient(135deg,var(--glow),rgba(255,255,255,.035))!important;
+}
+.progress-toast{
+  border-color:color-mix(in srgb,var(--accent) 45%, white 0%)!important;
+}
+#modulesStep,#modules,.modules,#infoPanel,.info-panel,[id*="modules"],[id*="infoPanel"],
+.panel:has(#modules),.panel:has(#modulesTitle){
+  display:none!important;
+}
+.level-picker-panel{
+  display:block!important;
+  margin-top:16px!important;
+  padding:14px!important;
+  border-radius:18px!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  background:rgba(255,255,255,.04)!important;
+}
+.level-picker-panel select{
+  min-height:50px;
+}
+.settings-theme-grid{
+  margin-top:0;
+}
+.settings-theme-grid .theme-dot{
+  min-height:58px;
+}
+
 </style>
 </head>
 <body>
@@ -313,13 +370,15 @@ body.theme-gold:before{
     <div class="settings-grid">
       <label class="field"><span>Проект</span><select id="settingsProject"><option>GTA5RP</option><option>Majestic RP</option></select></label>
       <label class="field"><span>Путь</span><select id="settingsPath"><option>Госка</option><option>Крайм</option></select></label>
-      <label class="field"><span>Цветовая тема</span><select id="settingsTheme">
-        <option value="theme-blue">Голубая</option>
-        <option value="theme-green">Зелёная</option>
-        <option value="theme-purple">Фиолетовая</option>
-        <option value="theme-red">Красная</option>
-        <option value="theme-gold">Золотая</option>
-      </select></label>
+      <label class="field"><span>Цветовая тема</span>
+        <div class="theme-grid settings-theme-grid">
+          <label class="choice"><input type="radio" name="settingsThemeRadio" value="theme-blue"><div class="theme-dot"><span class="theme-swatch" style="background:linear-gradient(135deg,#7dd3fc,#60a5fa)"></span></div></label>
+          <label class="choice"><input type="radio" name="settingsThemeRadio" value="theme-green"><div class="theme-dot"><span class="theme-swatch" style="background:linear-gradient(135deg,#86efac,#2dd4bf)"></span></div></label>
+          <label class="choice"><input type="radio" name="settingsThemeRadio" value="theme-purple"><div class="theme-dot"><span class="theme-swatch" style="background:linear-gradient(135deg,#c4b5fd,#818cf8)"></span></div></label>
+          <label class="choice"><input type="radio" name="settingsThemeRadio" value="theme-red"><div class="theme-dot"><span class="theme-swatch" style="background:linear-gradient(135deg,#fb7185,#f472b6)"></span></div></label>
+          <label class="choice"><input type="radio" name="settingsThemeRadio" value="theme-gold"><div class="theme-dot"><span class="theme-swatch" style="background:linear-gradient(135deg,#facc15,#f59e0b)"></span></div></label>
+        </div>
+      </label>
     </div>
     <div class="settings-actions">
       <button class="btn soft" id="closeSettings">Отмена</button>
@@ -455,6 +514,7 @@ function goNextLevel(){
 }
 
 
+
 function setLevelDirect(level){
  if(!level || !S.configured) return;
  const list=currentLevelList();
@@ -469,15 +529,24 @@ function setLevelDirect(level){
 function renderManualLevelPicker(){
  const panel=$('#levelPickerPanel');
  const select=$('#manualLevelSelect');
- if(panel) panel.style.display = S.configured ? 'block' : 'none';
- if(!select || !S.configured) return;
+ if(!panel || !select) return;
+ panel.style.display = S.configured ? 'block' : 'none';
+ if(!S.configured) return;
  const list=currentLevelList();
  if(!list.length) return;
  if(!list.includes(S.level)){
   S.level=list[0];
   save();
  }
- select.innerHTML=list.map(v=>`<option value="${v}" ${S.level===v?'selected':''}>${v}</option>`).join('');
+ const previousValue=select.value;
+ select.innerHTML='';
+ list.forEach(v=>{
+  const option=document.createElement('option');
+  option.value=v;
+  option.textContent=v;
+  if(v===S.level) option.selected=true;
+  select.appendChild(option);
+ });
  select.value=S.level;
  select.onchange=()=>setLevelDirect(select.value);
  const idx=list.indexOf(S.level);
@@ -536,7 +605,7 @@ function openSettingsModal(){
  if(!modal) return;
  $('#settingsProject').value=S.project||'GTA5RP';
  $('#settingsPath').value=S.path||'Госка';
- $('#settingsTheme').value=S.theme||'theme-blue';
+ document.querySelectorAll('[name="settingsThemeRadio"]').forEach(r=>{r.checked = r.value === (S.theme||'theme-blue')});
  modal.classList.add('open');
 }
 function closeSettingsModal(){
@@ -545,7 +614,7 @@ function closeSettingsModal(){
 function saveSettingsModal(){
  S.project=$('#settingsProject').value;
  S.path=$('#settingsPath').value;
- S.theme=$('#settingsTheme').value;
+ S.theme=document.querySelector('[name="settingsThemeRadio"]:checked')?.value || S.theme || 'theme-blue';
  S.org='';
  S.section='';
  S.level='';
@@ -560,6 +629,7 @@ function saveSettingsModal(){
 
 ['rp_panel_v88_theme_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v87_auto_next_level','rp_panel_v86_smooth_progress'].forEach(k=>localStorage.removeItem(k));
 ['rp_panel_v90_fresh_theme_bg_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v88_theme_level_picker'].forEach(k=>localStorage.removeItem(k));
+['rp_panel_v91_clean_settings_themes_level','rp_panel_v90_fresh_theme_bg_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v88_theme_level_picker'].forEach(k=>localStorage.removeItem(k));
 load();render();
 
 setTimeout(()=>{
