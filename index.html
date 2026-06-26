@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RP Panel — Личный кабинет</title>
+  <title>RP Panel — Первый запуск</title>
   <style>
     :root {
       --bg: #060913;
@@ -755,9 +755,270 @@
         white-space: nowrap;
       }
     }
+
+    /* Первый запуск: чёрный экран с минимальной настройкой */
+    body:not(.profile-ready) .app {
+      display: none !important;
+    }
+
+    body.profile-ready .first-launch {
+      display: none !important;
+    }
+
+    .first-launch {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 50% 22%, rgba(115,167,255,.10), transparent 28%),
+        radial-gradient(circle at 78% 78%, rgba(178,140,255,.07), transparent 30%),
+        #000;
+      color: var(--text);
+    }
+
+    .first-launch::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
+      background-size: 58px 58px;
+      opacity: .35;
+    }
+
+    .launch-card {
+      width: min(560px, 100%);
+      position: relative;
+      z-index: 1;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 30px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.025)),
+        rgba(8, 12, 22, .78);
+      box-shadow: 0 26px 90px rgba(0,0,0,.72);
+      backdrop-filter: blur(18px);
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .launch-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 0 0, rgba(115,167,255,.14), transparent 32%),
+        radial-gradient(circle at 100% 0, rgba(104,230,255,.06), transparent 30%);
+    }
+
+    .launch-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .launch-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(104,230,255,.22);
+      background: rgba(104,230,255,.07);
+      color: #ddecff;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .launch-kicker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(118,243,197,.65);
+    }
+
+    .launch-card h1 {
+      margin: 18px 0 8px;
+      font-size: clamp(32px, 8vw, 54px);
+      line-height: .95;
+      letter-spacing: -.06em;
+    }
+
+    .launch-card p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .launch-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .avatar-select {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .avatar-option {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .avatar-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .avatar-tile {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.13);
+      background: rgba(255,255,255,.045);
+      font-size: 25px;
+      transition: .18s ease;
+    }
+
+    .avatar-option:hover .avatar-tile {
+      transform: translateY(-2px);
+      border-color: rgba(115,167,255,.36);
+      background: rgba(115,167,255,.08);
+    }
+
+    .avatar-option input:checked + .avatar-tile {
+      border-color: rgba(104,230,255,.70);
+      background: linear-gradient(135deg, rgba(104,230,255,.18), rgba(115,167,255,.10));
+      box-shadow: 0 0 0 1px rgba(104,230,255,.16), 0 0 28px rgba(104,230,255,.10);
+    }
+
+    .launch-start {
+      width: 100%;
+      min-height: 52px;
+      margin-top: 3px;
+      border: 1px solid rgba(104,230,255,.42);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(115,167,255,.35), rgba(104,230,255,.18));
+      color: var(--text);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 950;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    .launch-start:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .launch-error {
+      display: none;
+      color: #ffd0d0;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,112,112,.26);
+      border-radius: 14px;
+      background: rgba(255,112,112,.08);
+    }
+
+    .launch-error.show {
+      display: block;
+    }
+
+    .avatar.emoji-avatar {
+      font-size: 30px;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 32% 20%, rgba(255,255,255,.18), transparent 28%),
+        linear-gradient(135deg, rgba(115,167,255,.22), rgba(178,140,255,.16));
+      border: 1px solid rgba(255,255,255,.14);
+    }
+
+    @media (max-width: 560px) {
+      .launch-card {
+        padding: 18px;
+        border-radius: 24px;
+      }
+
+      .avatar-select {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
   </style>
 </head>
 <body>
+
+  <section class="first-launch" id="firstLaunch" aria-label="Первый запуск панели">
+    <div class="launch-card">
+      <div class="launch-kicker">Первый запуск</div>
+      <h1>Создай свой профиль</h1>
+      <p>Введи имя, выбери аватар и проект. После этого откроется личный кабинет.</p>
+
+      <div class="launch-form">
+        <label class="field">
+          <span>Твоё имя / ник</span>
+          <input id="launchName" placeholder="Например: KIRI" autocomplete="nickname" />
+        </label>
+
+        <label class="field">
+          <span>Проект</span>
+          <select id="launchProject">
+            <option value="GTA5RP">GTA5RP</option>
+            <option value="Majestic RP">Majestic RP</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Аватар</span>
+          <div class="avatar-select" id="launchAvatarList">
+            <label class="avatar-option">
+              <input type="radio" name="launchAvatar" value="🪖" checked />
+              <span class="avatar-tile">🪖</span>
+            </label>
+            <label class="avatar-option">
+              <input type="radio" name="launchAvatar" value="🚓" />
+              <span class="avatar-tile">🚓</span>
+            </label>
+            <label class="avatar-option">
+              <input type="radio" name="launchAvatar" value="🏛️" />
+              <span class="avatar-tile">🏛️</span>
+            </label>
+            <label class="avatar-option">
+              <input type="radio" name="launchAvatar" value="💼" />
+              <span class="avatar-tile">💼</span>
+            </label>
+            <label class="avatar-option">
+              <input type="radio" name="launchAvatar" value="⚡" />
+              <span class="avatar-tile">⚡</span>
+            </label>
+            <label class="avatar-option">
+              <input type="radio" name="launchAvatar" value="🎮" />
+              <span class="avatar-tile">🎮</span>
+            </label>
+          </div>
+        </label>
+
+        <div class="launch-error" id="launchError">Сначала введи имя.</div>
+        <button class="launch-start" id="launchStart">Открыть личный кабинет</button>
+      </div>
+    </div>
+  </section>
+
   <div class="app">
     <header class="topbar">
       <div class="brand">
@@ -1077,7 +1338,8 @@
         project: "GTA5RP",
         server: "Downtown",
         org: "",
-        goal: ""
+        goal: "",
+        avatar: "🪖"
       },
       checks: [],
       notes: ""
@@ -1123,7 +1385,12 @@
         state.profile.server || "сервер не выбран",
         state.profile.org || "направление не выбрано"
       ].join(" · ");
-      $("#avatarLetter").textContent = (state.profile.name || "R").trim().slice(0, 1).toUpperCase();
+      
+      const avatar = state.profile.avatar || (state.profile.name || "R").trim().slice(0, 1).toUpperCase();
+      $("#avatarLetter").textContent = avatar;
+      $("#avatarLetter").classList.toggle("emoji-avatar", avatar.length > 1 || /[^A-Za-zА-Яа-я0-9]/.test(avatar));
+      document.body.classList.toggle("profile-ready", Boolean(state.profile.ready));
+
     }
 
     function readProfileForm() {
@@ -1168,6 +1435,40 @@
       });
     }
 
+
+    function setupFirstLaunch() {
+      const startButton = $("#launchStart");
+      const error = $("#launchError");
+
+      if (!startButton) return;
+
+      startButton.addEventListener("click", () => {
+        const name = $("#launchName").value.trim();
+        const project = $("#launchProject").value;
+        const avatarInput = document.querySelector("input[name='launchAvatar']:checked");
+
+        if (!name) {
+          error.classList.add("show");
+          $("#launchName").focus();
+          return;
+        }
+
+        error.classList.remove("show");
+
+        state.profile.name = name;
+        state.profile.project = project;
+        state.profile.avatar = avatarInput ? avatarInput.value : "🪖";
+        state.profile.server = project === "GTA5RP" ? "Downtown" : "";
+        state.profile.org = "";
+        state.profile.goal = "";
+        state.profile.ready = true;
+
+        renderProfile();
+        saveState();
+        showToast("Личный кабинет открыт");
+      });
+    }
+
     function setupEvents() {
       $("#saveProfile").addEventListener("click", readProfileForm);
 
@@ -1177,7 +1478,8 @@
           project: "GTA5RP",
           server: "Downtown",
           org: "",
-          goal: ""
+          goal: "",
+          avatar: "🪖"
         };
         renderProfile();
         saveState();
@@ -1205,6 +1507,7 @@
     loadState();
     renderProfile();
     setupTabs();
+    setupFirstLaunch();
     setupEvents();
     $("#notesText").value = state.notes || "";
     renderProgress();
