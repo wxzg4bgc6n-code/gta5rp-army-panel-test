@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v123</title>
+<title>RP Cabinet v124</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1992,6 +1992,39 @@ body{
   font-weight:950;
 }
 
+
+/* v124: у нового профиля всегда пустой значок с плюсом, без карандаша на рамке */
+.profile-achievement-icon.clean-rank-emblem #rankTier{
+  display:none!important;
+}
+.profile-achievement-icon.clean-rank-emblem #rankIcon{
+  position:relative!important;
+}
+.profile-achievement-icon.clean-rank-emblem.empty-profile-icon #rankIcon{
+  font-size:44px!important;
+  color:color-mix(in srgb,var(--accent) 72%, var(--muted) 28%)!important;
+  border-style:dashed!important;
+}
+.profile-achievement-icon.clean-rank-emblem.empty-profile-icon #rankIcon::after{
+  content:"нажми, чтобы выбрать";
+  position:absolute;
+  left:50%;
+  bottom:9px;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:86px;
+  color:var(--muted);
+  font-size:9px;
+  font-weight:950;
+  line-height:1.05;
+  opacity:.72;
+  pointer-events:none;
+}
+.profile-achievement-icon.clean-rank-emblem:not(.empty-profile-icon) #rankIcon::after{
+  content:"";
+  display:none;
+}
+
 </style>
 </head>
 <body>
@@ -2036,7 +2069,7 @@ body{
         <div class="avatar-wrap">
           <button class="initial rank-emblem clean-rank-emblem profile-achievement-icon" id="profileInitial" title="Изменить значок профиля">
             <span id="rankIcon">＋</span>
-            <small id="rankTier">✎</small>
+            <small id="rankTier"></small>
           </button>
         </div>
         <h2 id="profileName">Игрок</h2>
@@ -2256,7 +2289,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v123_clean_icon_last_ach_structure';
+const VERSION_KEY='rp_panel_v124_empty_profile_icon_no_pencil';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -2669,12 +2702,12 @@ function renderProfileIcon(){
   const box=$('#profileInitial');
   if(def){
     icon.textContent=def.icon;
-    tag.textContent='✎';
+    tag.textContent='';
     if(box) box.classList.remove('empty-profile-icon');
     $('#profileInitial').title=`Значок профиля: ${def.title}`;
   }else{
     icon.textContent='＋';
-    tag.textContent='✎';
+    tag.textContent='';
     if(box) box.classList.add('empty-profile-icon');
     $('#profileInitial').title='Выбрать значок профиля';
   }
@@ -2688,7 +2721,7 @@ function closeProfileIconModal(){
 }
 function setProfileIcon(id){
   if(!S.account) S.account={achievements:{}};
-  S.account.profileIconAchievementId=id;
+  
   save();
   renderProfileIcon();
   closeProfileIconModal();
@@ -2707,7 +2740,7 @@ function renderProfileIconModal(){
   const got=achievements();
   const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]);
   if(!opened.length){
-    grid.innerHTML='<div class="profile-icon-empty">Достижений пока нет. Когда откроешь достижение, его значок можно будет поставить в профиль.</div>';
+    grid.innerHTML='<div class="profile-icon-empty">Достижений пока нет. Пока значок профиля останется пустым. Когда откроешь достижения, здесь появится выбор.</div>';
     return;
   }
   const selected=S.account?.profileIconAchievementId||'';
