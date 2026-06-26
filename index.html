@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v126</title>
+<title>RP Cabinet v127</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2197,6 +2197,140 @@ body{
   white-space:nowrap;
 }
 
+
+/* v127: статистика как в примере, без повторяющейся инфы */
+.last-ach-card{
+  padding:14px!important;
+  border-radius:18px!important;
+  background:linear-gradient(180deg,rgba(11,16,28,.92),rgba(8,12,22,.92))!important;
+  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.10))!important;
+}
+.last-ach-card::before{
+  display:none!important;
+}
+.last-ach-title{
+  font-size:16px!important;
+  gap:10px!important;
+  padding-bottom:12px!important;
+  margin-bottom:13px!important;
+  border-bottom:1px solid rgba(255,255,255,.075)!important;
+}
+.last-ach-title::before{
+  content:""!important;
+  width:18px!important;
+  height:18px!important;
+  display:inline-block!important;
+  border-radius:4px!important;
+  background:
+    linear-gradient(135deg,var(--accent),var(--accent2))!important;
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 73%,0 100%)!important;
+  filter:drop-shadow(0 0 8px var(--glow))!important;
+}
+.last-ach-body{
+  grid-template-columns:70px 1fr!important;
+  gap:14px!important;
+}
+.last-ach-body > span{
+  width:60px!important;
+  height:60px!important;
+  border-radius:10px!important;
+  background:linear-gradient(180deg,#0f1625,#070b14)!important;
+  border:1px solid rgba(255,255,255,.07)!important;
+  box-shadow:none!important;
+  font-size:34px!important;
+}
+.last-ach-body > span::before{
+  display:none!important;
+}
+.last-ach-body > span::after{
+  display:none!important;
+}
+.last-ach-body b{
+  font-size:15px!important;
+}
+.last-ach-body small{
+  font-size:12px!important;
+  color:var(--muted)!important;
+}
+.last-ach-body small::after{
+  color:color-mix(in srgb,var(--accent) 78%, white 10%)!important;
+  margin-top:8px!important;
+  font-size:12px!important;
+}
+
+.account-stats-card{
+  margin-top:14px!important;
+  padding:14px!important;
+  border-radius:18px!important;
+  background:linear-gradient(180deg,rgba(11,16,28,.92),rgba(8,12,22,.92))!important;
+  border:1px solid rgba(255,255,255,.095)!important;
+}
+.account-stats-title{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  padding-bottom:12px!important;
+  margin-bottom:0!important;
+  border-bottom:1px solid rgba(255,255,255,.075)!important;
+  font-size:16px!important;
+  font-weight:950!important;
+}
+.account-stats-title::before{
+  content:""!important;
+  width:20px!important;
+  height:18px!important;
+  display:inline-block!important;
+  background:linear-gradient(135deg,var(--accent),var(--accent2))!important;
+  -webkit-mask:
+    radial-gradient(circle 2px at 4px 4px,#000 99%,transparent 100%),
+    radial-gradient(circle 2px at 4px 9px,#000 99%,transparent 100%),
+    radial-gradient(circle 2px at 4px 14px,#000 99%,transparent 100%),
+    linear-gradient(#000 0 0) 9px 3px/11px 2px no-repeat,
+    linear-gradient(#000 0 0) 9px 8px/11px 2px no-repeat,
+    linear-gradient(#000 0 0) 9px 13px/11px 2px no-repeat;
+  mask:
+    radial-gradient(circle 2px at 4px 4px,#000 99%,transparent 100%),
+    radial-gradient(circle 2px at 4px 9px,#000 99%,transparent 100%),
+    radial-gradient(circle 2px at 4px 14px,#000 99%,transparent 100%),
+    linear-gradient(#000 0 0) 9px 3px/11px 2px no-repeat,
+    linear-gradient(#000 0 0) 9px 8px/11px 2px no-repeat,
+    linear-gradient(#000 0 0) 9px 13px/11px 2px no-repeat;
+  filter:drop-shadow(0 0 8px var(--glow))!important;
+}
+.account-stats-list{
+  display:grid!important;
+  gap:0!important;
+}
+.stat-line{
+  display:grid!important;
+  grid-template-columns:1fr auto!important;
+  align-items:center!important;
+  min-height:44px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  border-bottom:1px solid rgba(255,255,255,.065)!important;
+}
+.stat-line:last-child{
+  border-bottom:0!important;
+}
+.stat-line span{
+  color:var(--muted)!important;
+  font-size:13px!important;
+  font-weight:850!important;
+}
+.stat-line b{
+  color:var(--text)!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  text-align:right!important;
+}
+.account-stats-grid,
+.stat-item{
+  display:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -2261,12 +2395,12 @@ body{
 
       <div class="account-stats-card" id="accountStatsCard">
         <div class="account-stats-title">Статистика аккаунта</div>
-        <div class="account-stats-grid">
-          <div class="stat-item"><span>Достижения</span><b id="statAchievements">0 / 0</b></div>
-          <div class="stat-item"><span>Профиль создан</span><b id="statCreated">—</b></div>
-          <div class="stat-item"><span>Текущий путь</span><b id="statPath">—</b></div>
-          <div class="stat-item"><span>Значок профиля</span><b id="statIcon">—</b></div>
+        <div class="account-stats-list">
+          <div class="stat-line"><span>Получено достижений</span><b id="statAchievements">0 / 0</b></div>
+          <div class="stat-line"><span>Общий опыт (XP)</span><b id="statXp">0</b></div>
+          <div class="stat-line"><span>Дата регистрации</span><b id="statCreated">—</b></div>
         </div>
+      </div>
       </div>
       <div class="account-progress-card">
         <div class="account-progress-head">
@@ -2471,7 +2605,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v126_last_ach_icon_account_stats';
+const VERSION_KEY='rp_panel_v127_stats_style_no_duplicates';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -3078,15 +3212,10 @@ function renderAccountStats(){
   const opened=ACHIEVEMENT_DEFS.filter(a=>got[a.id]).length;
   const statAchievements=$('#statAchievements');
   if(statAchievements) statAchievements.textContent=`${opened} / ${ACHIEVEMENT_DEFS.length}`;
+  const statXp=$('#statXp');
+  if(statXp) statXp.textContent=String(accountXp ? accountXp() : ACHIEVEMENT_DEFS.reduce((sum,a)=>sum+(got[a.id]?a.xp:0),0));
   const statCreated=$('#statCreated');
   if(statCreated) statCreated.textContent=formatProfileDate(S.account?.createdAt);
-  const statPath=$('#statPath');
-  if(statPath) statPath.textContent=[S.project,S.path,S.org,S.section].filter(Boolean).join(' › ') || '—';
-  const statIcon=$('#statIcon');
-  if(statIcon){
-    const def=selectedProfileIconDef ? selectedProfileIconDef() : null;
-    statIcon.textContent=def ? `${def.icon} ${def.title}` : 'Не выбран';
-  }
 }
 function renderLastAchievementUI(){
   const last=lastAchievementDef();
