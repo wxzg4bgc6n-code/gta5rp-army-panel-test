@@ -178,6 +178,61 @@ body.theme-gold{--accent:#ffd166;--accent2:#74a8ff;--glow:rgba(255,209,102,.15)}
   .level-controls{grid-template-columns:1fr}
 }
 
+
+/* v89: окно изменения проекта/пути, уровни видны, инфа снизу полностью убрана */
+.modules,
+#modules,
+#modulesStep,
+#infoPanel,
+.panel:has(#modules),
+.panel:has(#modulesTitle) {
+  display: none !important;
+}
+.settings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0,0,0,.76);
+  backdrop-filter: blur(14px);
+}
+.settings-modal.open { display: flex; }
+.settings-card {
+  width: min(680px,100%);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.025)),rgba(10,13,22,.96);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+.settings-card h2 {
+  margin: 0 0 8px;
+  font-size: 30px;
+}
+.settings-grid {
+  display: grid;
+  gap: 13px;
+  margin-top: 16px;
+}
+.settings-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.level-manual-box {
+  display: block !important;
+}
+#manualLevelSelect {
+  display: block !important;
+}
+@media(max-width:620px){
+  .settings-actions{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -189,7 +244,30 @@ body.theme-gold{--accent:#ffd166;--accent2:#74a8ff;--glow:rgba(255,209,102,.15)}
         <label class="choice"><input type="radio" name="theme" value="theme-gold"><div class="theme-dot"><span class="theme-swatch" style="background:linear-gradient(135deg,#ffd166,#74a8ff)"></span></div></label>
       </div></label><label class="choice"><input type="radio" name="avatar" value="🚓"><div class="tile">🚓</div></label><label class="choice"><input type="radio" name="avatar" value="🏛️"><div class="tile">🏛️</div></label><label class="choice"><input type="radio" name="avatar" value="💼"><div class="tile">💼</div></label><label class="choice"><input type="radio" name="avatar" value="🕶️"><div class="tile">🕶️</div></label><label class="choice"><input type="radio" name="avatar" value="🎮"><div class="tile">🎮</div></label></div></label><label class="field"><span>Проект</span><select id="firstProject"><option>GTA5RP</option><option>Majestic RP</option></select></label><label class="field"><span>Путь</span><div class="path-grid"><label class="choice"><input type="radio" name="path" value="Госка" checked><div class="tile"><b>🏛️ Госка</b>служба и карьера</div></label><label class="choice"><input type="radio" name="path" value="Крайм"><div class="tile"><b>🕶️ Крайм</b>семья / банда / мафия</div></label></div></label><div class="err" id="err">Сначала введи имя.</div><button class="btn" id="start">Открыть личный кабинет</button></div></div></section>
 <div class="app">
-<main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Уровень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div><button class="btn soft profile-change-link" id="editSetup">Изменить раздел / ступень</button></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и уровень</h2><p>Выбери раздел и ступень повышения из ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div><div class="next-level-box" id="nextLevelBox"><strong>Этап закрыт</strong><span id="nextLevelText">Можно перейти дальше.</span><button class="btn" id="goNextLevel" style="width:100%">Перейти на следующий уровень</button></div></div></div></div><div class="panel step-panel" id="infoStep"><div class="step-title"><div><h2 id="infoTitle">Информация ARMY</h2><p>Инфа разложена по вкладкам, без общей каши.</p></div></div><div class="info-tabs" id="infoTabs"></div><div class="info-grid" id="infoGrid"></div></div></section></main></div>
+<main class="main"><aside class="panel profile-card"><div class="profile-hero"><div class="big-ava" id="bigAva">🪖</div><h2 id="profileName">Игрок</h2><p id="profileLine">GTA5RP › Госка</p></div><div class="profile-info"><div class="row"><span>Проект</span><b id="infoProject">—</b></div><div class="row"><span>Путь</span><b id="infoPath">—</b></div><div class="row"><span>Организация</span><b id="infoOrg">Нужно выбрать справа</b></div><div class="row"><span>Раздел</span><b id="infoSection">—</b></div><div class="row"><span>Уровень</span><b id="infoLevel">—</b></div></div><div class="ach-strip" id="achievements"></div><button class="btn soft profile-change-link" id="editSetup">Изменить раздел / ступень</button><button class="btn soft profile-change-link" id="openSettings">Изменить проект / путь / тему</button></aside><section class="right-flow"><div class="panel step-panel" id="orgStep"><div class="step-title"><div><h2>Выбери организацию</h2><p>После выбора появится настройка раздела и уровня.</p></div></div><div class="org-grid" id="orgGrid"></div></div><div class="panel step-panel" id="setupStep"><div class="selected-summary"><div><strong id="chosenOrg">ARMY</strong><span>Организация выбрана. Можно сменить, если ошибся.</span></div><button class="btn soft" id="reselectOrg">Сменить организацию</button></div><div class="step-title" style="margin-top:16px"><div><h2>Выбери раздел и уровень</h2><p>Выбери раздел и ступень повышения из ARMY-панели.</p></div></div><div class="setup-grid"><label class="field"><span>Раздел / подразделение</span><select id="section"></select></label><label class="field"><span>Ступень повышения</span><select id="level"></select></label></div><button class="btn" id="saveSetup" style="width:100%;margin-top:12px">Сохранить и показать прогресс</button></div><div class="panel step-panel" id="progressStep"><div class="progress-layout" style="margin-top:16px"><div class="ring" id="ring" style="--p:0"><div><b id="percent">0%</b><span>до повышения</span></div></div><div><p id="nextText">Отмечай выполненное, чтобы видеть прогресс.</p><div class="tasks" id="tasks"></div><div class="next-level-box" id="nextLevelBox"><strong>Этап закрыт</strong><span id="nextLevelText">Можно перейти дальше.</span><button class="btn" id="goNextLevel" style="width:100%">Перейти на следующий уровень</button></div></div></div></div><div class="panel step-panel" id="infoStep"><div class="step-title"><div><h2 id="infoTitle">Информация ARMY</h2><p>Инфа разложена по вкладкам, без общей каши.</p></div></div><div class="info-tabs" id="infoTabs"></div><div class="info-grid" id="infoGrid"></div></div></section></main></div>
+
+<div class="settings-modal" id="settingsModal">
+  <div class="settings-card">
+    <h2>Изменить профиль</h2>
+    <p>Можно поменять проект, путь и цветовую тему. Организация и прогресс сбросятся, чтобы не смешивать данные.</p>
+    <div class="settings-grid">
+      <label class="field"><span>Проект</span><select id="settingsProject"><option>GTA5RP</option><option>Majestic RP</option></select></label>
+      <label class="field"><span>Путь</span><select id="settingsPath"><option>Госка</option><option>Крайм</option></select></label>
+      <label class="field"><span>Цветовая тема</span><select id="settingsTheme">
+        <option value="theme-blue">Голубая</option>
+        <option value="theme-green">Зелёная</option>
+        <option value="theme-purple">Фиолетовая</option>
+        <option value="theme-red">Красная</option>
+        <option value="theme-gold">Золотая</option>
+      </select></label>
+    </div>
+    <div class="settings-actions">
+      <button class="btn soft" id="closeSettings">Отмена</button>
+      <button class="btn" id="saveSettings">Сохранить изменения</button>
+    </div>
+  </div>
+</div>
+
 <div class="progress-toast" id="progressToast"><b>Прогресс обновлён</b><span id="progressToastText">+0%</span></div>
 <script>
 const KEY='rp_panel_v83_clean_army_logic';
@@ -377,12 +455,52 @@ function renderProgress(){
 function availableTabs(){return S.org==='ARMY'?['Academy','USAF','Повышение','Премии','Общее']:[S.org||'Инфо','Премии']}function tabData(tab){if(tab==='Academy')return INFO.Academy;if(tab==='USAF')return INFO.USAF;if(tab==='Премии')return INFO.Premium;if(tab==='Повышение')return {[`Повышение: ${S.section}`]:taskList(), 'Как пользоваться':['Выбери уровень слева сверху, затем отмечай пункты прогресса.','Список задач меняется от раздела: Academy, USAF или другой отдел.']};return INFO.Common}
 function renderInfo(){if(!S.configured)return;let tabs=availableTabs();if(!tabs.includes(S.infoTab))S.infoTab=tabs[0];$('#infoTitle').textContent=`Информация — ${S.org}`;$('#infoTabs').innerHTML=tabs.map(t=>`<button class="info-tab ${S.infoTab===t?'active':''}" data-tab="${t}">${t}</button>`).join('');document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{S.infoTab=b.dataset.tab;save();render()});let data=tabData(S.infoTab);$('#infoGrid').innerHTML=Object.entries(data).map(([title,items])=>`<div class="info-card ${S.infoTab==='Премии'?'premium':''}"><strong>${title}</strong><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}
 function renderAch(){let a=[];if(S.ready)a.push(['🟢','Профиль']);if(S.path)a.push([S.path==='Госка'?'🏛️':'🕶️',S.path]);if(S.org)a.push(['⭐',S.org]);if(S.configured)a.push(['📌',S.section]);if(percent()>=50)a.push(['🎖','50%']);if(percent()>=100)a.push(['🏆','Готово']);$('#achievements').innerHTML=a.map(x=>`<span class="ach">${x[0]} ${x[1]}</span>`).join('')}
-$('#start').onclick=()=>{let n=$('#firstName').value.trim();if(!n){$('#err').classList.add('show');return}S={ready:true,name:n,theme:document.querySelector('[name=theme]:checked').value,project:$('#firstProject').value,path:document.querySelector('[name=path]:checked').value,org:'',section:'',level:'',configured:false,tasks:{},infoTab:'Academy'};save();render()};
+$('#start').onclick=()=>{let n=$('#firstName').value.trim();if(!n){$('#err').classList.add('show');return}S={ready:true,name:n,theme:document.querySelector('[name=theme]:checked')?.value||'theme-blue',project:$('#firstProject').value,path:document.querySelector('[name=path]:checked').value,org:'',section:'',level:'',configured:false,tasks:{},infoTab:'Academy'};save();render()};
 $('#reselectOrg').onclick=()=>{S.org='';S.section='';S.level='';S.configured=false;S.tasks={};displayedProgress=0;save();render()};
 $('#editSetup').onclick=()=>{S.configured=false;S.tasks={};displayedProgress=0;save();render()};
 $('#saveSetup').onclick=()=>{S.section=$('#section').value;S.level=$('#level').value;S.configured=true;S.tasks={};S.infoTab=S.section==='USAF'?'USAF':'Academy';save();render()};
 document.addEventListener('change',e=>{if(e.target.id==='section'){S.section=$('#section').value;S.level=(LEVELS[S.section]||LEVELS.default)[0];renderSetup()}if(e.target.id==='level'){S.level=$('#level').value}});
+
+function openSettingsModal(){
+ const modal=$('#settingsModal');
+ if(!modal) return;
+ $('#settingsProject').value=S.project||'GTA5RP';
+ $('#settingsPath').value=S.path||'Госка';
+ $('#settingsTheme').value=S.theme||'theme-blue';
+ modal.classList.add('open');
+}
+function closeSettingsModal(){
+ $('#settingsModal')?.classList.remove('open');
+}
+function saveSettingsModal(){
+ S.project=$('#settingsProject').value;
+ S.path=$('#settingsPath').value;
+ S.theme=$('#settingsTheme').value;
+ S.org='';
+ S.section='';
+ S.level='';
+ S.configured=false;
+ S.tasks={};
+ displayedProgress=0;
+ save();
+ closeSettingsModal();
+ render();
+ showProgressToast('Профиль обновлён');
+}
+
 load();render();
+
+setTimeout(()=>{
+ const openBtn=$('#openSettings');
+ if(openBtn) openBtn.onclick=openSettingsModal;
+ const closeBtn=$('#closeSettings');
+ if(closeBtn) closeBtn.onclick=closeSettingsModal;
+ const saveBtn=$('#saveSettings');
+ if(saveBtn) saveBtn.onclick=saveSettingsModal;
+ const modal=$('#settingsModal');
+ if(modal) modal.onclick=(e)=>{if(e.target.id==='settingsModal')closeSettingsModal()};
+},0);
+
 </script>
 </body>
 </html>
