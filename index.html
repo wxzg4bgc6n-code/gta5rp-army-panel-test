@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v117</title>
+<title>RP Cabinet v118</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1452,6 +1452,138 @@ body.style-gold:before{
   }
 }
 
+
+/* v118: чистый тёмный фон без больших бликов */
+body::before,
+body.style-arctic::before,
+body.style-emerald::before,
+body.style-violet::before,
+body.style-crimson::before,
+body.style-gold::before{
+  background:
+    linear-gradient(180deg,#070a12 0%,#04060b 48%,#020309 100%)!important;
+  opacity:1!important;
+}
+
+/* Убираем цветные "облака" внутри больших карточек */
+.profile-card,
+.flow,
+.main,
+.dashboard-section,
+#progressStep,
+.clean-rank-emblem,
+.achievement-preview.open,
+.path-card.active{
+  background-image:none!important;
+}
+
+/* Вместо прожекторов — ровные тёмные карточки */
+.profile-card{
+  background:linear-gradient(180deg,rgba(18,23,35,.96),rgba(10,14,24,.96))!important;
+  border-color:rgba(255,255,255,.10)!important;
+  box-shadow:0 22px 60px rgba(0,0,0,.46)!important;
+}
+.flow{
+  background:linear-gradient(180deg,rgba(15,20,32,.96),rgba(8,12,22,.96))!important;
+  border-color:rgba(255,255,255,.10)!important;
+  box-shadow:0 22px 60px rgba(0,0,0,.46)!important;
+}
+.dashboard-section,
+#progressStep{
+  background:rgba(7,10,18,.42)!important;
+  border-color:rgba(255,255,255,.095)!important;
+}
+.dashboard-tabs .dash-tab{
+  background:rgba(5,8,15,.62)!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+.dashboard-tabs .dash-tab.active,
+.dashboard-tabs .dash-tab:hover{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 16%, rgba(255,255,255,.045)),rgba(255,255,255,.035))!important;
+  border-color:color-mix(in srgb,var(--accent) 48%, white 0%)!important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 10%, transparent)!important;
+}
+
+/* Достижения и путь без огромных пятен */
+.achievement-preview{
+  background:rgba(255,255,255,.032)!important;
+  border-color:rgba(255,255,255,.09)!important;
+}
+.achievement-preview.open{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.035)),rgba(255,255,255,.030))!important;
+  border-color:color-mix(in srgb,var(--accent) 46%, white 0%)!important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 9%, transparent)!important;
+}
+.path-card{
+  background:rgba(255,255,255,.032)!important;
+  border-color:rgba(255,255,255,.09)!important;
+}
+.path-card.active{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.035)),rgba(255,255,255,.030))!important;
+  border-color:color-mix(in srgb,var(--accent) 48%, white 0%)!important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 9%, transparent)!important;
+}
+
+/* Эмблема ранга — темная, акцент только контур/символ */
+.clean-rank-emblem{
+  background:linear-gradient(180deg,#1b2332,#0c111d)!important;
+  border-color:color-mix(in srgb,var(--accent) 42%, white 0%)!important;
+  box-shadow:
+    0 16px 36px rgba(0,0,0,.38),
+    0 0 0 1px rgba(255,255,255,.035),
+    0 0 22px color-mix(in srgb,var(--accent) 13%, transparent)!important;
+}
+.clean-rank-emblem::before{
+  background:linear-gradient(145deg,rgba(255,255,255,.10),transparent 44%)!important;
+}
+.clean-rank-emblem span{
+  color:color-mix(in srgb,var(--accent) 84%, white 10%)!important;
+  text-shadow:0 0 14px color-mix(in srgb,var(--accent) 24%, transparent)!important;
+}
+.clean-rank-emblem small{
+  background:linear-gradient(135deg,var(--accent),var(--accent2))!important;
+}
+
+/* Блок последнего достижения тоже без заливки-прожектора */
+.last-ach-card{
+  background:rgba(255,255,255,.035)!important;
+  border-color:color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.08))!important;
+}
+.last-ach-body > span{
+  background:rgba(255,255,255,.045)!important;
+  border-color:color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.08))!important;
+}
+
+/* Мягкие hover/active, без засветки */
+.btn:not(.soft):not(.danger),
+.account-ach-wide,
+#openAchievementsHero{
+  box-shadow:none!important;
+}
+.btn:hover,
+.dash-tab:hover,
+.achievement-preview:hover,
+.path-card:hover{
+  filter:brightness(1.07)!important;
+}
+
+/* Задачи прогресса */
+.task{
+  background:rgba(3,6,12,.42)!important;
+  border-color:rgba(255,255,255,.095)!important;
+}
+.task.done{
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.030)),rgba(255,255,255,.028))!important;
+  border-color:color-mix(in srgb,var(--accent) 48%, white 0%)!important;
+}
+
+/* Очень слабая общая глубина вместо цветных пятен */
+body{
+  background:
+    radial-gradient(ellipse at center,rgba(255,255,255,.018),transparent 62%),
+    linear-gradient(180deg,#070a12,#020309)!important;
+}
+
 </style>
 </head>
 <body>
@@ -1703,7 +1835,7 @@ body.style-gold:before{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v117_separate_profile_restore_themes';
+const VERSION_KEY='rp_panel_v118_clean_dark_no_spotlights';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
