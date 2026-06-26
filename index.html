@@ -453,7 +453,7 @@ input[type="checkbox"]{accent-color:var(--accent)!important}
 
 <div class="progress-toast" id="progressToast"><b>Прогресс обновлён</b><span id="progressToastText">+0%</span></div>
 <script>
-const KEY='rp_panel_v83_clean_army_logic';
+const KEY='rp_panel_v94_true_fresh_start';
 const ORGS={Госка:['ARMY','LSPD','LSSD','FIB','EMS','GOV','USSS','PRISON','Weazel News'],Крайм:['Семья','Банда','Мафия','Картель','Нелегал']};
 const SECTIONS={ARMY:['Academy','USAF','MP','DF','SD','RAP','SAS','ED'],defaultGov:['Основной раздел','Стажировка','Шпаргалки'],defaultCrime:['Основной состав','Правила','Шпаргалки']};
 const LEVELS={
@@ -682,10 +682,8 @@ function saveSettingsModal(){
  showProgressToast('Профиль обновлён');
 }
 
-['rp_panel_v88_theme_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v87_auto_next_level','rp_panel_v86_smooth_progress'].forEach(k=>localStorage.removeItem(k));
-['rp_panel_v90_fresh_theme_bg_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v88_theme_level_picker'].forEach(k=>localStorage.removeItem(k));
-['rp_panel_v91_clean_settings_themes_level','rp_panel_v90_fresh_theme_bg_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v88_theme_level_picker'].forEach(k=>localStorage.removeItem(k));
-['rp_panel_v92_no_info_theme_swatch_level','rp_panel_v91_clean_settings_themes_level','rp_panel_v90_fresh_theme_bg_level_picker'].forEach(k=>localStorage.removeItem(k));
+const OLD_KEYS=["rp_panel_v83_clean_army_logic", "rp_panel_v84_real_levels", "rp_panel_v85_fixed_login_section_only", "rp_panel_v86_smooth_progress", "rp_panel_v87_auto_next_level", "rp_panel_v88_theme_level_picker", "rp_panel_v89_fresh_edit_project_levels", "rp_panel_v90_fresh_theme_bg_level_picker", "rp_panel_v91_clean_settings_themes_level", "rp_panel_v92_no_info_theme_swatch_level", "rp_panel_v93_info_removed_level_fixed", "rp_clean_panel_v1"];
+OLD_KEYS.forEach(k=>localStorage.removeItem(k));
 load();render();
 
 setTimeout(()=>{
