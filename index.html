@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v100</title>
+<title>RP Cabinet v101</title>
 <style>
 :root{
   --bg:#02040a;
@@ -376,14 +376,28 @@ input:focus,select:focus{
   .choice-grid,.setup-grid,.org-grid,.level-buttons,.modal-actions{grid-template-columns:1fr}
   .row{grid-template-columns:1fr}
 }
+
+/* v101: чистый первый запуск и один сценарий повышения */
+.next-box{
+  animation: promotionReveal .28s ease;
+}
+.next-box strong{
+  font-size:16px;
+}
+@keyframes promotionReveal{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.level-picker{
+  margin-top:16px;
+}
+
 </style>
 </head>
 <body>
 <section class="first-screen">
   <div class="first-card">
-    <div class="kicker">Первый запуск</div>
     <h1>Создай RP-профиль</h1>
-    <p>Только ник, проект и путь. Организацию, раздел и уровень выберешь уже в кабинете.</p>
     <div class="form">
       <label class="field">
         <span>Имя / ник</span>
@@ -458,19 +472,16 @@ input:focus,select:focus{
             <p id="nextText">Отмечай выполненное — это прогресс до следующей ступени.</p>
             <div class="tasks" id="tasks" style="margin-top:12px"></div>
             <div class="next-box" id="nextBox">
-              <strong>Ступень закрыта</strong>
-              <span id="nextLevelText">Можно перейти дальше.</span>
-              <button class="btn" id="goNextLevel" style="width:100%">Перейти на следующий уровень</button>
+              <strong>🏆 Повышение доступно</strong>
+              <span id="nextLevelText">Следующая ступень готова.</span>
+              <button class="btn" id="claimPromotion" style="width:100%">Получить повышение</button>
             </div>
           </div>
         </div>
 
         <div class="level-picker">
           <label class="field"><span>Выбрать ступень вручную</span><select id="manualLevelSelect"></select></label>
-          <div class="level-buttons">
-            <button class="btn soft" id="prevLevelBtn">← Предыдущая</button>
-            <button class="btn soft" id="nextLevelBtn">Следующая →</button>
-          </div>
+
         </div>
       </div>
     </section>
@@ -505,13 +516,13 @@ input:focus,select:focus{
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 
 <script>
-const KEY='rp_panel_v100_clean_base';
+const KEY='rp_panel_v101_clean_flow_promotion';
 const OLD_KEYS=[
  'rp_panel_v83_clean_army_logic','rp_panel_v84_real_levels','rp_panel_v85_fixed_login_section_only',
  'rp_panel_v86_smooth_progress','rp_panel_v87_auto_next_level','rp_panel_v88_theme_level_picker',
  'rp_panel_v89_fresh_edit_project_levels','rp_panel_v90_fresh_theme_bg_level_picker',
  'rp_panel_v91_clean_settings_themes_level','rp_panel_v92_no_info_theme_swatch_level',
- 'rp_panel_v93_info_removed_level_fixed','rp_panel_v94_true_fresh_start'
+ 'rp_panel_v93_info_removed_level_fixed','rp_panel_v94_true_fresh_start','rp_panel_v100_clean_base'
 ];
 OLD_KEYS.forEach(k=>localStorage.removeItem(k));
 
@@ -552,7 +563,7 @@ const PROMO_TASKS={
     '7 → 8 — Уорент-офицер → Старший уорент-офицер':['Сдать Miljet','Сдать усложнённый Miljet','Сдать парашютирование — «Небесный избранник»','Сдать парашютирование — «Чёрный клевер»','Участие в 4 ГМП/МФМП/ВФМП или тренировке','Участие в CO — 7']
   }
 };
-let S={ready:false,name:'',project:'GTA5RP',path:'Госка',style:'style-arctic',org:'',section:'',level:'',tasks:{}};
+let S={ready:false,name:'',project:'GTA5RP',path:'Госка',style:'style-arctic',org:'',section:'',level:'',configured:false,tasks:{}};
 let displayedProgress=0;
 let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
@@ -572,7 +583,7 @@ function tasks(){
 }
 function percent(){
   const list=tasks();
-  if(!S.org || !S.section || !S.level || !list.length) return 0;
+  if(!S.org || !S.section || !S.level || !S.configured || !list.length) return 0;
   return Math.round(list.filter(t=>S.tasks[t]).length/list.length*100);
 }
 function render(){
@@ -584,12 +595,12 @@ function render(){
   $('#infoProject').textContent=S.project;
   $('#infoPath').textContent=S.path;
   $('#infoOrg').textContent=S.org||'Нужно выбрать';
-  $('#infoSection').textContent=S.section||'—';
-  $('#infoLevel').textContent=S.level||'—';
+  $('#infoSection').textContent=S.configured?(S.section||'—'):'—';
+  $('#infoLevel').textContent=S.configured?(S.level||'—'):'—';
 
   $('#orgStep').classList.toggle('show',!S.org);
-  $('#setupStep').classList.toggle('show',!!S.org && (!S.section || !S.level));
-  $('#progressStep').classList.toggle('show',!!S.org && !!S.section && !!S.level);
+  $('#setupStep').classList.toggle('show',!!S.org && !S.configured);
+  $('#progressStep').classList.toggle('show',!!S.org && S.configured);
 
   renderOrgs();
   renderSetup();
@@ -605,6 +616,7 @@ function renderOrgs(){
       S.org=btn.dataset.org;
       S.section='';
       S.level='';
+      S.configured=false;
       S.tasks={};
       displayedProgress=0;
       save();
@@ -618,28 +630,16 @@ function renderSetup(){
   if(!sectionSelect || !levelSelect || !S.org) return;
 
   const secList=sections();
-  if(!secList.includes(S.section)) S.section=secList[0]||'';
-  sectionSelect.innerHTML=secList.map(v=>`<option value="${v}" ${S.section===v?'selected':''}>${v}</option>`).join('');
+  const selectedSection = secList.includes(S.section) ? S.section : (secList[0]||'');
+  sectionSelect.innerHTML=secList.map(v=>`<option value="${v}" ${selectedSection===v?'selected':''}>${v}</option>`).join('');
 
-  const levList=levels();
-  if(!levList.includes(S.level)) S.level=levList[0]||'';
-  levelSelect.innerHTML=levList.map(v=>`<option value="${v}" ${S.level===v?'selected':''}>${v}</option>`).join('');
+  const levelListForSection = LEVELS[selectedSection] || LEVELS.default;
+  const selectedLevel = levelListForSection.includes(S.level) ? S.level : (levelListForSection[0]||'');
+  levelSelect.innerHTML=levelListForSection.map(v=>`<option value="${v}" ${selectedLevel===v?'selected':''}>${v}</option>`).join('');
 
   sectionSelect.onchange=()=>{
-    S.section=sectionSelect.value;
-    S.level='';
-    S.tasks={};
-    displayedProgress=0;
-    renderSetup();
-    save();
-    render();
-  };
-  levelSelect.onchange=()=>{
-    S.level=levelSelect.value;
-    S.tasks={};
-    displayedProgress=0;
-    save();
-    render();
+    const list = LEVELS[sectionSelect.value] || LEVELS.default;
+    levelSelect.innerHTML=list.map(v=>`<option value="${v}">${v}</option>`).join('');
   };
 }
 function animateProgressTo(target){
@@ -668,7 +668,7 @@ function animateProgressTo(target){
   requestAnimationFrame(frame);
 }
 function renderProgress(){
-  if(!S.org || !S.section || !S.level) return;
+  if(!S.org || !S.section || !S.level || !S.configured) return;
   const p=percent();
   animateProgressTo(p);
 
@@ -690,13 +690,13 @@ function renderProgress(){
   const next=nextLevel();
   $('#nextBox').classList.toggle('show',p>=100);
   $('#nextLevelText').textContent=next?`Следующая ступень: ${next}`:'Это последняя ступень выбранного раздела.';
-  $('#goNextLevel').style.display=next?'block':'none';
-  $('#goNextLevel').onclick=()=>goNextLevel();
+  $('#claimPromotion').style.display=next?'block':'none';
+  $('#claimPromotion').onclick=()=>claimPromotion();
   $('#nextText').textContent=p<100?'Отмечай выполненное — это прогресс до следующей ступени.':'Ступень закрыта. Можно перейти дальше.';
 }
 function renderManualLevelPicker(){
   const select=$('#manualLevelSelect');
-  if(!select || !S.section) return;
+  if(!select || !S.section || !S.configured) return;
   const list=levels();
   select.innerHTML=list.map(v=>`<option value="${v}" ${S.level===v?'selected':''}>${v}</option>`).join('');
   select.onchange=()=>{
@@ -707,11 +707,6 @@ function renderManualLevelPicker(){
     render();
     showToast('Ступень изменена','Задачи обновлены');
   };
-  const idx=list.indexOf(S.level);
-  $('#prevLevelBtn').disabled=idx<=0;
-  $('#nextLevelBtn').disabled=idx<0 || idx>=list.length-1;
-  $('#prevLevelBtn').onclick=()=>{if(idx>0)setLevel(list[idx-1])};
-  $('#nextLevelBtn').onclick=()=>{if(idx>=0 && idx<list.length-1)setLevel(list[idx+1])};
 }
 function setLevel(level){
   S.level=level;
@@ -726,10 +721,11 @@ function nextLevel(){
   const idx=list.indexOf(S.level);
   return idx>=0 && idx<list.length-1 ? list[idx+1] : '';
 }
-function goNextLevel(){
+function claimPromotion(){
   const next=nextLevel();
   if(!next) return;
   setLevel(next);
+  showToast('Повышение получено','Открыта следующая ступень');
 }
 function renderAchievements(){
   const ach=[];
@@ -769,6 +765,7 @@ function saveSettings(){
     S.org='';
     S.section='';
     S.level='';
+    S.configured=false;
     S.tasks={};
     displayedProgress=0;
   }
@@ -781,10 +778,21 @@ $('#createProfile').onclick=()=>{
   const name=$('#firstName').value.trim();
   if(!name){$('#firstError').classList.add('show');return}
   $('#firstError').classList.remove('show');
-  S={ready:true,name,project:$('#firstProject').value,path:document.querySelector('[name="path"]:checked').value,style:'style-arctic',org:'',section:'',level:'',tasks:{}};
+  S={ready:true,name,project:$('#firstProject').value,path:document.querySelector('[name="path"]:checked').value,style:'style-arctic',org:'',section:'',level:'',configured:false,tasks:{}};
   save();
   render();
 };
+
+$('#saveSetup').onclick=()=>{
+  S.section=$('#sectionSelect').value;
+  S.level=$('#levelSelect').value;
+  S.configured=true;
+  S.tasks={};
+  displayedProgress=0;
+  save();
+  render();
+};
+
 $('#openSettings').onclick=openSettings;
 $('#closeSettings').onclick=closeSettings;
 $('#saveSettings').onclick=saveSettings;
