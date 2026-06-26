@@ -339,6 +339,70 @@ input[type="checkbox"]{accent-color:var(--accent)!important}
   min-height:58px;
 }
 
+
+/* v93: блок информации физически удалён, фон мягкий как раньше, рабочий выбор ступени */
+body.theme-blue{
+  --accent:#67e8ff;--accent2:#74a8ff;--glow:rgba(103,232,255,.16);--themeTint:rgba(103,232,255,.12);
+}
+body.theme-green{
+  --accent:#76f3c5;--accent2:#4ddda8;--glow:rgba(118,243,197,.14);--themeTint:rgba(118,243,197,.10);
+}
+body.theme-purple{
+  --accent:#b28cff;--accent2:#818cf8;--glow:rgba(178,140,255,.15);--themeTint:rgba(178,140,255,.11);
+}
+body.theme-red{
+  --accent:#fb7185;--accent2:#f472b6;--glow:rgba(251,113,133,.13);--themeTint:rgba(251,113,133,.10);
+}
+body.theme-gold{
+  --accent:#facc15;--accent2:#f59e0b;--glow:rgba(250,204,21,.12);--themeTint:rgba(250,204,21,.09);
+}
+body.theme-blue:before,
+body.theme-green:before,
+body.theme-purple:before,
+body.theme-red:before,
+body.theme-gold:before{
+  background:
+    radial-gradient(circle at 50% 8%, var(--themeTint), transparent 29%),
+    radial-gradient(circle at 82% 82%, color-mix(in srgb,var(--accent2) 9%, transparent), transparent 34%),
+    linear-gradient(180deg,#02040a,#000) !important;
+}
+.kicker:before{background:var(--accent)!important;box-shadow:0 0 18px var(--glow)!important}
+input[type="checkbox"]{accent-color:var(--accent)!important}
+.btn:not(.soft):not(.danger){
+  border-color:color-mix(in srgb,var(--accent) 42%, white 0%)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent2) 28%, transparent),color-mix(in srgb,var(--accent) 12%, transparent))!important;
+}
+.btn.soft{
+  background:rgba(255,255,255,.055)!important;
+  border-color:rgba(255,255,255,.13)!important;
+}
+.ring{background:conic-gradient(var(--accent) calc(var(--p)*1%),rgba(255,255,255,.08) 0)!important}
+.task.done{
+  border-color:color-mix(in srgb,var(--accent) 55%, white 0%)!important;
+  background:linear-gradient(135deg,var(--glow),rgba(255,255,255,.035))!important;
+}
+.next-level-box{
+  border-color:color-mix(in srgb,var(--accent) 32%, white 0%)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, transparent),rgba(255,255,255,.035))!important;
+}
+.progress-toast{border-color:color-mix(in srgb,var(--accent) 42%, white 0%)!important}
+#modulesStep,#modules,.modules,#infoPanel,.info-panel,[id*="modules"],[id*="infoPanel"],
+.panel:has(#modules),.panel:has(#modulesTitle){
+  display:none!important;
+}
+.level-picker-panel{
+  display:block!important;
+  margin-top:16px!important;
+  padding:14px!important;
+  border-radius:18px!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  background:rgba(255,255,255,.04)!important;
+}
+.level-picker-panel select{
+  min-height:50px!important;
+  color:var(--text)!important;
+}
+
 </style>
 </head>
 <body>
@@ -493,8 +557,10 @@ function showProgressToast(text){
  showProgressToast.timer=setTimeout(()=>toast.classList.remove('show'),1800);
 }
 
+
 function currentLevelList(){
- return LEVELS[S.section] || LEVELS.default || [];
+ const levels = LEVELS[S.section] || LEVELS.default || [];
+ return Array.isArray(levels) ? levels : [];
 }
 function nextLevelValue(){
  const list=currentLevelList();
@@ -502,19 +568,6 @@ function nextLevelValue(){
  if(idx>=0 && idx<list.length-1) return list[idx+1];
  return "";
 }
-function goNextLevel(){
- const next=nextLevelValue();
- if(!next) return;
- S.level=next;
- S.tasks={};
- displayedProgress=0;
- save();
- render();
- showProgressToast('Открыт следующий уровень');
-}
-
-
-
 function setLevelDirect(level){
  if(!level || !S.configured) return;
  const list=currentLevelList();
@@ -533,19 +586,21 @@ function renderManualLevelPicker(){
  panel.style.display = S.configured ? 'block' : 'none';
  if(!S.configured) return;
  const list=currentLevelList();
- if(!list.length) return;
+ if(!list.length){
+  select.innerHTML='<option value="">Нет ступеней</option>';
+  return;
+ }
  if(!list.includes(S.level)){
   S.level=list[0];
   save();
  }
- const previousValue=select.value;
  select.innerHTML='';
  list.forEach(v=>{
-  const option=document.createElement('option');
-  option.value=v;
-  option.textContent=v;
-  if(v===S.level) option.selected=true;
-  select.appendChild(option);
+  const opt=document.createElement('option');
+  opt.value=v;
+  opt.textContent=v;
+  if(v===S.level) opt.selected=true;
+  select.appendChild(opt);
  });
  select.value=S.level;
  select.onchange=()=>setLevelDirect(select.value);
@@ -630,6 +685,7 @@ function saveSettingsModal(){
 ['rp_panel_v88_theme_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v87_auto_next_level','rp_panel_v86_smooth_progress'].forEach(k=>localStorage.removeItem(k));
 ['rp_panel_v90_fresh_theme_bg_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v88_theme_level_picker'].forEach(k=>localStorage.removeItem(k));
 ['rp_panel_v91_clean_settings_themes_level','rp_panel_v90_fresh_theme_bg_level_picker','rp_panel_v89_fresh_edit_project_levels','rp_panel_v88_theme_level_picker'].forEach(k=>localStorage.removeItem(k));
+['rp_panel_v92_no_info_theme_swatch_level','rp_panel_v91_clean_settings_themes_level','rp_panel_v90_fresh_theme_bg_level_picker'].forEach(k=>localStorage.removeItem(k));
 load();render();
 
 setTimeout(()=>{
