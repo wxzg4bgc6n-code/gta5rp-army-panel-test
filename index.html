@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v119</title>
+<title>RP Cabinet v120</title>
 <style>
 :root{
   --bg:#02040a;
@@ -1655,6 +1655,91 @@ body{
   margin-top:16px!important;
 }
 
+
+/* v120: без уровня аккаунта — эмблема текущего направления + достижения */
+.profile-account-hero,
+.hero-xp-track,
+#heroXpText,
+#heroLevelText,
+#heroRankTitle{
+  display:none!important;
+}
+.clean-rank-emblem{
+  background:linear-gradient(180deg,#1b2332,#0c111d)!important;
+  border-color:color-mix(in srgb,var(--accent) 42%, white 0%)!important;
+}
+.clean-rank-emblem span{
+  font-size:46px!important;
+  color:color-mix(in srgb,var(--accent) 82%, white 8%)!important;
+}
+.clean-rank-emblem small{
+  min-width:42px!important;
+}
+.profile-direction-card{
+  width:100%;
+  margin:10px auto 10px;
+  padding:12px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:rgba(255,255,255,.035);
+}
+.profile-direction-card strong{
+  display:block;
+  font-size:15px;
+  line-height:1.15;
+}
+.profile-direction-card span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+  margin-top:4px;
+}
+.profile-achievements-card{
+  width:100%;
+  margin:0 auto 16px;
+  padding:12px;
+  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.09));
+  border-radius:18px;
+  background:rgba(255,255,255,.035);
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:10px;
+  align-items:center;
+}
+.profile-achievements-card strong{
+  display:block;
+  font-size:15px;
+}
+.profile-achievements-card span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+  margin-top:4px;
+}
+.hero-collection-btn{
+  min-height:38px;
+  padding:0 12px;
+  border-radius:14px;
+  border:1px solid color-mix(in srgb,var(--accent) 36%, rgba(255,255,255,.10));
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 14%, rgba(255,255,255,.04)),rgba(255,255,255,.035));
+  color:var(--text);
+  font-weight:950;
+  font-size:12px;
+  white-space:nowrap;
+}
+.account-progress-card,
+.last-ach-card{
+  display:none!important;
+}
+.account-modal-summary .summary-block:first-child{
+  display:none!important;
+}
+.account-modal-summary{
+  grid-template-columns:1fr!important;
+}
+
 </style>
 </head>
 <body>
@@ -1698,8 +1783,8 @@ body{
       <div class="profile-head">
         <div class="avatar-wrap">
           <div class="initial rank-emblem clean-rank-emblem" id="profileInitial">
-            <span id="rankIcon">◇</span>
-            <small id="rankTier">I</small>
+            <span id="rankIcon">👤</span>
+            <small id="rankTier">RP</small>
           </div>
         </div>
         <h2 id="profileName">Игрок</h2>
@@ -1906,7 +1991,7 @@ body{
 
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v119_account_info_near_avatar_clean_profile';
+const VERSION_KEY='rp_panel_v120_no_account_level_direction_emblem';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -2283,14 +2368,28 @@ function rankInfo(){
   if(lvl>=11) return {title:'Опытный',icon:'◆',tier:'II',cls:'rank-2'};
   return {title:'Новичок',icon:'◇',tier:'I',cls:'rank-1'};
 }
+
+function directionInfo(){
+  if(S.section==='USAF') return {icon:'✈️',tag:'USAF',title:'USAF',sub:'Воздушное подразделение'};
+  if(S.section==='Academy') return {icon:'🎓',tag:'AC',title:'Academy',sub:'Академия и подготовка'};
+  if(S.org==='ARMY') return {icon:'🪖',tag:'ARMY',title:'ARMY',sub:S.section?`Текущий раздел: ${S.section}`:'Военная организация'};
+  if(S.path==='Крайм') return {icon:'🕶️',tag:'CR',title:'Крайм',sub:S.org||'Криминальный путь'};
+  if(S.path==='Госка') return {icon:'🏛️',tag:'GOV',title:'Госструктуры',sub:S.org||'Государственный путь'};
+  return {icon:'👤',tag:'RP',title:'RP-профиль',sub:'Выбери направление'};
+}
+function renderDirectionEmblem(){
+  const d=directionInfo();
+  const icon=$('#rankIcon');
+  const tier=$('#rankTier');
+  if(icon) icon.textContent=d.icon;
+  if(tier) tier.textContent=d.tag;
+  const title=$('#directionTitle');
+  const sub=$('#directionSubtitle');
+  if(title) title.textContent=d.title;
+  if(sub) sub.textContent=d.sub;
+}
 function renderRankEmblem(){
-  const el=$('#profileInitial');
-  if(!el) return;
-  const r=rankInfo();
-  el.classList.remove('rank-1','rank-2','rank-3','rank-4','rank-5');
-  el.classList.add(r.cls);
-  $('#rankIcon').textContent=r.icon;
-  $('#rankTier').textContent=r.tier;
+  renderDirectionEmblem();
 }
 function unlockAchievement(id){
   const got=achievements();
@@ -2342,10 +2441,8 @@ function renderAccountBlock(){
   const oldBar=$('#accountXpBar'); if(oldBar) oldBar.style.width=`${current}%`;
   const oldAch=$('#accountAchText'); if(oldAch) oldAch.textContent=`${opened.length} / ${ACHIEVEMENT_DEFS.length} достижений`;
 
-  const heroRank=$('#heroRankTitle'); if(heroRank) heroRank.textContent=r.title;
-  const heroLvl=$('#heroLevelText'); if(heroLvl) heroLvl.textContent=`Уровень аккаунта ${lvl}`;
-  const heroXp=$('#heroXpText'); if(heroXp) heroXp.textContent=`${current} / 100 XP`;
-  const heroBar=$('#heroXpBar'); if(heroBar) heroBar.style.width=`${current}%`;
+    const profileAch=$('#profileAchCount');
+  if(profileAch) profileAch.textContent=`${opened.length} / ${ACHIEVEMENT_DEFS.length} открыто`;
   const last=opened.sort((a,b)=>(got[b.id]?.time||0)-(got[a.id]?.time||0))[0];
   const lastText=last?`${last.icon} ${last.title}`:'—';
   const inline=$('#lastAchInline');
@@ -2369,8 +2466,8 @@ function renderAchievementModal(){
       <span>${open?`+${a.xp} XP`:''}</span>
     </div>`;
   }).join('');
-  $('#modalRankTitle').textContent=rankInfo().title;
-  $('#modalLevelText').textContent=`Уровень аккаунта ${accountLevel()}`;
+  const mrt=$('#modalRankTitle'); if(mrt) mrt.textContent='Достижения';
+  const mlt=$('#modalLevelText'); if(mlt) mlt.textContent='Коллекция профиля';
   $('#modalAchCount').textContent=`${ACHIEVEMENT_DEFS.filter(a=>got[a.id]).length} / ${ACHIEVEMENT_DEFS.length}`;
 }
 function openAchievementsModal(){
