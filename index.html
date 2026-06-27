@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v036</title>
+<title>RP Cabinet TEST v038</title>
 <style>
 :root{
   --bg:#02040a;
@@ -3883,6 +3883,26 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 
 
 
+
+
+/* KIRI v038: чистый интерфейс облачной синхронизации */
+.cloud-sync-card{border-color:color-mix(in srgb,var(--accent) 28%, rgba(255,255,255,.12))!important;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%, transparent),rgba(255,255,255,.035))!important;}
+.cloud-sync-status{display:grid;grid-template-columns:16px 1fr;gap:10px;align-items:start;margin:12px 0;padding:12px;border:1px solid rgba(255,255,255,.11);border-radius:15px;background:rgba(0,0,0,.16);}
+.cloud-sync-status b{display:block;font-size:14px;color:var(--text);}
+.cloud-sync-status small{display:block;margin-top:3px;color:var(--muted);font-size:12px;font-weight:850;line-height:1.35;}
+.cloud-dot{width:11px;height:11px;border-radius:999px;margin-top:4px;background:#8b95a7;box-shadow:0 0 14px rgba(139,149,167,.22);}
+.cloud-dot.cloud-on{background:#76f3c5;box-shadow:0 0 18px rgba(118,243,197,.42);}
+.cloud-dot.cloud-wait{background:#ffd166;box-shadow:0 0 18px rgba(255,209,102,.35);}
+.cloud-dot.cloud-error{background:#ff7070;box-shadow:0 0 18px rgba(255,112,112,.35);}
+.cloud-sync-actions{display:grid;grid-template-columns:1fr;gap:9px;margin-top:10px;}
+.cloud-sync-actions.cloud-connected{grid-template-columns:1fr;}
+.cloud-sync-actions .btn{min-height:42px!important;border-radius:14px!important;font-size:12px!important;}
+.cloud-sync-actions .btn.is-hidden{display:none!important;}
+.cloud-sync-meta{margin-top:9px;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35;}
+.cloud-sync-mini{display:inline-flex;align-items:center;gap:7px;margin-top:8px;color:var(--muted);font-size:11px;font-weight:900;}
+.cloud-sync-mini::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 12px var(--glow);} 
+@media(max-width:700px){.cloud-sync-actions{grid-template-columns:1fr;}}
+
 /* KIRI v036: витрина — открытые достижения сверху; Academy визуально мягче и меньше перегруза */
 #achievementGrid .achievement-card.locked{
   order:50!important;
@@ -5628,29 +5648,22 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <div class="theme-card" data-style="style-gold" style="--p1:#facc15;--p2:#f59e0b"><div class="theme-preview"></div><b>Gold</b><span>золотой</span></div>
 </div>
 </label>
-<div class="profile-transfer-card">
+<div class="profile-transfer-card cloud-sync-card" id="cloudSyncCard">
           <div class="profile-transfer-head">
             <div>
-              <h3>Перенос профиля</h3>
-              <p>Экспортируй профиль на ПК и импортируй на телефоне. Можно через код, файл или ссылку.</p>
+              <h3>☁ Облачная синхронизация</h3>
+              <p>Подключи Google, чтобы профиль автоматически обновлялся между ПК и телефоном. Ручной экспорт/импорт убран из интерфейса.</p>
             </div>
           </div>
-          <div class="profile-transfer-grid">
-            <button class="btn soft" id="exportProfileCode" type="button">Создать код</button>
-            <button class="btn soft" id="copyProfileLink" type="button">Скопировать ссылку</button>
+          <div class="cloud-sync-status" id="cloudSyncStatus">
+            <span class="cloud-dot cloud-off"></span>
+            <div><b>Не подключена</b><small>Профиль сейчас хранится локально на этом устройстве.</small></div>
           </div>
-          <textarea class="profile-transfer-code" id="profileTransferCode" placeholder="Здесь появится код профиля. На другом устройстве вставь его сюда и нажми «Импортировать»." spellcheck="false"></textarea>
-          <div class="profile-transfer-actions">
-            <button class="btn soft" id="copyProfileCode" type="button">Копировать код</button>
-            <button class="btn soft" id="downloadProfileFile" type="button">Скачать файл</button>
-            <button class="btn" id="importProfileCode" type="button">Импортировать</button>
+          <div class="cloud-sync-actions" id="cloudSyncActions">
+            <button class="btn" id="cloudGoogleLogin" type="button">Войти через Google</button>
+            <button class="btn soft" id="cloudLogout" type="button">Выйти из аккаунта</button>
           </div>
-          <input class="profile-transfer-file" id="profileImportFile" type="file" accept="application/json,.json,.txt">
-          <div class="profile-transfer-actions">
-            <button class="btn soft" id="chooseProfileFile" type="button">Выбрать файл</button>
-            <button class="btn soft" id="clearProfileTransfer" type="button">Очистить поле</button>
-          </div>
-          <div class="profile-transfer-note">Ссылка может быть длинной. Если мессенджер её режет, лучше используй код или файл.</div>
+          <div class="cloud-sync-meta" id="cloudSyncMeta">Firebase готовится к подключению.</div>
         </div>
 </div>
 <div class="modal-actions">
@@ -5664,9 +5677,12 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <div><b>Новое достижение</b><span id="achievementToastText">Открыто</span></div>
 </div>
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v036_showcase_sort_academy_soft';
+const VERSION_KEY='rp_panel_v038_cloud_sync_clean_ui';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -5821,9 +5837,10 @@ let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
 
 function save(){
-  // KIRI v035: не даём пустому профилю перезаписать уже созданный профиль.
+  // KIRI v035/v037: не даём пустому профилю перезаписать уже созданный профиль.
   const normalized=normalizeProfileData(S);
   if(normalized && normalized.ready) S=normalized;
+  if(!window.__cloudApplyingRemote) S.updatedAt=Date.now();
   const data=JSON.stringify(S);
   try{
     if(S.ready){
@@ -5835,6 +5852,7 @@ function save(){
   }catch(e){
     console.warn('Profile save failed',e);
   }
+  if(window.CloudSync && !window.__cloudApplyingRemote) window.CloudSync.scheduleSave();
 }
 function normalizeProfileData(d){
   if(!d || typeof d!=='object') return null;
@@ -5859,6 +5877,8 @@ function normalizeProfileData(d){
   if(!merged.account.achievements || typeof merged.account.achievements!=='object') merged.account.achievements={};
   if(!merged.account.createdAt) merged.account.createdAt=Date.now();
   if(!merged.account.initialName) merged.account.initialName=merged.name||'';
+  if(!merged.updatedAt) merged.updatedAt=Date.now();
+  if(!merged.cloud || typeof merged.cloud!=='object') merged.cloud={enabled:false,provider:'local',uid:'',lastSync:0};
   return merged;
 }
 function safeReadProfileKey(key){
@@ -6878,11 +6898,211 @@ function importProfileFile(file){
   reader.readAsText(file);
 }
 
+
+
+const FIREBASE_CONFIG={
+  apiKey:"AIzaSyAIOHZIBi2l5aOiivO1q6LlVRXFjicQrhI",
+  authDomain:"rp-cabinet.firebaseapp.com",
+  projectId:"rp-cabinet",
+  storageBucket:"rp-cabinet.firebasestorage.app",
+  messagingSenderId:"686693815982",
+  appId:"1:686693815982:web:94fd42fdab2ddab6c53f3f",
+  measurementId:"G-250D37LHFT"
+};
+const CLOUD_PROFILE_ID='default';
+const CLOUD_DEVICE_KEY='rp_cabinet_cloud_device_id';
+function getCloudDeviceId(){
+  try{
+    let id=localStorage.getItem(CLOUD_DEVICE_KEY);
+    if(!id){id='dev_'+Math.random().toString(36).slice(2,10)+'_'+Date.now().toString(36);localStorage.setItem(CLOUD_DEVICE_KEY,id)}
+    return id;
+  }catch(e){return 'dev_'+Date.now().toString(36)}
+}
+function deviceLabel(){
+  const ua=navigator.userAgent||'';
+  if(/Android/i.test(ua)) return 'Android';
+  if(/iPhone|iPad/i.test(ua)) return 'iPhone / iPad';
+  if(/Windows/i.test(ua)) return 'Windows';
+  if(/Mac/i.test(ua)) return 'Mac';
+  if(/Linux/i.test(ua)) return 'Linux';
+  return 'Браузер';
+}
+function cloudPath(uid){return `users/${uid}/profiles/${CLOUD_PROFILE_ID}`;}
+function setCloudStatus(mode,title,desc,meta){
+  const el=$('#cloudSyncStatus');
+  if(el){
+    const dot=el.querySelector('.cloud-dot');
+    if(dot) dot.className='cloud-dot '+(mode==='on'?'cloud-on':mode==='wait'?'cloud-wait':mode==='error'?'cloud-error':'cloud-off');
+    const b=el.querySelector('b'); if(b) b.textContent=title;
+    const sm=el.querySelector('small'); if(sm) sm.textContent=desc;
+  }
+  const m=$('#cloudSyncMeta'); if(m) m.textContent=meta||'';
+  const googleBtn=$('#cloudGoogleLogin');
+  const logoutBtn=$('#cloudLogout');
+  const actions=$('#cloudSyncActions');
+  if(googleBtn) googleBtn.classList.toggle('is-hidden', mode==='on');
+  if(logoutBtn) logoutBtn.classList.toggle('is-hidden', mode!=='on');
+  if(actions) actions.classList.toggle('cloud-connected', mode==='on');
+}
+function formatSyncTime(ts){
+  if(!ts) return 'ещё не было';
+  try{return new Date(ts).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return String(ts)}
+}
+function renderCloudSyncStatus(){
+  const cloud=S.cloud||{};
+  if(window.CloudSync && window.CloudSync.user){
+    const email=window.CloudSync.user.email||'Google аккаунт';
+    setCloudStatus('on','Синхронизировано',`Google: ${email}. Профиль автоматически обновляется между устройствами.`,`Последняя синхронизация: ${formatSyncTime(cloud.lastSync)} · Устройство: ${deviceLabel()}`);
+  }else if(window.CloudSync && window.CloudSync.ready){
+    setCloudStatus('off','Не подключена','Профиль хранится только на этом устройстве. Войди через Google, чтобы включить автоматическую синхронизацию.','Локальный режим: между ПК и телефоном данные не обновляются.');
+  }else{
+    setCloudStatus('wait','Подготовка Firebase','Проверяю подключение к облачной синхронизации.','Если статус не меняется, проверь интернет или настройки Firebase.');
+  }
+}
+function cloudSafeState(){
+  const copy=JSON.parse(JSON.stringify(S));
+  copy.ready=!!copy.ready;
+  copy.cloud=Object.assign({},copy.cloud||{}, {enabled:true, provider:'google', uid:window.CloudSync?.user?.uid||copy.cloud?.uid||'', lastSync:Date.now()});
+  return copy;
+}
+window.CloudSync={
+  ready:false,
+  app:null,
+  auth:null,
+  db:null,
+  user:null,
+  unsub:null,
+  saveTimer:null,
+  async init(){
+    try{
+      if(!window.firebase) throw new Error('Firebase SDK не загрузился');
+      this.app=firebase.apps && firebase.apps.length ? firebase.app() : firebase.initializeApp(FIREBASE_CONFIG);
+      this.auth=firebase.auth();
+      this.db=firebase.firestore();
+      this.ready=true;
+      renderCloudSyncStatus();
+      this.auth.onAuthStateChanged(user=>this.onAuth(user));
+    }catch(e){
+      console.warn('Firebase init failed',e);
+      this.ready=false;
+      setCloudStatus('error','Firebase недоступен','Панель работает локально. Облако не подключилось.',String(e.message||e));
+    }
+  },
+  async loginGoogle(){
+    if(!this.auth) return showToast('Firebase не готов','Подожди пару секунд и попробуй снова');
+    try{
+      setCloudStatus('wait','Вход через Google','Открываю окно авторизации.','Если окно не открылось, проверь блокировку всплывающих окон.');
+      const provider=new firebase.auth.GoogleAuthProvider();
+      provider.setCustomParameters({prompt:'select_account'});
+      await this.auth.signInWithPopup(provider);
+    }catch(e){
+      console.warn(e);
+      showToast('Вход не выполнен','Google авторизация отменена или заблокирована');
+      renderCloudSyncStatus();
+    }
+  },
+  async logout(){
+    try{
+      if(this.unsub){this.unsub();this.unsub=null;}
+      await this.auth?.signOut();
+      S.cloud={enabled:false,provider:'local',uid:'',lastSync:S.cloud?.lastSync||0};
+      save();
+      render();
+      showToast('Облако отключено','Профиль остался локально на этом устройстве');
+    }catch(e){showToast('Не удалось отключить','Попробуй ещё раз');}
+  },
+  async onAuth(user){
+    this.user=user||null;
+    if(!user){renderCloudSyncStatus();return;}
+    S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:user.uid});
+    save();
+    await this.attachProfile();
+  },
+  profileRef(){return this.db.doc(cloudPath(this.user.uid));},
+  async attachProfile(){
+    if(!this.user || !this.db) return;
+    const ref=this.profileRef();
+    setCloudStatus('wait','Подключаю профиль','Проверяю данные в облаке.','UID: '+this.user.uid.slice(0,8)+'…');
+    const snap=await ref.get();
+    const local=normalizeProfileData(S);
+    const cloud=snap.exists ? normalizeProfileData((snap.data()||{}).state) : null;
+    if(cloud && cloud.ready){
+      const cloudUpdated=(snap.data()||{}).updatedAt || cloud.updatedAt || 0;
+      const localUpdated=local?.updatedAt || 0;
+      if(!local?.ready || cloudUpdated>=localUpdated){
+        window.__cloudApplyingRemote=true;
+        S=cloud;
+        S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now()});
+        save();
+        window.__cloudApplyingRemote=false;
+        render();
+        applyDashTab();
+        showToast('Профиль загружен','Данные подтянуты из облака');
+      }else{
+        await this.saveNow(true);
+        showToast('Профиль перенесён','Локальные данные загружены в облако');
+      }
+    }else if(local && local.ready){
+      await this.saveNow(true);
+      showToast('Облако подключено','Локальный профиль перенесён в Firebase');
+    }
+    if(this.unsub) this.unsub();
+    this.unsub=ref.onSnapshot(doc=>{
+      if(!doc.exists || window.__cloudSaving) return;
+      const data=doc.data()||{};
+      const remote=normalizeProfileData(data.state);
+      if(!remote || !remote.ready) return;
+      const remoteUpdated=data.updatedAt || remote.updatedAt || 0;
+      const localUpdated=S.updatedAt || 0;
+      if(remoteUpdated>localUpdated+250){
+        window.__cloudApplyingRemote=true;
+        S=remote;
+        S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now()});
+        save();
+        window.__cloudApplyingRemote=false;
+        render();
+        applyDashTab();
+        showToast('Синхронизация','Профиль обновлён из облака');
+      }
+    });
+    renderCloudSyncStatus();
+  },
+  scheduleSave(){
+    if(!this.ready || !this.user || !S.ready) return;
+    clearTimeout(this.saveTimer);
+    this.saveTimer=setTimeout(()=>this.saveNow(false),900);
+  },
+  async saveNow(force){
+    if(!this.ready || !this.user || !S.ready) return;
+    try{
+      window.__cloudSaving=true;
+      const now=Date.now();
+      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:now});
+      const state=cloudSafeState();
+      await this.profileRef().set({
+        profileId:CLOUD_PROFILE_ID,
+        ownerUid:this.user.uid,
+        updatedAt:now,
+        state,
+        devices:{[getCloudDeviceId()]:{label:deviceLabel(),lastSeen:now,userAgent:(navigator.userAgent||'').slice(0,180)}}
+      },{merge:true});
+      window.__cloudSaving=false;
+      renderCloudSyncStatus();
+      if(force) showToast('Синхронизировано','Профиль сохранён в облаке');
+    }catch(e){
+      window.__cloudSaving=false;
+      console.warn('Cloud save failed',e);
+      setCloudStatus('error','Ошибка синхронизации','Не удалось записать данные в Firestore. Проверь правила доступа.',String(e.message||e).slice(0,120));
+    }
+  }
+};
+
 function openSettings(){
   $('#settingsName').value=S.name||'';
   $('#settingsProject').value=S.project;
   $('#settingsPath').value=S.path;
   document.querySelectorAll('.theme-card').forEach(card=>card.classList.toggle('active',card.dataset.style===S.style));
+  renderCloudSyncStatus();
   $('#settingsModal').classList.add('open');
 }
 function closeSettings(){
@@ -7027,14 +7247,8 @@ $('#openSettings').onclick=openSettings;
 $('#closeSettings').onclick=closeSettings;
 $('#saveSettings').onclick=saveSettings;
 $('#settingsModal').onclick=e=>{if(e.target.id==='settingsModal')closeSettings()};
-$('#exportProfileCode')?.addEventListener('click',exportProfileCode);
-$('#copyProfileCode')?.addEventListener('click',copyProfileCode);
-$('#copyProfileLink')?.addEventListener('click',copyProfileLink);
-$('#downloadProfileFile')?.addEventListener('click',downloadProfileFile);
-$('#importProfileCode')?.addEventListener('click',importProfileFromCode);
-$('#clearProfileTransfer')?.addEventListener('click',()=>setTransferCode(''));
-$('#chooseProfileFile')?.addEventListener('click',()=>$('#profileImportFile')?.click());
-$('#profileImportFile')?.addEventListener('change',e=>importProfileFile(e.target.files && e.target.files[0]));
+$('#cloudGoogleLogin')?.addEventListener('click',()=>CloudSync.loginGoogle());
+$('#cloudLogout')?.addEventListener('click',()=>CloudSync.logout());
 $('#levelModal').onclick=e=>{if(e.target.id==='levelModal')closeLevelModal()};
 $('#orgSectionModal').onclick=e=>{if(e.target.id==='orgSectionModal')closeOrgSectionModal()};
 document.querySelectorAll('.theme-card').forEach(card=>{
@@ -7253,9 +7467,9 @@ document.addEventListener('click',e=>{
 },true);
 
 load();
-importProfileFromUrl();
 render();
 applyDashTab();
+CloudSync.init();
 </script>
 </body>
 </html>
