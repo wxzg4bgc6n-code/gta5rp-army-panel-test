@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v063</title>
+<title>RP Cabinet TEST v064</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5140,6 +5140,27 @@ body.academy-info-clean #departmentInfoContent details.section-toggle.academy-ex
   border-color:color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.14)) !important;
   box-shadow:0 14px 34px rgba(0,0,0,.22), 0 0 24px color-mix(in srgb,var(--accent) 12%, transparent) !important;
   background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.024)),rgba(10,14,24,.38) !important;
+}
+body.academy-info-clean #departmentInfoContent details.section-toggle.academy-expand-card[open] > summary.academy-section-head-card{
+  background:transparent !important;
+}
+
+
+/* KIRI v064: Academy — слабый тематический фон только у свернутых карточек; при открытии фон убирается, остаётся подсветка рамки */
+body.academy-info-clean #departmentInfoContent details.section-toggle.academy-expand-card:not([open]){
+  border-color:rgba(255,255,255,.13) !important;
+  background:
+    linear-gradient(135deg, color-mix(in srgb,var(--accent) 8%, transparent), rgba(255,255,255,.022) 58%, rgba(255,255,255,.012)),
+    rgba(12,16,27,.42) !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.16) !important;
+}
+body.academy-info-clean #departmentInfoContent details.section-toggle.academy-expand-card:not([open]) > summary.academy-section-head-card{
+  background:transparent !important;
+}
+body.academy-info-clean #departmentInfoContent details.section-toggle.academy-expand-card[open]{
+  border-color:color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.14)) !important;
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.024)),rgba(10,14,24,.38) !important;
+  box-shadow:0 14px 34px rgba(0,0,0,.22), 0 0 24px color-mix(in srgb,var(--accent) 12%, transparent) !important;
 }
 body.academy-info-clean #departmentInfoContent details.section-toggle.academy-expand-card[open] > summary.academy-section-head-card{
   background:transparent !important;
