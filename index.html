@@ -3823,6 +3823,64 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 #dashboardDepartmentTests .answer-options li.correct{border-color:color-mix(in srgb,var(--accent) 40%, rgba(255,255,255,.10))!important;background:color-mix(in srgb,var(--accent) 10%, rgba(0,0,0,.12))!important;}
 #dashboardDepartmentTests .answer-options li.correct::before{content:"✓";width:18px;height:18px;left:10px;display:grid;place-items:center;color:#06130f;background:var(--accent);font-size:12px;font-weight:950;}
 @media(max-width:900px){#departmentInfoContent .grid,#departmentInfoContent .grid.three,#departmentTestsContent .grid,#departmentTestsContent .grid.three{grid-template-columns:1fr!important;}}
+
+
+/* KIRI v033: перенос профиля между ПК и телефоном — экспорт / импорт / ссылка */
+.profile-transfer-card{
+  margin-top:14px;
+  padding:14px;
+  border-radius:20px;
+  border:1px solid color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.12));
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 7%, rgba(255,255,255,.035)),rgba(255,255,255,.024));
+}
+.profile-transfer-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:11px;
+  margin-bottom:12px;
+  border-bottom:1px solid rgba(255,255,255,.075);
+}
+.profile-transfer-head h3{margin:0;font-size:17px;letter-spacing:-.025em;}
+.profile-transfer-head p{margin:4px 0 0;color:var(--muted);font-size:12px;font-weight:850;line-height:1.35;}
+.profile-transfer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:10px;}
+.profile-transfer-grid .btn{min-height:44px!important;border-radius:14px!important;font-size:13px!important;}
+.profile-transfer-code{
+  width:100%;
+  min-height:98px;
+  resize:vertical;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.24);
+  color:var(--text);
+  padding:11px 12px;
+  outline:none;
+  font:inherit;
+  font-size:12px;
+  font-weight:850;
+  line-height:1.35;
+}
+.profile-transfer-code:focus{border-color:color-mix(in srgb,var(--accent) 58%, rgba(255,255,255,.12));box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 12%, transparent);}
+.profile-transfer-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px;}
+.profile-transfer-actions .btn{min-height:40px!important;border-radius:13px!important;font-size:12px!important;}
+.profile-transfer-file{display:none;}
+.profile-transfer-note{margin-top:9px;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35;}
+@media(max-width:700px){
+  .profile-transfer-grid,.profile-transfer-actions{grid-template-columns:1fr;}
+  .profile-transfer-head{display:block;}
+}
+
+
+
+/* KIRI v034: перенос профиля находится внутри настроек профиля, а не в смене отдела */
+#settingsModal .profile-transfer-card{
+  margin-top:2px!important;
+}
+#orgSectionModal .profile-transfer-card{
+  display:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -5470,6 +5528,30 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <div class="theme-card" data-style="style-gold" style="--p1:#facc15;--p2:#f59e0b"><div class="theme-preview"></div><b>Gold</b><span>золотой</span></div>
 </div>
 </label>
+<div class="profile-transfer-card">
+          <div class="profile-transfer-head">
+            <div>
+              <h3>Перенос профиля</h3>
+              <p>Экспортируй профиль на ПК и импортируй на телефоне. Можно через код, файл или ссылку.</p>
+            </div>
+          </div>
+          <div class="profile-transfer-grid">
+            <button class="btn soft" id="exportProfileCode" type="button">Создать код</button>
+            <button class="btn soft" id="copyProfileLink" type="button">Скопировать ссылку</button>
+          </div>
+          <textarea class="profile-transfer-code" id="profileTransferCode" placeholder="Здесь появится код профиля. На другом устройстве вставь его сюда и нажми «Импортировать»." spellcheck="false"></textarea>
+          <div class="profile-transfer-actions">
+            <button class="btn soft" id="copyProfileCode" type="button">Копировать код</button>
+            <button class="btn soft" id="downloadProfileFile" type="button">Скачать файл</button>
+            <button class="btn" id="importProfileCode" type="button">Импортировать</button>
+          </div>
+          <input class="profile-transfer-file" id="profileImportFile" type="file" accept="application/json,.json,.txt">
+          <div class="profile-transfer-actions">
+            <button class="btn soft" id="chooseProfileFile" type="button">Выбрать файл</button>
+            <button class="btn soft" id="clearProfileTransfer" type="button">Очистить поле</button>
+          </div>
+          <div class="profile-transfer-note">Ссылка может быть длинной. Если мессенджер её режет, лучше используй код или файл.</div>
+        </div>
 </div>
 <div class="modal-actions">
 <button class="btn soft" id="closeSettings">Отмена</button>
@@ -5484,7 +5566,7 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v032_storage_fix_academy_cleanup';
+const VERSION_KEY='rp_panel_v034_profile_settings_transfer';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -6521,6 +6603,117 @@ function showToast(title,text){
   clearTimeout(showToast.timer);
   showToast.timer=setTimeout(()=>$('#toast').classList.remove('show'),1700);
 }
+
+function profileExportPayload(){
+  const data=JSON.stringify(S);
+  return btoa(unescape(encodeURIComponent(data)));
+}
+function profileImportPayload(code){
+  const cleaned=(code||'').trim();
+  if(!cleaned) throw new Error('empty');
+  let raw=cleaned;
+  const urlMatch=cleaned.match(/[?#&]profile=([^&]+)/);
+  if(urlMatch) raw=decodeURIComponent(urlMatch[1]);
+  if(cleaned.includes('#profile=')) raw=decodeURIComponent(cleaned.split('#profile=')[1].split('&')[0]);
+  const json=decodeURIComponent(escape(atob(raw)));
+  const parsed=JSON.parse(json);
+  const normalized=normalizeProfileData(parsed);
+  if(!normalized) throw new Error('bad_profile');
+  normalized.ready=true;
+  return normalized;
+}
+function profileShareUrl(){
+  return `${location.origin}${location.pathname}#profile=${encodeURIComponent(profileExportPayload())}`;
+}
+function setTransferCode(value){
+  const box=$('#profileTransferCode');
+  if(box) box.value=value||'';
+}
+async function copyTextSafe(text,okText){
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast('Скопировано',okText||'Данные в буфере обмена');
+  }catch(e){
+    setTransferCode(text);
+    const box=$('#profileTransferCode');
+    if(box){box.focus();box.select();}
+    showToast('Скопируй вручную','Я вывела данные в поле ниже');
+  }
+}
+function exportProfileCode(){
+  const code=profileExportPayload();
+  setTransferCode(code);
+  showToast('Код создан','Теперь его можно скопировать на телефон');
+}
+function copyProfileCode(){
+  const code=($('#profileTransferCode')?.value||'').trim() || profileExportPayload();
+  copyTextSafe(code,'Код профиля скопирован');
+}
+function copyProfileLink(){
+  copyTextSafe(profileShareUrl(),'Ссылка профиля скопирована');
+}
+function downloadProfileFile(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  const safeName=(S.name||'profile').replace(/[\\/:*?"<>|\s]+/g,'_').slice(0,32)||'profile';
+  a.href=URL.createObjectURL(blob);
+  a.download=`army-panel-${safeName}.json`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},0);
+  showToast('Файл создан','Его можно импортировать на другом устройстве');
+}
+function importProfileFromCode(){
+  try{
+    const imported=profileImportPayload($('#profileTransferCode')?.value||'');
+    S=imported;
+    save();
+    closeSettings();
+    render();
+    applyDashTab();
+    showToast('Профиль импортирован','Данные перенесены на это устройство');
+  }catch(e){
+    showToast('Не удалось импортировать','Проверь код, ссылку или файл профиля');
+  }
+}
+function importProfileFromUrl(){
+  try{
+    const href=location.href;
+    if(!href.includes('#profile=') && !href.includes('?profile=')) return false;
+    S=profileImportPayload(href);
+    save();
+    history.replaceState(null,'',location.pathname+location.search.replace(/[?&]profile=[^&]+/,'').replace(/^&/,'?'));
+    showToast('Профиль загружен','Данные взяты из ссылки');
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+function importProfileFile(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const text=String(reader.result||'').trim();
+      let data;
+      if(text.startsWith('{')) data=JSON.parse(text);
+      else data=profileImportPayload(text);
+      const normalized=normalizeProfileData(data);
+      if(!normalized) throw new Error('bad');
+      normalized.ready=true;
+      S=normalized;
+      save();
+      closeSettings();
+      render();
+      applyDashTab();
+      showToast('Файл импортирован','Профиль перенесён');
+    }catch(e){
+      showToast('Файл не подошёл','Выбери JSON или код профиля');
+    }
+  };
+  reader.readAsText(file);
+}
+
 function openSettings(){
   $('#settingsName').value=S.name||'';
   $('#settingsProject').value=S.project;
@@ -6670,6 +6863,14 @@ $('#openSettings').onclick=openSettings;
 $('#closeSettings').onclick=closeSettings;
 $('#saveSettings').onclick=saveSettings;
 $('#settingsModal').onclick=e=>{if(e.target.id==='settingsModal')closeSettings()};
+$('#exportProfileCode')?.addEventListener('click',exportProfileCode);
+$('#copyProfileCode')?.addEventListener('click',copyProfileCode);
+$('#copyProfileLink')?.addEventListener('click',copyProfileLink);
+$('#downloadProfileFile')?.addEventListener('click',downloadProfileFile);
+$('#importProfileCode')?.addEventListener('click',importProfileFromCode);
+$('#clearProfileTransfer')?.addEventListener('click',()=>setTransferCode(''));
+$('#chooseProfileFile')?.addEventListener('click',()=>$('#profileImportFile')?.click());
+$('#profileImportFile')?.addEventListener('change',e=>importProfileFile(e.target.files && e.target.files[0]));
 $('#levelModal').onclick=e=>{if(e.target.id==='levelModal')closeLevelModal()};
 $('#orgSectionModal').onclick=e=>{if(e.target.id==='orgSectionModal')closeOrgSectionModal()};
 document.querySelectorAll('.theme-card').forEach(card=>{
@@ -6888,6 +7089,7 @@ document.addEventListener('click',e=>{
 },true);
 
 load();
+importProfileFromUrl();
 render();
 applyDashTab();
 </script>
