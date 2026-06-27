@@ -2073,6 +2073,17 @@ body{
 .profile-icon-choice.rarity-epic{
   box-shadow:0 0 0 1px rgba(178,140,255,.14),0 0 22px rgba(178,140,255,.13)!important;
 }
+
+.achievement-card .achievement-date{
+  color:var(--muted)!important;
+  font-size:12px!important;
+  font-weight:850!important;
+  margin-top:7px!important;
+}
+.achievement-card:not(.locked) .achievement-date{
+  color:color-mix(in srgb,var(--rarity) 72%, var(--muted))!important;
+}
+
 .profile-icon-choice .rarity-label,
 .achievement-card .rarity-label{
   display:inline-flex;
@@ -2701,6 +2712,251 @@ body{
   }
 }
 
+
+
+/* KIRI v001: вкладки кабинета как на референсе — меняем только форму/раскладку, палитру оставляем текущей */
+.dashboard-tabs{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(136px,1fr))!important;
+  gap:4px!important;
+  margin:0 0 26px!important;
+  align-items:stretch!important;
+}
+.dashboard-tabs .dash-tab{
+  position:relative!important;
+  min-height:56px!important;
+  height:56px!important;
+  padding:0 18px 0 56px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  border-radius:10px!important;
+  border:1px solid rgba(255,255,255,.075)!important;
+  background:rgba(4,7,14,.58)!important;
+  color:var(--muted)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 10px 24px rgba(0,0,0,.18)!important;
+  overflow:hidden!important;
+  text-transform:uppercase!important;
+  letter-spacing:.015em!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  transition:border-color .18s ease, background .18s ease, box-shadow .18s ease, color .18s ease, transform .18s ease!important;
+}
+.dashboard-tabs .dash-tab::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,0))!important;
+}
+.dashboard-tabs .dash-tab-icon{
+  position:absolute!important;
+  left:23px!important;
+  top:50%!important;
+  width:20px!important;
+  height:20px!important;
+  transform:translateY(-50%)!important;
+  display:grid!important;
+  place-items:center!important;
+  color:color-mix(in srgb,var(--accent) 70%, #f59e0b 30%)!important;
+  opacity:.95!important;
+}
+.dashboard-tabs .dash-tab-icon svg{
+  width:20px!important;
+  height:20px!important;
+  display:block!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:1.9!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  filter:drop-shadow(0 0 8px color-mix(in srgb,var(--accent) 18%, transparent))!important;
+}
+.dashboard-tabs .dash-tab-label{
+  display:block!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  padding-top:1px!important;
+}
+.dashboard-tabs .dash-tab.active,
+.dashboard-tabs .dash-tab:hover{
+  color:var(--text)!important;
+  border-color:color-mix(in srgb,var(--accent) 45%, rgba(255,255,255,.10))!important;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 20%, rgba(255,255,255,.035)),color-mix(in srgb,var(--accent) 10%, rgba(5,8,15,.58)))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 0 0 1px color-mix(in srgb,var(--accent) 10%, transparent),0 14px 30px rgba(0,0,0,.24),0 0 24px color-mix(in srgb,var(--accent) 16%, transparent)!important;
+}
+.dashboard-tabs .dash-tab.active .dash-tab-icon,
+.dashboard-tabs .dash-tab:hover .dash-tab-icon{
+  color:var(--accent)!important;
+  opacity:1!important;
+}
+@media(max-width:900px){
+  .dashboard-tabs{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+  .dashboard-tabs .dash-tab{
+    min-height:54px!important;
+    height:54px!important;
+    padding-left:52px!important;
+  }
+  .dashboard-tabs .dash-tab-icon{left:20px!important;}
+}
+@media(max-width:520px){
+  .dashboard-tabs{
+    grid-template-columns:1fr!important;
+  }
+}
+
+
+
+/* KIRI v002: витрина достижений — пользователь выбирает сам, иначе показываем самые редкие */
+.achievement-showcase-toolbar{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:9px!important;
+  flex-wrap:wrap!important;
+}
+.achievement-showcase-note{
+  margin:-4px 0 13px!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  font-weight:850!important;
+}
+.achievement-preview{
+  position:relative!important;
+  min-height:150px!important;
+  padding:15px 12px 13px!important;
+}
+.achievement-preview .showcase-pin{
+  position:absolute!important;
+  right:9px!important;
+  top:9px!important;
+  min-width:25px!important;
+  height:25px!important;
+  padding:0 7px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:999px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.14))!important;
+  background:color-mix(in srgb,var(--accent) 13%, rgba(0,0,0,.28))!important;
+  color:var(--text)!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  line-height:1!important;
+}
+.achievement-preview .ap-icon{
+  font-size:36px!important;
+  filter:drop-shadow(0 0 14px color-mix(in srgb,var(--accent) 18%, transparent))!important;
+}
+.achievement-preview b{
+  min-height:32px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1.18!important;
+}
+.achievement-preview span{
+  line-height:1.2!important;
+}
+.achievement-preview .rarity-label{
+  justify-self:center!important;
+  margin-top:2px!important;
+  padding:4px 8px!important;
+  border-radius:999px!important;
+  border:1px solid color-mix(in srgb,var(--rarity, var(--accent)) 35%, rgba(255,255,255,.10))!important;
+  background:color-mix(in srgb,var(--rarity, var(--accent)) 10%, rgba(0,0,0,.22))!important;
+  color:color-mix(in srgb,var(--rarity, var(--accent)) 75%, white 12%)!important;
+  font-size:10px!important;
+  font-style:normal!important;
+  font-weight:950!important;
+  text-transform:uppercase!important;
+  letter-spacing:.03em!important;
+}
+.achievement-card{
+  position:relative!important;
+}
+.achievement-card .showcase-select-btn{
+  margin-top:8px!important;
+  width:100%!important;
+  min-height:34px!important;
+  border-radius:11px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 32%, rgba(255,255,255,.12))!important;
+  background:color-mix(in srgb,var(--accent) 9%, rgba(255,255,255,.035))!important;
+  color:var(--text)!important;
+  font-size:12px!important;
+  font-weight:950!important;
+}
+.achievement-card .showcase-select-btn.active{
+  border-color:color-mix(in srgb,var(--accent) 58%, rgba(255,255,255,.10))!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 22%, rgba(255,255,255,.04)),rgba(0,0,0,.12))!important;
+}
+.achievement-card .showcase-select-btn:disabled{
+  opacity:.45!important;
+  cursor:not-allowed!important;
+}
+.showcase-modal-tip{
+  margin:10px 0 0!important;
+  padding:10px 12px!important;
+  border-radius:14px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 22%, rgba(255,255,255,.12))!important;
+  background:color-mix(in srgb,var(--accent) 7%, rgba(255,255,255,.025))!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  font-weight:850!important;
+}
+@media(max-width:620px){
+  .achievement-showcase-toolbar{justify-content:stretch!important;}
+  .achievement-showcase-toolbar .btn{width:100%!important;}
+}
+
+
+/* KIRI v005: кнопка "Все достижения" как на референсе, без смены цветовой палитры */
+.hero-all-achievements-btn{
+  min-height:50px!important;
+  padding:0 18px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:12px!important;
+  border-radius:13px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 55%, rgba(255,255,255,.10))!important;
+  background:color-mix(in srgb,var(--accent) 8%, rgba(5,8,16,.46))!important;
+  color:color-mix(in srgb,var(--accent) 84%, white 8%)!important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 9%, transparent), inset 0 0 22px color-mix(in srgb,var(--accent) 5%, transparent)!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  letter-spacing:.01em!important;
+  white-space:nowrap!important;
+}
+.hero-all-achievements-btn svg{
+  width:18px!important;
+  height:18px!important;
+  flex:0 0 18px!important;
+  fill:none!important;
+  stroke:currentColor!important;
+  stroke-width:2.2!important;
+  stroke-linecap:round!important;
+  stroke-linejoin:round!important;
+  filter:drop-shadow(0 0 8px color-mix(in srgb,var(--accent) 30%, transparent))!important;
+}
+.hero-all-achievements-btn:hover{
+  transform:translateY(-1px)!important;
+  border-color:color-mix(in srgb,var(--accent) 76%, rgba(255,255,255,.12))!important;
+  background:color-mix(in srgb,var(--accent) 13%, rgba(5,8,16,.50))!important;
+}
+@media(max-width:620px){
+  .hero-all-achievements-btn{
+    width:100%!important;
+    min-height:48px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2792,18 +3048,21 @@ body{
 
     <section class="flow">
       <div class="dashboard-tabs">
-        <button class="dash-tab active" data-dash-tab="profile">👤 Профиль</button>
-        <button class="dash-tab" data-dash-tab="achievements">🏆 Достижения</button>
-        <button class="dash-tab" data-dash-tab="academy">🎓 Academy</button>
-        <button class="dash-tab" data-dash-tab="army">⭐ ARMY</button>
-        <button class="dash-tab" data-dash-tab="reports">📋 Отчёты</button>
+        <button class="dash-tab active" data-dash-tab="profile"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span><span class="dash-tab-label">Профиль</span></button>
+        <button class="dash-tab" data-dash-tab="achievements"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v2a4 4 0 0 0 4 4"/><path d="M17 6h3v2a4 4 0 0 1-4 4"/></svg></span><span class="dash-tab-label">Достижения</span></button>
+        <button class="dash-tab" data-dash-tab="academy"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3.5 2 8.5 2 12 0v-5"/><path d="M22 10v6"/></svg></span><span class="dash-tab-label">Academy</span></button>
+        <button class="dash-tab" data-dash-tab="army"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 2.85 6.18 6.75.8-4.98 4.63 1.32 6.67L12 16.95l-5.94 3.33 1.32-6.67L2.4 8.98l6.75-.8L12 2Z"/></svg></span><span class="dash-tab-label">Армия</span></button>
+        <button class="dash-tab" data-dash-tab="reports"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h6"/></svg></span><span class="dash-tab-label">Отчеты</span></button>
       </div>
 
       <div class="panel dashboard-section" id="dashboardAchievements">
         <div class="dash-section-head">
-          <div><h2>🏆 Достижения</h2><p>Ваши достижения сохраняются навсегда</p></div>
-          <button class="btn soft" id="openAchievementsHero">Все достижения ↗</button>
+          <div><h2>🏆 Достижения</h2></div>
+          <div class="achievement-showcase-toolbar">
+            <button class="btn soft hero-all-achievements-btn" id="openAchievementsHero"><span>Все достижения</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg></button>
+          </div>
         </div>
+        <div class="achievement-showcase-note" id="achievementShowcaseNote">—</div>
         <div class="achievement-preview-grid" id="achievementPreviewGrid"></div>
       </div>
 
@@ -2876,7 +3135,7 @@ body{
 <div class="modal" id="achievementsModal">
   <div class="modal-card achievements-modal">
     <h2>Коллекция достижений</h2>
-    <p>Достижения сохраняются на аккаунте и не пропадают при смене проекта, госки, крайма или организации.</p>
+    <div class="showcase-modal-tip" id="showcaseModalTip">В витрину можно закрепить до 6 открытых достижений. Если ничего не выбрано, профиль сам покажет самые редкие.</div>
 
     <div class="account-modal-summary">
       <div class="summary-block">
@@ -3429,7 +3688,7 @@ function selectedProfileIconDef(){
 }
 
 function displayPathName(value){
-  return value === 'Госка' ? 'Государственная служба' : (value || '');
+  return value === 'Государственная служба' ? 'Государственная служба' : (value || '');
 }
 function renderProfileIcon(){
   const def=selectedProfileIconDef();
@@ -3619,26 +3878,91 @@ function renderAccountBlock(){
 function rarityName(r){
   return ({common:'обычное',rare:'редкое',epic:'эпическое',legendary:'легендарное'}[r]||'обычное');
 }
+
+function rarityWeight(r){
+  return ({common:1,rare:2,epic:3,legendary:4}[r]||1);
+}
+function ensureShowcase(){
+  if(!S.account) S.account={achievements:{}};
+  if(!Array.isArray(S.account.showcaseAchievements)) S.account.showcaseAchievements=[];
+  const got=achievements();
+  S.account.showcaseAchievements=S.account.showcaseAchievements.filter(id=>got[id]);
+  return S.account.showcaseAchievements;
+}
+function autoShowcaseList(limit=6){
+  const got=achievements();
+  return ACHIEVEMENT_DEFS
+    .filter(a=>got[a.id])
+    .sort((a,b)=>
+      (rarityWeight(b.rarity)-rarityWeight(a.rarity)) ||
+      ((got[b.id]?.time||0)-(got[a.id]?.time||0)) ||
+      a.title.localeCompare(b.title,'ru')
+    )
+    .slice(0,limit);
+}
+function showcaseList(limit=6){
+  const got=achievements();
+  const picked=ensureShowcase()
+    .map(id=>ACHIEVEMENT_DEFS.find(a=>a.id===id))
+    .filter(a=>a && got[a.id])
+    .slice(0,limit);
+  return picked.length ? picked : autoShowcaseList(limit);
+}
+function toggleShowcaseAchievement(id){
+  const got=achievements();
+  if(!got[id]) return;
+  const list=ensureShowcase();
+  const idx=list.indexOf(id);
+  if(idx>=0){
+    list.splice(idx,1);
+  }else{
+    if(list.length>=6){
+      showToast('Витрина заполнена','Можно закрепить максимум 6 достижений');
+      return;
+    }
+    list.push(id);
+  }
+  save();
+  renderAchievementPreviews();
+  renderAchievementModal();
+}
+function clearShowcase(){
+  ensureShowcase().splice(0);
+  save();
+  renderAchievementPreviews();
+  renderAchievementModal();
+  showToast('Витрина очищена','Теперь показываются самые редкие достижения');
+}
+
 function renderAchievementModal(){
   const got=achievements();
+  const picked=ensureShowcase();
   const cats=['Все',...Array.from(new Set(ACHIEVEMENT_DEFS.map(a=>a.cat)))];
   $('#achievementTabs').innerHTML=cats.map(cat=>`<button class="achievement-tab ${activeAchCategory===cat?'active':''}" data-ach-cat="${cat}">${cat}</button>`).join('');
   document.querySelectorAll('[data-ach-cat]').forEach(btn=>{
     btn.onclick=()=>{activeAchCategory=btn.dataset.achCat;renderAchievementModal()};
   });
+  const tip=$('#showcaseModalTip');
+  if(tip) tip.innerHTML=`Витрина: <b>${picked.length} / 6</b>. Нажми «В витрину» на открытом достижении. Если ничего не выбрано, профиль сам покажет самые редкие.`;
   const list=activeAchCategory==='Все'?ACHIEVEMENT_DEFS:ACHIEVEMENT_DEFS.filter(a=>a.cat===activeAchCategory);
   $('#achievementGrid').innerHTML=list.map(a=>{
     const open=!!got[a.id];
+    const selected=picked.includes(a.id);
+    const blocked=open && !selected && picked.length>=6;
     return `<div class="achievement-card ${open?'':'locked'} rarity-${a.rarity||'common'}">
       <div class="icon">${open?a.icon:'🔒'}</div>
       <strong>${open?a.title:'Скрытое достижение'}</strong>
       <span>${open?a.desc:'Откроется после выполнения условия.'}</span>
-      <span>${open?`+${a.xp} XP`:''}</span>
+      <span class="achievement-date">${open?`Получено: ${formatProfileDate(got[a.id]?.time)}`:'Не получено'}</span>
       ${open?`<em class="rarity-label">${rarityName(a.rarity)}</em>`:''}
+      ${open?`<button class="showcase-select-btn ${selected?'active':''}" data-showcase-pick="${a.id}" ${blocked?'disabled':''}>${selected?'✓ В витрине':'В витрину'}</button>`:''}
     </div>`;
   }).join('');
+  document.querySelectorAll('[data-showcase-pick]').forEach(btn=>{
+    btn.onclick=(e)=>{e.stopPropagation();toggleShowcaseAchievement(btn.dataset.showcasePick)};
+  });
   const mrt=$('#modalRankTitle'); if(mrt) mrt.textContent='Достижения';
-  const mlt=$('#modalLevelText'); if(mlt) mlt.textContent='Коллекция профиля';
+  const mlt=$('#modalLevelText'); if(mlt) mlt.innerHTML=picked.length ? `Витрина выбрана: ${picked.length} / 6` : 'Автовитрина: самые редкие';
   $('#modalAchCount').textContent=`${ACHIEVEMENT_DEFS.filter(a=>got[a.id]).length} / ${ACHIEVEMENT_DEFS.length}`;
 }
 function openAchievementsModal(){
@@ -3688,13 +4012,33 @@ function renderAchievementPreviews(){
   const grid=$('#achievementPreviewGrid');
   if(!grid) return;
   const got=achievements();
-  const preview=ACHIEVEMENT_DEFS.slice(0,6);
-  grid.innerHTML=preview.map(a=>{
+  const picked=ensureShowcase();
+  const selected=showcaseList(6);
+  const note=$('#achievementShowcaseNote');
+  if(note){
+    note.textContent=picked.length
+      ? `Закреплено в витрине: ${picked.length} / 6. Эти достижения будут видны в профиле.`
+      : 'Автовитрина: сейчас показываются самые редкие открытые достижения. Можно выбрать свои.';
+  }
+  if(!selected.length){
+    const starter=ACHIEVEMENT_DEFS.slice(0,6);
+    grid.innerHTML=starter.map(a=>`<div class="achievement-preview locked rarity-${a.rarity||'common'}">
+      <span class="showcase-pin">?</span>
+      <div class="ap-icon">🔒</div>
+      <b>Скрыто</b>
+      <span>Откроется позже</span>
+    </div>`).join('');
+    return;
+  }
+  grid.innerHTML=selected.map((a,i)=>{
     const open=!!got[a.id];
+    const manual=picked.includes(a.id);
     return `<div class="achievement-preview ${open?'open':'locked'} rarity-${a.rarity||'common'}">
+      <span class="showcase-pin">${manual?'★':i+1}</span>
       <div class="ap-icon">${open?a.icon:'🔒'}</div>
       <b>${open?a.title:'Скрыто'}</b>
-      <span>${open?rarityName(a.rarity):'Не получено'}</span>
+      <span>${open?a.desc:'Не получено'}</span>
+      ${open?`<em class="rarity-label">${rarityName(a.rarity)}</em>`:''}
     </div>`;
   }).join('');
 }
@@ -3798,6 +4142,7 @@ $('#clearProfileIcon').onclick=clearProfileIcon;
 $('#profileIconModal').onclick=e=>{if(e.target.id==='profileIconModal')closeProfileIconModal()};
 $('#openAchievements').onclick=openAchievementsModal;
 const openHero=$('#openAchievementsHero'); if(openHero) openHero.onclick=openAchievementsModal;
+const openShowcase=$('#openShowcaseSettings'); if(openShowcase) openShowcase.onclick=openAchievementsModal;
 const openHeroMini=$('#openAchievementsHeroMini'); if(openHeroMini) openHeroMini.onclick=openAchievementsModal;
 document.addEventListener('click',e=>{
   if(e.target && (e.target.id==='openAchievements' || e.target.id==='openAchievementsHero' || e.target.id==='openAchievementsHeroMini')) openAchievementsModal();
