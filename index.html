@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v030</title>
+<title>RP Cabinet TEST v035</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5566,7 +5566,7 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v034_profile_settings_transfer';
+const VERSION_KEY='rp_panel_v035_storage_priority_title_fix';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -5721,13 +5721,40 @@ let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
 
 function save(){
+  // KIRI v035: не даём пустому профилю перезаписать уже созданный профиль.
+  const normalized=normalizeProfileData(S);
+  if(normalized && normalized.ready) S=normalized;
   const data=JSON.stringify(S);
-  localStorage.setItem(KEY,data);
-  localStorage.setItem(VERSION_KEY,data);
+  try{
+    if(S.ready){
+      localStorage.setItem(KEY,data);
+      localStorage.setItem(VERSION_KEY,data);
+    }else{
+      localStorage.setItem(VERSION_KEY,data);
+    }
+  }catch(e){
+    console.warn('Profile save failed',e);
+  }
 }
 function normalizeProfileData(d){
   if(!d || typeof d!=='object') return null;
   const merged=Object.assign({}, S, d);
+
+  // KIRI v035: старые версии иногда сохраняли профиль без ready,
+  // либо в основной ключ мог попасть пустой ready:false.
+  // Если есть реальные данные профиля — считаем профиль созданным.
+  const hasRealProfile=!!(
+    (typeof merged.name==='string' && merged.name.trim()) ||
+    (typeof merged.org==='string' && merged.org.trim()) ||
+    (typeof merged.section==='string' && merged.section.trim()) ||
+    merged.configured===true
+  );
+  merged.ready = merged.ready===true || hasRealProfile;
+
+  if(!merged.project) merged.project='GTA5RP';
+  if(!merged.path) merged.path='Государственная служба';
+  if(!merged.style) merged.style='style-violet';
+  if(!merged.tasks || typeof merged.tasks!=='object') merged.tasks={};
   if(!merged.account || typeof merged.account!=='object') merged.account={achievements:{}};
   if(!merged.account.achievements || typeof merged.account.achievements!=='object') merged.account.achievements={};
   if(!merged.account.createdAt) merged.account.createdAt=Date.now();
@@ -5743,10 +5770,28 @@ function safeReadProfileKey(key){
     return null;
   }
 }
+function profileStorageScore(data,key){
+  if(!data) return -1;
+  let score=0;
+  if(data.ready) score+=1000;
+  if(data.name) score+=120;
+  if(data.org) score+=80;
+  if(data.section) score+=80;
+  if(data.level) score+=60;
+  if(data.configured) score+=80;
+  if(data.tasks && typeof data.tasks==='object') score+=Object.values(data.tasks).filter(Boolean).length*8;
+  if(data.account && data.account.achievements) score+=Object.keys(data.account.achievements).length*4;
+  if(key===KEY) score+=15;
+  if(key===VERSION_KEY) score+=10;
+  return score;
+}
 function load(){
   const migrateKeys=[
     KEY,
     VERSION_KEY,
+    'rp_panel_v034_profile_settings_transfer',
+    'rp_panel_v033_profile_export_import_link',
+    'rp_panel_v032_storage_fix_academy_cleanup',
     'rp_panel_v031_profile_achievements_cleanup',
     'rp_panel_v030_department_info_tests',
     'rp_panel_v029_dynamic_department_academy',
@@ -5774,16 +5819,23 @@ function load(){
   }catch(e){}
 
   let best=null;
+  let bestKey='';
+  let bestScore=-1;
   for(const key of migrateKeys){
     const data=safeReadProfileKey(key);
     if(!data) continue;
-    if(key===KEY){ best=data; break; }
-    if(data.ready){ best=data; break; }
-    if(!best) best=data;
+    const score=profileStorageScore(data,key);
+    if(score>bestScore){
+      best=data;
+      bestKey=key;
+      bestScore=score;
+    }
   }
-  if(best){
+
+  if(best && best.ready){
     S=best;
-    save();
+    save(); // переписываем основной ключ уже нормальным найденным профилем
+    try{localStorage.setItem('rp_panel_last_loaded_from',bestKey)}catch(e){}
   }
 }
 function theme(){
