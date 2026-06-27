@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ARMY Panel — TEST v008</title>
+<title>ARMY Panel — TEST v012</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2986,7 +2986,7 @@ body{
 }
 
 
-/* KIRI v008: динамический карьерный путь от v007 */
+/* KIRI v010: прогресс повышения перенесён во вкладку */
 .test-version-label{
   margin:6px 0 0!important;
   color:var(--muted)!important;
@@ -2996,7 +2996,7 @@ body{
   text-transform:uppercase!important;
 }
 body.ready::after{
-  content:"ARMY Panel — TEST v008";
+  content:"ARMY Panel — TEST v012";
   position:fixed;
   left:14px;
   bottom:14px;
@@ -3015,7 +3015,17 @@ body.ready::after{
 @media(max-width:620px){body.ready::after{display:none}}
 
 
-/* KIRI v008: динамический карьерный путь */
+/* KIRI v010: прогресс повышения перенесён во вкладку */
+
+#dashboardPathProgress .career-path-head{margin-bottom:14px!important;}
+#dashboardPathProgress .career-title-icon{
+  display:inline-block;
+  font-size:1em;
+  line-height:1;
+  vertical-align:-.04em;
+  margin-right:2px;
+}
+
 .dynamic-career-path{
   display:grid!important;
   grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important;
@@ -3084,13 +3094,66 @@ body.ready::after{
   font-weight:950;
 }
 
+
+/* KIRI v010: прогресс повышения внутри вкладки профиля */
+.progress-tab-card{
+  display:none;
+  margin-top:14px;
+  padding:0;
+  background:transparent;
+  border:0;
+}
+.progress-tab-card.show{display:block;}
+#dashboardAchievements .progress-layout{
+  margin-top:10px;
+}
+#dashboardAchievements .ring{
+  flex-shrink:0;
+}
+@media(max-width:900px){
+  #dashboardAchievements .progress-layout{
+    grid-template-columns:1fr!important;
+    padding-left:0!important;
+  }
+}
+
+
+
+/* KIRI v012: иконка вкладки Прогресс заменена, логика v011 сохранена */
+.flow-tab-hidden{display:none!important;}
+body[data-active-dash-tab="profile"] #dashboardAchievements,
+body[data-active-dash-tab="profile"] #dashboardPathProgress{display:block!important;}
+body[data-active-dash-tab="achievements"] #dashboardAchievements,
+body[data-active-dash-tab="achievements"] #dashboardPathProgress{display:none!important;}
+body[data-active-dash-tab="achievements"] #progressStep.show,
+body[data-active-dash-tab="achievements"] #orgStep.show,
+body[data-active-dash-tab="achievements"] #setupStep.show{display:block!important;}
+body[data-active-dash-tab="profile"] #progressStep,
+body[data-active-dash-tab="profile"] #orgStep,
+body[data-active-dash-tab="profile"] #setupStep{display:none!important;}
+body[data-active-dash-tab="academy"] #dashboardAchievements,
+body[data-active-dash-tab="academy"] #dashboardPathProgress,
+body[data-active-dash-tab="academy"] #progressStep,
+body[data-active-dash-tab="academy"] #orgStep,
+body[data-active-dash-tab="academy"] #setupStep,
+body[data-active-dash-tab="army"] #dashboardAchievements,
+body[data-active-dash-tab="army"] #dashboardPathProgress,
+body[data-active-dash-tab="army"] #progressStep,
+body[data-active-dash-tab="army"] #orgStep,
+body[data-active-dash-tab="army"] #setupStep,
+body[data-active-dash-tab="reports"] #dashboardAchievements,
+body[data-active-dash-tab="reports"] #dashboardPathProgress,
+body[data-active-dash-tab="reports"] #progressStep,
+body[data-active-dash-tab="reports"] #orgStep,
+body[data-active-dash-tab="reports"] #setupStep{display:none!important;}
+
 </style>
 </head>
 <body>
 <section class="first-screen">
   <div class="first-card">
     <h1>Создай RP-профиль</h1>
-    <p class="test-version-label">ARMY Panel — TEST v008</p>
+    <p class="test-version-label">ARMY Panel — TEST v012</p>
     <div class="form">
       <label class="field">
         <span>Имя / ник</span>
@@ -3177,7 +3240,7 @@ body.ready::after{
     <section class="flow">
       <div class="dashboard-tabs">
         <button class="dash-tab active" data-dash-tab="profile"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span><span class="dash-tab-label">Профиль</span></button>
-        <button class="dash-tab" data-dash-tab="achievements"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v2a4 4 0 0 0 4 4"/><path d="M17 6h3v2a4 4 0 0 1-4 4"/></svg></span><span class="dash-tab-label">Достижения</span></button>
+        <button class="dash-tab" data-dash-tab="achievements"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M7 16V9"/><path d="M12 16V5"/><path d="M17 16v-4"/><path d="M15 6l-3-3-3 3"/></svg></span><span class="dash-tab-label">Прогресс</span></button>
         <button class="dash-tab" data-dash-tab="academy"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3.5 2 8.5 2 12 0v-5"/><path d="M22 10v6"/></svg></span><span class="dash-tab-label">Academy</span></button>
         <button class="dash-tab" data-dash-tab="army"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 2.85 6.18 6.75.8-4.98 4.63 1.32 6.67L12 16.95l-5.94 3.33 1.32-6.67L2.4 8.98l6.75-.8L12 2Z"/></svg></span><span class="dash-tab-label">Армия</span></button>
         <button class="dash-tab" data-dash-tab="reports"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h6"/></svg></span><span class="dash-tab-label">Отчеты</span></button>
@@ -3194,8 +3257,9 @@ body.ready::after{
         <div class="achievement-preview-grid" id="achievementPreviewGrid"></div>
       </div>
 
+
       <div class="panel dashboard-section" id="dashboardPathProgress">
-        <h2>Карьерный путь</h2>
+        <div class="dash-section-head career-path-head"><div><h2><span class="career-title-icon" aria-hidden="true">🧭</span> Карьерный путь</h2></div></div>
         <div class="path-cards dynamic-career-path" id="careerPathCards"></div>
       </div>
       <div class="panel step" id="orgStep">
@@ -3560,6 +3624,7 @@ function render(){
   renderSetup();
   renderProgress();
   renderAchievements();
+  if(typeof applyDashTab==='function') applyDashTab();
 }
 function renderOrgs(){
   const grid=$('#orgGrid');
@@ -4193,10 +4258,9 @@ function buildCareerPathSteps(){
   const got=achievements();
   const p=S.configured?percent():0;
   const steps=[];
-  steps.push({title:'Начало',status:S.ready?'Профиль создан':'Создай профиль',icon:'◆',done:!!S.ready});
 
   if(!S.org){
-    steps.push({title:'Организация',status:'Нужно выбрать',icon:'◇',active:!!S.ready,locked:!S.ready});
+    steps.push({title:'Фракция',status:'Нужно выбрать',icon:'★',active:!!S.ready,locked:!S.ready});
     return steps;
   }
 
@@ -4205,19 +4269,19 @@ function buildCareerPathSteps(){
   if(isArmy){
     const academyActive=S.section==='Academy';
     steps.push({
+      title:'ARMY',
+      status:S.section && S.section!=='Academy'?'Фракция активна':(academyActive?'Текущая фракция':'Фракция выбрана'),
+      icon:'★',
+      active:!!S.org && (!S.configured || S.section===''),
+      done:!!S.org
+    });
+    steps.push({
       title:'Academy',
       status:academyDone?'Завершено':(academyActive?`${S.level||'В процессе'} · ${p}%`:'Не отмечено'),
       icon:'🎓',
       done:academyDone,
       active:academyActive,
       progress:academyActive?p:(academyDone?100:0)
-    });
-    steps.push({
-      title:'ARMY',
-      status:S.section && S.section!=='Academy'?'Фракция активна':(academyActive?'После Academy':'Фракция выбрана'),
-      icon:'★',
-      active:!!S.org && (!S.configured || S.section===''),
-      done:!!S.org
     });
     if(S.configured && S.section && S.section!=='Academy'){
       steps.push({
@@ -4233,7 +4297,7 @@ function buildCareerPathSteps(){
   }else{
     steps.push({
       title:S.org,
-      status:S.configured?'Организация активна':'Выбери раздел',
+      status:S.configured?'Фракция активна':'Выбери раздел',
       icon:'★',
       active:!!S.org && !S.configured,
       done:!!S.org
@@ -4360,11 +4424,15 @@ document.addEventListener('click',e=>{
 });
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
+let activeDashTab='profile';
+function applyDashTab(){
+  document.body.dataset.activeDashTab=activeDashTab;
+  document.querySelectorAll('.dash-tab').forEach(b=>b.classList.toggle('active', b.dataset.dashTab===activeDashTab));
+}
 document.querySelectorAll('.dash-tab').forEach(btn=>{
   btn.onclick=()=>{
-    document.querySelectorAll('.dash-tab').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    if(btn.dataset.dashTab==='achievements') openAchievementsModal();
+    activeDashTab=btn.dataset.dashTab||'profile';
+    applyDashTab();
   };
 });
 $('#openSettings').onclick=openSettings;
@@ -4381,6 +4449,7 @@ document.querySelectorAll('.theme-card').forEach(card=>{
 });
 load();
 render();
+applyDashTab();
 </script>
 </body>
 </html>
