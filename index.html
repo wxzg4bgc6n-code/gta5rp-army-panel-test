@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v071</title>
+<title>RP Cabinet TEST v072</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5603,6 +5603,97 @@ select:focus{
   }
 }
 
+
+/* v072: информация профиля перенесена из левой карточки в верхнюю плашку вкладки Профиль */
+#dashboardProfileInfo{
+  display:none;
+  padding:0!important;
+  overflow:hidden!important;
+}
+body[data-active-dash-tab="profile"] #dashboardProfileInfo{display:block!important;}
+body[data-active-dash-tab="achievements"] #dashboardProfileInfo,
+body[data-active-dash-tab="department"] #dashboardProfileInfo,
+body[data-active-dash-tab="tests"] #dashboardProfileInfo,
+body[data-active-dash-tab="reports"] #dashboardProfileInfo{display:none!important;}
+.profile-top-strip .profile-info{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:0!important;
+  padding:0!important;
+}
+.profile-top-strip .row,
+.profile-top-strip .editable-row,
+.profile-top-strip .level-row{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  grid-template-rows:auto auto!important;
+  align-content:center!important;
+  min-height:112px!important;
+  padding:20px 24px!important;
+  gap:7px 10px!important;
+  border-bottom:0!important;
+  border-right:1px solid rgba(255,255,255,.08)!important;
+}
+.profile-top-strip .row:last-child,
+.profile-top-strip .level-row:last-child{border-right:0!important;}
+.profile-top-strip .row span{
+  grid-column:1/-1!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  text-transform:uppercase!important;
+  letter-spacing:.07em!important;
+  line-height:1.1!important;
+}
+.profile-top-strip .row b{
+  grid-column:1/2!important;
+  color:var(--text)!important;
+  font-size:21px!important;
+  font-weight:950!important;
+  line-height:1.12!important;
+  min-width:0!important;
+  overflow-wrap:anywhere!important;
+}
+.profile-top-strip .mini-edit{
+  grid-column:2/3!important;
+  grid-row:2/3!important;
+  align-self:center!important;
+  justify-self:end!important;
+  display:none;
+  width:32px!important;
+  height:32px!important;
+  min-width:32px!important;
+  min-height:32px!important;
+  border-radius:11px!important;
+  border-color:color-mix(in srgb,var(--accent) 34%, rgba(255,255,255,.10))!important;
+  background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.045))!important;
+}
+.profile-top-strip .mini-edit.show{display:grid!important;}
+.profile-top-strip .editable-row:hover,
+.profile-top-strip .level-row:hover{
+  background:color-mix(in srgb,var(--accent) 5%, transparent)!important;
+}
+.profile-card > .last-ach-card{margin-top:16px!important;}
+@media(max-width:1100px){
+  .profile-top-strip .profile-info{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  .profile-top-strip .row:nth-child(3){border-right:0!important;}
+}
+@media(max-width:700px){
+  .profile-top-strip .profile-info{grid-template-columns:1fr!important;}
+  .profile-top-strip .row,
+  .profile-top-strip .editable-row,
+  .profile-top-strip .level-row{
+    min-height:70px!important;
+    padding:14px 16px!important;
+    border-right:0!important;
+    border-bottom:1px solid rgba(255,255,255,.075)!important;
+  }
+  .profile-top-strip .row:last-child,
+  .profile-top-strip .level-row:last-child{border-bottom:0!important;}
+  .profile-top-strip .row b{font-size:17px!important;}
+}
+
 </style>
 </head>
 <body>
@@ -5658,13 +5749,6 @@ select:focus{
 <button class="dash-tab" data-dash-tab="department" id="sectionInfoTab"><span aria-hidden="true" class="dash-tab-icon" id="sectionInfoTabIcon"><svg viewbox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c3.5 2 8.5 2 12 0v-5"></path><path d="M22 10v6"></path></svg></span><span class="dash-tab-label" id="sectionInfoTabLabel">Отдел</span></button><button class="dash-tab section-only-tab" data-dash-tab="tests" id="sectionTestsTab"><span aria-hidden="true" class="dash-tab-icon" id="sectionTestsTabIcon"><svg viewbox="0 0 24 24"><path d="M9 11l2 2 4-5"></path><path d="M20 6 9 17l-5-5"></path><path d="M4 20h16"></path></svg></span><span class="dash-tab-label" id="sectionTestsTabLabel">Тесты</span></button>
 <button class="dash-tab" data-dash-tab="reports"><span aria-hidden="true" class="dash-tab-icon"><svg viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg></span><span class="dash-tab-label">Отчёты и премии</span></button>
 </div>
-<div class="profile-info">
-<div class="row"><span>Проект</span><b id="infoProject">—</b></div>
-<div class="row"><span>Путь</span><b id="infoPath">—</b></div>
-<div class="row editable-row"><span>Организация</span><b id="infoOrg">Нужно выбрать</b><button class="mini-edit" id="editOrgBtn" title="Изменить организацию">✎</button></div>
-<div class="row editable-row"><span>Раздел</span><b id="infoSection">—</b><button class="mini-edit" id="editSectionBtn" title="Изменить раздел">✎</button></div>
-<div class="row level-row"><span>Ступень</span><b id="infoLevel">—</b><button class="mini-edit" id="editLevelBtn" title="Изменить ступень">✎</button></div>
-</div>
 <div class="last-ach-card" id="lastAchCard">
 <div class="last-ach-title">Последнее достижение</div>
 <div class="last-ach-body"><span id="lastAchCardIcon">🏆</span><div><b id="lastAchCardTitle">—</b><small id="lastAchCardDesc">Пока нет достижений</small></div></div>
@@ -5696,6 +5780,15 @@ select:focus{
 <button class="btn soft profile-settings" id="openSettings">Настройки профиля</button>
 </aside>
 <section class="flow">
+<div class="panel dashboard-section profile-top-strip" id="dashboardProfileInfo">
+<div class="profile-info">
+<div class="row"><span>Проект</span><b id="infoProject">—</b></div>
+<div class="row"><span>Путь</span><b id="infoPath">—</b></div>
+<div class="row editable-row"><span>Организация</span><b id="infoOrg">Нужно выбрать</b><button class="mini-edit" id="editOrgBtn" title="Изменить организацию">✎</button></div>
+<div class="row editable-row"><span>Раздел</span><b id="infoSection">—</b><button class="mini-edit" id="editSectionBtn" title="Изменить раздел">✎</button></div>
+<div class="row level-row"><span>Ступень</span><b id="infoLevel">—</b><button class="mini-edit" id="editLevelBtn" title="Изменить ступень">✎</button></div>
+</div>
+</div>
 <div class="panel dashboard-section" id="dashboardAchievements">
 <div class="dash-section-head">
 <div><h2>🏆 Достижения</h2></div>
