@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v064</title>
+<title>RP Cabinet TEST v068</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5351,6 +5351,131 @@ body.academy-info-clean #departmentInfoContent details.section-toggle.academy-ex
   .profile-card .profile-info .editable-row b,
   .profile-card .profile-info .level-row b{
     font-size:12.5px!important;
+  }
+}
+
+
+
+/* KIRI v068: телефон — ровная сетка профиля без лишнего фона и без двойных карандашей.
+   Тронут только блок строк: Проект / Путь / Организация / Раздел / Ступень. ПК не меняется. */
+@media (max-width:620px){
+  .profile-card .profile-info{
+    display:block!important;
+  }
+
+  .profile-card .profile-info .row,
+  .profile-card .profile-info .editable-row,
+  .profile-card .profile-info .level-row{
+    display:grid!important;
+    grid-template-columns:108px minmax(0,1fr) 28px!important;
+    align-items:center!important;
+    column-gap:8px!important;
+    min-height:40px!important;
+    padding:6px 0!important;
+    margin:0!important;
+    background:transparent!important;
+    border-radius:0!important;
+    border-bottom:1px solid rgba(255,255,255,.075)!important;
+  }
+
+  .profile-card .profile-info .row:last-child,
+  .profile-card .profile-info .level-row{
+    border-bottom:0!important;
+  }
+
+  .profile-card .profile-info .row span,
+  .profile-card .profile-info .editable-row span,
+  .profile-card .profile-info .level-row span{
+    grid-column:1!important;
+    grid-row:1!important;
+    align-self:center!important;
+    justify-self:start!important;
+    margin:0!important;
+    white-space:nowrap!important;
+    color:var(--muted)!important;
+    font-size:12.5px!important;
+    line-height:1.15!important;
+    font-weight:900!important;
+  }
+
+  .profile-card .profile-info .row b,
+  .profile-card .profile-info .editable-row b,
+  .profile-card .profile-info .level-row b{
+    grid-column:2!important;
+    grid-row:1!important;
+    align-self:center!important;
+    justify-self:start!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin:0!important;
+    text-align:left!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    color:var(--text)!important;
+    font-size:12.5px!important;
+    line-height:1.18!important;
+    font-weight:950!important;
+  }
+
+  /* У строк без редактирования сохраняем пустое место справа, но карандаш не добавляем */
+  .profile-card .profile-info .row:not(.editable-row):not(.level-row)::after{
+    content:""!important;
+    grid-column:3!important;
+    grid-row:1!important;
+    width:24px!important;
+    height:24px!important;
+  }
+
+  .profile-card .profile-info .editable-row .mini-edit,
+  .profile-card .profile-info .level-row .mini-edit{
+    grid-column:3!important;
+    grid-row:1!important;
+    justify-self:end!important;
+    align-self:center!important;
+    width:24px!important;
+    height:24px!important;
+    min-width:24px!important;
+    min-height:24px!important;
+    padding:0!important;
+    margin:0!important;
+    border-radius:8px!important;
+    display:grid!important;
+    place-items:center!important;
+    background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.035))!important;
+    border:1px solid color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.12))!important;
+    color:color-mix(in srgb,var(--accent) 86%, white 8%)!important;
+    box-shadow:none!important;
+    font-size:0!important;
+    line-height:1!important;
+    overflow:hidden!important;
+  }
+
+  .profile-card .profile-info .editable-row .mini-edit::before,
+  .profile-card .profile-info .level-row .mini-edit::before{
+    content:"✎"!important;
+    display:block!important;
+    font-size:11px!important;
+    line-height:1!important;
+    margin:0!important;
+    transform:none!important;
+  }
+}
+
+@media (max-width:380px){
+  .profile-card .profile-info .row,
+  .profile-card .profile-info .editable-row,
+  .profile-card .profile-info .level-row{
+    grid-template-columns:94px minmax(0,1fr) 24px!important;
+    column-gap:7px!important;
+  }
+  .profile-card .profile-info .row span,
+  .profile-card .profile-info .row b,
+  .profile-card .profile-info .editable-row span,
+  .profile-card .profile-info .editable-row b,
+  .profile-card .profile-info .level-row span,
+  .profile-card .profile-info .level-row b{
+    font-size:12px!important;
   }
 }
 
