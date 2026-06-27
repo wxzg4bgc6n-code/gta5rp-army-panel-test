@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v039</title>
+<title>RP Cabinet TEST v040</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5854,7 +5854,7 @@ function save(){
   }catch(e){
     console.warn('Profile save failed',e);
   }
-  if(window.CloudSync && !passiveLoad) window.CloudSync.scheduleSave();
+  if(window.CloudSync && !passiveLoad && !window.__cloudSigningOut) window.CloudSync.scheduleSave();
 }
 function normalizeProfileData(d){
   if(!d || typeof d!=='object') return null;
@@ -7008,13 +7008,24 @@ window.CloudSync={
   },
   async logout(){
     try{
+      window.__cloudSigningOut=true;
       if(this.unsub){this.unsub();this.unsub=null;}
+      this.user=null;
+      clearTimeout(this.saveTimer);
       await this.auth?.signOut();
       S.cloud={enabled:false,provider:'local',uid:'',lastSync:S.cloud?.lastSync||0};
+      // KIRI v040: выход с телефона/ПК не должен отправлять старый локальный кэш в облако.
+      // Поэтому сохраняем локально в пассивном режиме, без scheduleSave().
+      window.__profileHydrating=true;
       save();
+      window.__profileHydrating=false;
+      window.__cloudSigningOut=false;
       render();
-      showToast('Облако отключено','Профиль остался локально на этом устройстве');
-    }catch(e){showToast('Не удалось отключить','Попробуй ещё раз');}
+      showToast('Выход выполнен','Облачная синхронизация отключена только на этом устройстве');
+    }catch(e){
+      window.__cloudSigningOut=false;
+      showToast('Не удалось выйти','Попробуй ещё раз');
+    }
   },
   async onAuth(user){
     this.user=user||null;
@@ -7035,23 +7046,16 @@ window.CloudSync={
     const cloud=cloudDoc ? normalizeProfileData(cloudDoc.state) : null;
     if(cloud && cloud.ready){
       const cloudUpdated=cloudDoc.updatedAt || cloud.updatedAt || 0;
-      const localUpdated=local?.updatedAt || 0;
-      const sameCloudUser = local?.cloud?.uid === this.user.uid && local?.cloud?.enabled;
-      // KIRI v039: при уже существующем облачном профиле отдаём приоритет облаку,
-      // если локальные данные не являются явно более свежей работой этого же аккаунта.
-      if(!local?.ready || !sameCloudUser || cloudUpdated>=localUpdated){
-        window.__cloudApplyingRemote=true;
-        S=cloud;
-        S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:cloudUpdated});
-        save();
-        window.__cloudApplyingRemote=false;
-        render();
-        applyDashTab();
-        showToast('Профиль загружен','Данные подтянуты из облака');
-      }else{
-        await this.saveNow(true);
-        showToast('Профиль обновлён','Свежие локальные данные отправлены в облако');
-      }
+      // KIRI v040: если облачный профиль уже существует, он всегда главный при входе.
+      // Локальный кэш телефона/ПК не имеет права перезаписывать облако просто из-за повторного входа.
+      window.__cloudApplyingRemote=true;
+      S=cloud;
+      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:cloudUpdated});
+      save();
+      window.__cloudApplyingRemote=false;
+      render();
+      applyDashTab();
+      showToast('Профиль загружен','Данные подтянуты из облака');
     }else if(local && local.ready){
       S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid});
       await this.saveNow(true);
@@ -7060,8 +7064,9 @@ window.CloudSync={
     window.__cloudAttaching=false;
     if(this.unsub) this.unsub();
     this.unsub=ref.onSnapshot(doc=>{
-      if(!doc.exists || window.__cloudSaving) return;
+      if(!doc.exists || window.__cloudSaving || window.__cloudAttaching) return;
       const data=doc.data()||{};
+      if(data.sourceDevice===getCloudDeviceId()) { renderCloudSyncStatus(); return; }
       const remote=normalizeProfileData(data.state);
       if(!remote || !remote.ready) return;
       const remoteUpdated=data.updatedAt || remote.updatedAt || 0;
@@ -7074,13 +7079,13 @@ window.CloudSync={
         window.__cloudApplyingRemote=false;
         render();
         applyDashTab();
-        showToast('Синхронизация','Профиль обновлён из облака');
+        renderCloudSyncStatus();
       }
     });
     renderCloudSyncStatus();
   },
   scheduleSave(){
-    if(!this.ready || !this.user || !S.ready) return;
+    if(!this.ready || !this.user || !S.ready || window.__cloudApplyingRemote || window.__cloudAttaching || window.__cloudSigningOut) return;
     clearTimeout(this.saveTimer);
     this.saveTimer=setTimeout(()=>this.saveNow(false),900);
   },
@@ -7089,6 +7094,7 @@ window.CloudSync={
     try{
       window.__cloudSaving=true;
       const now=Date.now();
+      S.updatedAt=now;
       S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:now,lastCloudUpdatedAt:now});
       const state=cloudSafeState();
       await this.profileRef().set({
