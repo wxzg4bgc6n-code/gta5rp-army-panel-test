@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v070</title>
+<title>RP Cabinet TEST v071</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5567,6 +5567,42 @@ select:focus{
   box-shadow: 0 0 0 3px color-mix(in srgb,var(--accent) 14%, transparent) !important;
 }
 
+
+/* v071: верхние вкладки перенесены в левую боковую колонку, старый профиль оставлен ниже */
+.profile-card > .dashboard-tabs{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:10px!important;
+  margin:16px 0 18px!important;
+  padding:0!important;
+}
+.profile-card > .dashboard-tabs .dash-tab{
+  width:100%!important;
+  min-height:58px!important;
+  justify-content:flex-start!important;
+  text-align:left!important;
+  padding:0 18px!important;
+}
+.profile-card > .dashboard-tabs .dash-tab-icon{
+  position:static!important;
+  transform:none!important;
+  margin-right:14px!important;
+  flex:0 0 auto!important;
+}
+.profile-card > .dashboard-tabs .dash-tab-label{
+  text-align:left!important;
+}
+@media(max-width:900px){
+  .profile-card > .dashboard-tabs{
+    grid-template-columns:1fr!important;
+    gap:10px!important;
+    margin:16px 0 18px!important;
+  }
+  .profile-card > .dashboard-tabs .dash-tab{
+    min-height:58px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -5616,6 +5652,12 @@ select:focus{
 <h2 id="profileName">Игрок</h2>
 <p id="profilePath">GTA5RP › Государственная служба</p>
 </div>
+<div class="dashboard-tabs">
+<button class="dash-tab active" data-dash-tab="profile"><span aria-hidden="true" class="dash-tab-icon"><svg viewbox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="dash-tab-label">Профиль</span></button>
+<button class="dash-tab" data-dash-tab="achievements"><span aria-hidden="true" class="dash-tab-icon"><svg viewbox="0 0 24 24"><path d="M4 19h16"></path><path d="M7 16V9"></path><path d="M12 16V5"></path><path d="M17 16v-4"></path><path d="M15 6l-3-3-3 3"></path></svg></span><span class="dash-tab-label">Прогресс</span></button>
+<button class="dash-tab" data-dash-tab="department" id="sectionInfoTab"><span aria-hidden="true" class="dash-tab-icon" id="sectionInfoTabIcon"><svg viewbox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c3.5 2 8.5 2 12 0v-5"></path><path d="M22 10v6"></path></svg></span><span class="dash-tab-label" id="sectionInfoTabLabel">Отдел</span></button><button class="dash-tab section-only-tab" data-dash-tab="tests" id="sectionTestsTab"><span aria-hidden="true" class="dash-tab-icon" id="sectionTestsTabIcon"><svg viewbox="0 0 24 24"><path d="M9 11l2 2 4-5"></path><path d="M20 6 9 17l-5-5"></path><path d="M4 20h16"></path></svg></span><span class="dash-tab-label" id="sectionTestsTabLabel">Тесты</span></button>
+<button class="dash-tab" data-dash-tab="reports"><span aria-hidden="true" class="dash-tab-icon"><svg viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg></span><span class="dash-tab-label">Отчёты и премии</span></button>
+</div>
 <div class="profile-info">
 <div class="row"><span>Проект</span><b id="infoProject">—</b></div>
 <div class="row"><span>Путь</span><b id="infoPath">—</b></div>
@@ -5654,12 +5696,6 @@ select:focus{
 <button class="btn soft profile-settings" id="openSettings">Настройки профиля</button>
 </aside>
 <section class="flow">
-<div class="dashboard-tabs">
-<button class="dash-tab active" data-dash-tab="profile"><span aria-hidden="true" class="dash-tab-icon"><svg viewbox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="7" r="4"></circle></svg></span><span class="dash-tab-label">Профиль</span></button>
-<button class="dash-tab" data-dash-tab="achievements"><span aria-hidden="true" class="dash-tab-icon"><svg viewbox="0 0 24 24"><path d="M4 19h16"></path><path d="M7 16V9"></path><path d="M12 16V5"></path><path d="M17 16v-4"></path><path d="M15 6l-3-3-3 3"></path></svg></span><span class="dash-tab-label">Прогресс</span></button>
-<button class="dash-tab" data-dash-tab="department" id="sectionInfoTab"><span aria-hidden="true" class="dash-tab-icon" id="sectionInfoTabIcon"><svg viewbox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c3.5 2 8.5 2 12 0v-5"></path><path d="M22 10v6"></path></svg></span><span class="dash-tab-label" id="sectionInfoTabLabel">Отдел</span></button><button class="dash-tab section-only-tab" data-dash-tab="tests" id="sectionTestsTab"><span aria-hidden="true" class="dash-tab-icon" id="sectionTestsTabIcon"><svg viewbox="0 0 24 24"><path d="M9 11l2 2 4-5"></path><path d="M20 6 9 17l-5-5"></path><path d="M4 20h16"></path></svg></span><span class="dash-tab-label" id="sectionTestsTabLabel">Тесты</span></button>
-<button class="dash-tab" data-dash-tab="reports"><span aria-hidden="true" class="dash-tab-icon"><svg viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h6"></path></svg></span><span class="dash-tab-label">Отчёты и премии</span></button>
-</div>
 <div class="panel dashboard-section" id="dashboardAchievements">
 <div class="dash-section-head">
 <div><h2>🏆 Достижения</h2></div>
