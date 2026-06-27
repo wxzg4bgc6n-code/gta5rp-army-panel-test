@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v069</title>
+<title>RP Cabinet TEST v070</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5519,6 +5519,52 @@ body.academy-info-clean #departmentInfoContent details.section-toggle.academy-ex
   .profile-card .profile-info .mini-edit::before{
     font-size:13px!important;
   }
+}
+
+
+
+/* v070: темное оформление нативных выпадающих списков в ручном выборе */
+select,
+.modal select,
+.modal-card select,
+#modalOrgSelect,
+#modalSectionSelect,
+#modalOrgLevelSelect,
+#modalLevelSelect,
+#settingsProject,
+#settingsPath,
+#sectionSelect,
+#levelSelect{
+  color-scheme: dark !important;
+  background-color: rgba(6,9,17,.96) !important;
+  color: var(--text) !important;
+  border-color: rgba(255,255,255,.14) !important;
+}
+select option,
+.modal select option,
+.modal-card select option,
+#modalOrgSelect option,
+#modalSectionSelect option,
+#modalOrgLevelSelect option,
+#modalLevelSelect option,
+#settingsProject option,
+#settingsPath option,
+#sectionSelect option,
+#levelSelect option{
+  background: #080c16 !important;
+  background-color: #080c16 !important;
+  color: #f5f8ff !important;
+}
+select option:checked,
+select option:hover,
+select option:focus{
+  background: color-mix(in srgb,var(--accent) 34%, #080c16) !important;
+  background-color: #1f2a44 !important;
+  color: #ffffff !important;
+}
+select:focus{
+  border-color: color-mix(in srgb,var(--accent) 70%, white 0%) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb,var(--accent) 14%, transparent) !important;
 }
 
 </style>
