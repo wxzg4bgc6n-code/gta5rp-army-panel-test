@@ -3496,24 +3496,15 @@ body[data-active-dash-tab="army"] #dashboardReports{display:none!important;}
 
 
 
-/* KIRI v022: безопасная доработка отчётов от v018 без смены ключей сохранения */
-#dashboardReports .premium-rule-danger,
-#dashboardReports .premium-reset-btn{
-  border-color:rgba(255,255,255,.12)!important;
-  background:rgba(255,255,255,.045)!important;
-}
-#dashboardReports .premium-rule-danger .premium-card-head h3::before{content:""!important;}
-#dashboardReports .premium-reset-btn:hover{
-  border-color:color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.12))!important;
-  background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.045))!important;
-}
-#dashboardReports .premium-report-card,
-#dashboardReports .premium-activity-card,
-#dashboardReports .premium-calculator-card,
-#dashboardReports .premium-selected-box,
-#dashboardReports .premium-rule-card{
-  box-shadow:none!important;
-}
+/* KIRI v025: безопасно от v018 — отчёты без ручных баллов, без смены сохранений профиля */
+#dashboardReports .premium-mini-note{display:none!important;}
+#dashboardReports .premium-calc-grid{grid-template-columns:1fr!important;}
+#dashboardReports .premium-calc-grid label:has(.premium-points-input){display:none!important;}
+#dashboardReports .premium-points-input{display:none!important;}
+#dashboardReports .premium-rank-select{pointer-events:none!important;opacity:1!important;cursor:default!important;}
+#dashboardReports .premium-reset-btn{width:42px!important;height:38px!important;padding:0!important;display:inline-grid!important;place-items:center!important;font-size:16px!important;}
+#dashboardReports .premium-calc-actions{margin-top:8px!important;}
+#dashboardReports .premium-selected-head span{font-size:11px!important;}
 
 </style>
 </head>
@@ -3691,7 +3682,7 @@ body[data-active-dash-tab="army"] #dashboardReports{display:none!important;}
 
           <article class="premium-calculator-card">
             <div class="premium-card-head premium-main-head"><h3>Калькулятор премии</h3></div>
-            <p class="premium-mini-note">Ранг берётся автоматически из вкладки «Прогресс». Лимит пересчитывается сам после смены ступени.</p>
+            
             <div class="premium-calc-grid">
               <label>Ранг из прогресса
                 <select class="premium-rank-select" disabled aria-label="Ранг берётся автоматически из прогресса">
@@ -3729,7 +3720,7 @@ body[data-active-dash-tab="army"] #dashboardReports{display:none!important;}
                 <p class="premium-selected-empty">Выбранные активности появятся здесь.</p>
               </div>
             </div>
-            <div class="premium-calc-actions"><button class="premium-reset-btn" type="button">Сбросить баллы</button></div>
+            <div class="premium-calc-actions"><button class="premium-reset-btn" type="button" title="Сбросить выбранные активности">🗑</button></div>
           </article>
 
           <div class="premium-activity-inside">
@@ -3951,10 +3942,6 @@ const ACHIEVEMENT_DEFS=[
   {id:'profile_icon_set',cat:'Профиль',icon:'🖼️',rarity:'rare',title:'Личный значок',desc:'Поставить значок профиля из открытых достижений.',xp:0},
   {id:'showcase_customized',cat:'Профиль',icon:'💎',rarity:'epic',title:'Своя витрина',desc:'Добавить достижение в витрину профиля.',xp:0},
   {id:'showcase_full',cat:'Профиль',icon:'🌟',rarity:'legendary',title:'Полная витрина',desc:'Заполнить все 6 мест витрины достижений.',xp:0},
-  {id:'premium_first_report',cat:'Премии',icon:'💵',rarity:'common',title:'Первый отчёт',desc:'Добавить первую активность в калькулятор премии.',xp:0},
-  {id:'premium_big_week',cat:'Премии',icon:'📈',rarity:'rare',title:'Большая неделя',desc:'Набрать 50 баллов премии за неделю.',xp:0},
-  {id:'premium_limit_reached',cat:'Премии',icon:'🏦',rarity:'epic',title:'Лимит закрыт',desc:'Дойти до максимальной выплаты по своему рангу.',xp:0},
-  {id:'premium_workhorse',cat:'Премии',icon:'🔥',rarity:'legendary',title:'Рабочая машина',desc:'Набрать 100 баллов премии за неделю.',xp:0},
 
   {id:'academy_started',cat:'Academy',icon:'📚',rarity:'common',title:'Курсант Academy',desc:'Начать путь в Academy.',xp:0},
   {id:'academy_half',cat:'Academy',icon:'📘',rarity:'rare',title:'Половина Academy',desc:'Дойти до 50% на любой ступени Academy.',xp:0},
@@ -4958,10 +4945,17 @@ document.querySelectorAll('.theme-card').forEach(card=>{
   const getPoints=()=>input?parsePoints(input.value):0;
   const getLimit=()=>{const opt=select?.selectedOptions?.[0];return Number(opt?.dataset?.limit||0)||0;};
   const getRankFromProfile=()=>{
+    const readRankFromText=(txt)=>{
+      const n=parseInt((String(txt||'').match(/\d+/)||[])[0]||'',10);
+      return Number.isFinite(n)&&n>0?Math.max(1,Math.min(16,n)):null;
+    };
     try{
-      const raw=String(window.S?.level||'');
-      const n=parseInt((raw.match(/\d+/)||[])[0]||'',10);
-      if(Number.isFinite(n) && n>0) return Math.max(1,Math.min(16,n));
+      const direct=readRankFromText(window.S?.level);
+      if(direct) return direct;
+      const info=readRankFromText(document.getElementById('infoLevel')?.textContent);
+      if(info) return info;
+      const current=readRankFromText(document.querySelector('.path-card.active .path-card-sub, .path-card.current .path-card-sub, .path-card.active p, .path-card.current p')?.textContent);
+      if(current) return current;
     }catch(e){}
     return null;
   };
@@ -4972,7 +4966,8 @@ document.querySelectorAll('.theme-card').forEach(card=>{
   };
   const keyOf=(name,note,points)=>[name,note,String(norm(points))].join('||');
   const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({rank:select?.value||'',rankWasTouched:false,points:getPoints(),selected:selected}));}catch(e){}};
-  const loadPremium=()=>{try{const raw=localStorage.getItem(KEY)||localStorage.getItem('kiri:army-panel:v016:reports-premium')||localStorage.getItem('kiri:army-panel:v015:reports-premium')||localStorage.getItem('kiri:army-panel:v014:reports-premium'); if(!raw)return; const data=JSON.parse(raw); rankWasTouched=false; if(input)setPoints(parsePoints(data.points)); selected=Array.isArray(data.selected)?data.selected.filter(x=>x&&x.name&&norm(x.points)>0&&Number(x.count)>0):[];}catch(e){}};
+  const totalSelected=()=>selected.reduce((sum,x)=>sum+norm(x.points)*(Math.max(1,Math.round(Number(x.count)||1))),0);
+  const loadPremium=()=>{try{const raw=localStorage.getItem(KEY)||localStorage.getItem('kiri:army-panel:v016:reports-premium')||localStorage.getItem('kiri:army-panel:v015:reports-premium')||localStorage.getItem('kiri:army-panel:v014:reports-premium'); if(!raw)return; const data=JSON.parse(raw); rankWasTouched=false; selected=Array.isArray(data.selected)?data.selected.filter(x=>x&&x.name&&norm(x.points)>0&&Number(x.count)>0):[]; setPoints(totalSelected());}catch(e){}};
   const updateProfilePremium=vals=>{
     const pts=document.getElementById('profilePremiumPoints');
     const pay=document.getElementById('profilePremiumPay');
@@ -4981,21 +4976,11 @@ document.querySelectorAll('.theme-card').forEach(card=>{
     if(pay) pay.textContent=money(vals.pay||0);
     if(lim) lim.textContent=money(vals.limit||0);
   };
-  const checkPremiumAchievements=vals=>{
-    try{
-      const points=getPoints();
-      if(points>0) window.unlockAchievement?.('premium_first_report');
-      if(points>=50) window.unlockAchievement?.('premium_big_week');
-      if(points>=100) window.unlockAchievement?.('premium_workhorse');
-      if((vals?.limit||0)>0 && (vals?.pay||0)>0 && vals.pay>=vals.limit) window.unlockAchievement?.('premium_limit_reached');
-    }catch(e){}
-  };
   const update=()=>{
     const points=getPoints(), limit=getLimit(), raw=points*RATE, pay=Math.min(raw,limit), burn=Math.max(0,raw-limit);
     const vals={raw,limit,pay,burn};
     Object.entries(vals).forEach(([k,v])=>{const el=root.querySelector(`[data-premium-output="${k}"]`); if(el)el.textContent=money(v);});
     updateProfilePremium(vals);
-    checkPremiumAchievements(vals);
   };
   const renderSelected=()=>{
     if(!selectedList||!selectedBox)return;
@@ -5034,7 +5019,10 @@ document.querySelectorAll('.theme-card').forEach(card=>{
   root.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return; const row=e.target.closest('.premium-activity-row[data-premium-add]'); if(row&&root.contains(row)){e.preventDefault();addRow(row);}});
   if(select){select.addEventListener('mousedown',e=>e.preventDefault()); select.addEventListener('keydown',e=>e.preventDefault());}
   if(input){input.addEventListener('input',()=>{update();save();}); input.addEventListener('change',()=>{setPoints(getPoints());update();save();});}
-  window.KiriPremiumSync=()=>{syncRankFromProfile();update();save();};
+  const syncAll=()=>{syncRankFromProfile(); update(); save();};
+  window.KiriPremiumSync=syncAll;
+  document.addEventListener('click',()=>setTimeout(syncAll,60),true);
+  try{new MutationObserver(()=>syncAll()).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true});}catch(e){}
   loadPremium(); syncRankFromProfile(); renderSelected(); update();
 })();
 
