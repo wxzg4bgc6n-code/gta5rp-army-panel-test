@@ -5711,7 +5711,7 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v044_google_avatar_cloud_guard';
+const VERSION_KEY='rp_panel_v045_google_avatar_live_dirty_sync';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -5871,7 +5871,12 @@ function save(){
   const normalized=normalizeProfileData(S);
   if(normalized && normalized.ready) S=normalized;
   const passiveLoad = !!(window.__cloudApplyingRemote || window.__profileHydrating || window.__cloudAttaching);
-  if(!passiveLoad) S.updatedAt=Date.now();
+  if(!passiveLoad){
+    S.updatedAt=Date.now();
+    // KIRI v045: отмечаем только реальные локальные действия пользователя.
+    // Именно они имеют право уйти в облако и обновить второе устройство.
+    window.__cloudLocalDirtyAt=S.updatedAt;
+  }
   const data=JSON.stringify(S);
   try{
     if(S.ready){
@@ -7127,6 +7132,7 @@ window.CloudSync={
       rememberGoogleProfileInfo(this.user);
       S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:cloudUpdated,googlePhotoURL:S.cloud?.googlePhotoURL||this.user.photoURL||'',googleEmail:this.user.email||S.cloud?.googleEmail||''});
       save();
+      window.__cloudLocalDirtyAt=0;
       window.__cloudApplyingRemote=false;
       render();
       applyDashTab();
@@ -7193,7 +7199,8 @@ window.CloudSync={
         const remoteUpdated=current.updatedAt || current.state?.updatedAt || 0;
         const localBase=S.cloud?.lastCloudUpdatedAt || 0;
         const sameDevice=current.sourceDevice===getCloudDeviceId();
-        if(!force && !sameDevice && remoteUpdated && localBase && remoteUpdated>localBase+250){
+        const hasLocalUserChange=!!(window.__cloudLocalDirtyAt && S.updatedAt && Math.abs(window.__cloudLocalDirtyAt-S.updatedAt)<5000);
+        if(!force && !hasLocalUserChange && !sameDevice && remoteUpdated && localBase && remoteUpdated>localBase+250){
           const remote=normalizeProfileData(current.state);
           if(remote && remote.ready){
             this.applyRemoteState(remote, remoteUpdated, true);
@@ -7216,6 +7223,7 @@ window.CloudSync={
         state,
         devices:{[getCloudDeviceId()]:{label:deviceLabel(),lastSeen:now,userAgent:(navigator.userAgent||'').slice(0,180)}}
       },{merge:true});
+      window.__cloudLocalDirtyAt=0;
       window.__cloudSaving=false;
       renderCloudSyncStatus();
       if(force) showToast('Синхронизировано','Профиль сохранён в облаке');
