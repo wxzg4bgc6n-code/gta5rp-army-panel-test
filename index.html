@@ -5258,6 +5258,102 @@ body.academy-info-clean #departmentInfoContent details.section-toggle.academy-ex
   }
 }
 
+
+
+/* KIRI v067: телефон — блок Организация / Раздел / Ступень в стиле iOS Settings.
+   Трогаем только эти три строки профиля, остальные блоки и ПК не меняем. */
+@media (max-width:620px){
+  .profile-card .profile-info .editable-row,
+  .profile-card .profile-info .level-row{
+    display:grid!important;
+    grid-template-columns:116px minmax(0,1fr) 30px!important;
+    align-items:center!important;
+    column-gap:8px!important;
+    min-height:48px!important;
+    padding:0 8px 0 12px!important;
+    margin:0!important;
+    background:rgba(255,255,255,.038)!important;
+    border-bottom:1px solid rgba(255,255,255,.075)!important;
+  }
+
+  .profile-card .profile-info .editable-row:first-of-type{
+    border-radius:16px 16px 0 0!important;
+  }
+
+  .profile-card .profile-info .level-row{
+    border-bottom:0!important;
+    border-radius:0 0 16px 16px!important;
+  }
+
+  .profile-card .profile-info .editable-row span,
+  .profile-card .profile-info .level-row span{
+    grid-column:1!important;
+    grid-row:1!important;
+    align-self:center!important;
+    justify-self:start!important;
+    margin:0!important;
+    white-space:nowrap!important;
+    color:var(--muted)!important;
+    font-size:13px!important;
+    line-height:1.1!important;
+    font-weight:900!important;
+  }
+
+  .profile-card .profile-info .editable-row b,
+  .profile-card .profile-info .level-row b{
+    grid-column:2!important;
+    grid-row:1!important;
+    align-self:center!important;
+    justify-self:start!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin:0!important;
+    text-align:left!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    color:var(--text)!important;
+    font-size:13px!important;
+    line-height:1.16!important;
+    font-weight:950!important;
+  }
+
+  .profile-card .profile-info .editable-row .mini-edit,
+  .profile-card .profile-info .level-row .mini-edit{
+    grid-column:3!important;
+    grid-row:1!important;
+    justify-self:end!important;
+    align-self:center!important;
+    width:28px!important;
+    height:28px!important;
+    min-width:28px!important;
+    min-height:28px!important;
+    padding:0!important;
+    margin:0!important;
+    border-radius:10px!important;
+    font-size:12px!important;
+    line-height:1!important;
+    background:color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.045))!important;
+    border-color:color-mix(in srgb,var(--accent) 34%, rgba(255,255,255,.12))!important;
+  }
+}
+
+@media (max-width:380px){
+  .profile-card .profile-info .editable-row,
+  .profile-card .profile-info .level-row{
+    grid-template-columns:108px minmax(0,1fr) 28px!important;
+    column-gap:7px!important;
+    padding-left:10px!important;
+    padding-right:7px!important;
+  }
+  .profile-card .profile-info .editable-row span,
+  .profile-card .profile-info .level-row span,
+  .profile-card .profile-info .editable-row b,
+  .profile-card .profile-info .level-row b{
+    font-size:12.5px!important;
+  }
+}
+
 </style>
 </head>
 <body>
