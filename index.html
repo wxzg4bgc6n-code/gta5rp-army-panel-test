@@ -2957,6 +2957,34 @@ body{
   }
 }
 
+
+
+/* KIRI v006: мягкий hover по достижениям в профиле + клик открывает коллекцию */
+.achievement-preview{
+  cursor:pointer!important;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease,filter .18s ease!important;
+}
+.achievement-preview.open:hover{
+  transform:translateY(-3px)!important;
+  border-color:color-mix(in srgb,var(--accent) 48%, rgba(255,255,255,.16))!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.045)),rgba(255,255,255,.04))!important;
+  box-shadow:0 16px 34px rgba(0,0,0,.30),0 0 0 1px color-mix(in srgb,var(--accent) 10%, transparent),0 0 22px color-mix(in srgb,var(--accent) 12%, transparent)!important;
+}
+.achievement-preview.locked:hover{
+  transform:translateY(-2px)!important;
+  filter:brightness(1.06)!important;
+  border-color:rgba(255,255,255,.18)!important;
+}
+.achievement-preview:active{
+  transform:translateY(-1px) scale(.992)!important;
+}
+.achievement-preview.open:hover .ap-icon{
+  transform:scale(1.035)!important;
+}
+.achievement-preview .ap-icon{
+  transition:transform .18s ease,filter .18s ease!important;
+}
+
 </style>
 </head>
 <body>
@@ -4022,18 +4050,19 @@ function renderAchievementPreviews(){
   }
   if(!selected.length){
     const starter=ACHIEVEMENT_DEFS.slice(0,6);
-    grid.innerHTML=starter.map(a=>`<div class="achievement-preview locked rarity-${a.rarity||'common'}">
+    grid.innerHTML=starter.map(a=>`<div class="achievement-preview locked rarity-${a.rarity||'common'}" data-open-achievements-modal="1" title="Открыть все достижения">
       <span class="showcase-pin">?</span>
       <div class="ap-icon">🔒</div>
       <b>Скрыто</b>
       <span>Откроется позже</span>
     </div>`).join('');
+    grid.querySelectorAll('[data-open-achievements-modal]').forEach(card=>card.onclick=openAchievementsModal);
     return;
   }
   grid.innerHTML=selected.map((a,i)=>{
     const open=!!got[a.id];
     const manual=picked.includes(a.id);
-    return `<div class="achievement-preview ${open?'open':'locked'} rarity-${a.rarity||'common'}">
+    return `<div class="achievement-preview ${open?'open':'locked'} rarity-${a.rarity||'common'}" data-open-achievements-modal="1" title="Открыть все достижения">
       <span class="showcase-pin">${manual?'★':i+1}</span>
       <div class="ap-icon">${open?a.icon:'🔒'}</div>
       <b>${open?a.title:'Скрыто'}</b>
@@ -4041,6 +4070,7 @@ function renderAchievementPreviews(){
       ${open?`<em class="rarity-label">${rarityName(a.rarity)}</em>`:''}
     </div>`;
   }).join('');
+  grid.querySelectorAll('[data-open-achievements-modal]').forEach(card=>card.onclick=openAchievementsModal);
 }
 function renderPathDashboard(){
   const sec=$('#pathCurrentSection'), lvl=$('#pathCurrentLevel'), ac=$('#academyPathStatus');
