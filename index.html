@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v046</title>
+<title>RP Cabinet TEST v047</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5711,7 +5711,7 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v046_google_avatar_reliable_two_way_sync';
+const VERSION_KEY='rp_panel_v047_google_avatar_persist_fix';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -5911,6 +5911,12 @@ function normalizeProfileData(d){
   if(!merged.tasks || typeof merged.tasks!=='object') merged.tasks={};
   if(!merged.account || typeof merged.account!=='object') merged.account={achievements:{}};
   if(!merged.account.achievements || typeof merged.account.achievements!=='object') merged.account.achievements={};
+  // KIRI v047: выбранная Google-аватарка хранится как отдельный тип значка,
+  // а не как "пустой выбор". Иначе после F5 она могла слетать.
+  if(merged.account.profileIconAchievementId && !merged.account.profileIconType) merged.account.profileIconType='achievement';
+  if(!merged.account.profileIconType) merged.account.profileIconType='empty';
+  if(!['empty','achievement','google'].includes(merged.account.profileIconType)) merged.account.profileIconType='empty';
+  if(merged.account.profileIconType==='achievement' && !merged.account.profileIconAchievementId) merged.account.profileIconType='empty';
   if(!merged.account.createdAt) merged.account.createdAt=Date.now();
   if(!merged.account.initialName) merged.account.initialName=merged.name||'';
   if(!merged.updatedAt) merged.updatedAt=Date.now();
@@ -6309,11 +6315,29 @@ function rememberGoogleProfileInfo(user){
 }
 
 function selectedProfileIconDef(){
-  const id=S.account && S.account.profileIconAchievementId;
-  if(!id) return null;
+  if(!S.account) S.account={achievements:{}};
+  const id=S.account.profileIconAchievementId;
+  if(!id || S.account.profileIconType!=='achievement') return null;
   const got=achievements();
   const def=ACHIEVEMENT_DEFS.find(a=>a.id===id);
   return def && got[id] ? def : null;
+}
+function isGoogleProfileIconSelected(){
+  return !!(S.account && S.account.profileIconType==='google');
+}
+function setGoogleProfileIcon(){
+  if(!S.account) S.account={achievements:{}};
+  const photo=getGoogleProfilePhoto();
+  S.account.profileIconType='google';
+  S.account.profileIconGoogleURL=photo || S.account.profileIconGoogleURL || '';
+  delete S.account.profileIconAchievementId;
+  unlockAchievement('profile_icon_set');
+  save();
+  renderProfileIcon();
+  renderAccountStats();
+  render();
+  closeProfileIconModal();
+  showToast('Аватар Google','Поставлен аватар аккаунта Google');
 }
 
 function displayPathName(value){
@@ -6335,7 +6359,7 @@ function renderProfileIcon(){
     tag.textContent='';
     if(box) box.classList.remove('empty-profile-icon');
     $('#profileInitial').title=`Значок профиля: ${def.title}`;
-  }else if(googlePhoto){
+  }else if(isGoogleProfileIconSelected() && (googlePhoto || S.account?.profileIconGoogleURL)){
     icon.textContent='';
     tag.textContent='';
     if(box){
@@ -6345,7 +6369,7 @@ function renderProfileIcon(){
       img.className='google-profile-avatar';
       img.alt='Google avatar';
       img.referrerPolicy='no-referrer';
-      img.src=googlePhoto;
+      img.src=googlePhoto || S.account.profileIconGoogleURL;
       box.prepend(img);
     }
     $('#profileInitial').title='Аватар Google. Нажми, чтобы выбрать значок профиля';
@@ -6365,7 +6389,9 @@ function closeProfileIconModal(){
 }
 function setProfileIcon(id){
   if(!S.account) S.account={achievements:{}};
+  S.account.profileIconType='achievement';
   S.account.profileIconAchievementId=id;
+  delete S.account.profileIconGoogleURL;
   unlockAchievement('profile_icon_set');
   save();
   renderProfileIcon();
@@ -6376,7 +6402,9 @@ function setProfileIcon(id){
 }
 function clearProfileIcon(){
   if(!S.account) S.account={achievements:{}};
+  S.account.profileIconType='empty';
   delete S.account.profileIconAchievementId;
+  delete S.account.profileIconGoogleURL;
   save();
   renderProfileIcon();
   renderProfileIconModal();
@@ -6390,22 +6418,23 @@ function renderProfileIconModal(){
     .filter(a=>got[a.id])
     .sort((a,b)=>(rarityOrder[a.rarity||'common']-rarityOrder[b.rarity||'common']) || a.title.localeCompare(b.title,'ru'));
   const selected=S.account?.profileIconAchievementId||'';
-  const googlePhoto=getGoogleProfilePhoto();
-  const googleCard=googlePhoto ? `<button class="profile-icon-choice google-avatar-choice ${!selected?'active':''}" data-profile-google-avatar="1">
+  const googleSelected=isGoogleProfileIconSelected();
+  const googlePhoto=getGoogleProfilePhoto() || S.account?.profileIconGoogleURL || '';
+  const googleCard=googlePhoto ? `<button class="profile-icon-choice google-avatar-choice ${googleSelected?'active':''}" data-profile-google-avatar="1">
     <div><img src="${googlePhoto}" referrerpolicy="no-referrer" alt="Google avatar"><b>Аватар Google</b><em class="rarity-label">аккаунт</em></div>
   </button>` : '';
   if(!opened.length && !googlePhoto){
     grid.innerHTML='<div class="profile-icon-empty">Достижений пока нет. Пока значок профиля останется пустым. Когда откроешь достижения, здесь появится выбор.</div>';
     return;
   }
-  grid.innerHTML=googleCard + opened.map(a=>`<button class="profile-icon-choice ${selected===a.id?'active':''} rarity-${a.rarity||'common'}" data-profile-icon="${a.id}">
+  grid.innerHTML=googleCard + opened.map(a=>`<button class="profile-icon-choice ${(S.account?.profileIconType==='achievement' && selected===a.id)?'active':''} rarity-${a.rarity||'common'}" data-profile-icon="${a.id}">
     <div><div class="icon">${a.icon}</div><b>${a.title}</b><em class="rarity-label">${rarityName(a.rarity)}</em></div>
   </button>`).join('');
   document.querySelectorAll('[data-profile-icon]').forEach(btn=>{
     btn.onclick=()=>setProfileIcon(btn.dataset.profileIcon);
   });
   document.querySelectorAll('[data-profile-google-avatar]').forEach(btn=>{
-    btn.onclick=()=>{clearProfileIcon(); closeProfileIconModal(); showToast('Аватар Google','Поставлен аватар аккаунта Google');};
+    btn.onclick=()=>setGoogleProfileIcon();
   });
 }
 function renderRankEmblem(){
@@ -6465,7 +6494,7 @@ function checkAchievements(){
   if(S.project==='GTA5RP') unlockAchievement('project_gta5rp');
   if(S.project==='Majestic RP') unlockAchievement('project_majestic');
   if(S.org==='ARMY') unlockAchievement('org_army');
-  if(S.account.profileIconAchievementId) unlockAchievement('profile_icon_set');
+  if(S.account.profileIconAchievementId || S.account.profileIconType==='google') unlockAchievement('profile_icon_set');
   if(Array.isArray(S.account.showcaseAchievements) && S.account.showcaseAchievements.length>0) unlockAchievement('showcase_customized');
   if(Array.isArray(S.account.showcaseAchievements) && S.account.showcaseAchievements.length>=6) unlockAchievement('showcase_full');
   if(S.style && S.style!=='style-violet') unlockAchievement('theme_changed');
