@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v041</title>
+<title>RP Cabinet TEST v040</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5682,7 +5682,7 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v041_live_two_way_sync';
+const VERSION_KEY='rp_panel_v039_cloud_conflict_guard';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -5837,11 +5837,11 @@ let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
 
 function save(){
-  // KIRI v041: обновляем updatedAt только при реальном действии пользователя.
+  // KIRI v039: обновляем updatedAt только при реальном действии пользователя.
   // Загрузка из localStorage/облака не должна делать старый профиль "новее".
   const normalized=normalizeProfileData(S);
   if(normalized && normalized.ready) S=normalized;
-  const passiveLoad = !!(window.__cloudApplyingRemote || window.__profileHydrating || window.__cloudAttaching || window.__cloudBootstrapping || window.__cloudSilentApply);
+  const passiveLoad = !!(window.__cloudApplyingRemote || window.__profileHydrating || window.__cloudAttaching);
   if(!passiveLoad) S.updatedAt=Date.now();
   const data=JSON.stringify(S);
   try{
@@ -5956,7 +5956,7 @@ function load(){
 
   if(best && best.ready){
     S=best;
-    // KIRI v041: нормализуем основной ключ без обновления updatedAt.
+    // KIRI v039: нормализуем основной ключ без обновления updatedAt.
     window.__profileHydrating=true;
     save();
     window.__profileHydrating=false;
@@ -6978,9 +6978,6 @@ window.CloudSync={
   user:null,
   unsub:null,
   saveTimer:null,
-  applyingRemote:false,
-  bootstrapping:false,
-  lastRemoteUpdatedAt:0,
   async init(){
     try{
       if(!window.firebase) throw new Error('Firebase SDK не загрузился');
@@ -7017,7 +7014,7 @@ window.CloudSync={
       clearTimeout(this.saveTimer);
       await this.auth?.signOut();
       S.cloud={enabled:false,provider:'local',uid:'',lastSync:S.cloud?.lastSync||0};
-      // KIRI v041: выход с телефона/ПК не должен отправлять старый локальный кэш в облако.
+      // KIRI v040: выход с телефона/ПК не должен отправлять старый локальный кэш в облако.
       // Поэтому сохраняем локально в пассивном режиме, без scheduleSave().
       window.__profileHydrating=true;
       save();
@@ -7033,7 +7030,7 @@ window.CloudSync={
   async onAuth(user){
     this.user=user||null;
     if(!user){renderCloudSyncStatus();return;}
-    // KIRI v041: не сохраняем локальный профиль сразу после входа.
+    // KIRI v039: не сохраняем локальный профиль сразу после входа.
     // Иначе старое устройство получает свежий updatedAt и может перезаписать облако.
     await this.attachProfile();
   },
@@ -7041,121 +7038,73 @@ window.CloudSync={
   async attachProfile(){
     if(!this.user || !this.db) return;
     window.__cloudAttaching=true;
-    window.__cloudBootstrapping=true;
     const ref=this.profileRef();
     setCloudStatus('wait','Подключаю профиль','Проверяю данные в облаке.','UID: '+this.user.uid.slice(0,8)+'…');
-    try{
-      const snap=await ref.get();
-      const local=normalizeProfileData(S);
-      const cloudDoc=snap.exists ? (snap.data()||{}) : null;
-      const cloud=cloudDoc ? normalizeProfileData(cloudDoc.state) : null;
-      if(cloud && cloud.ready){
-        const cloudUpdated=cloudDoc.updatedAt || cloud.updatedAt || 0;
-        this.lastRemoteUpdatedAt=cloudUpdated;
-        // v041: при входе устройство ВСЕГДА сначала принимает облачную базу.
-        // Старый localStorage телефона/ПК не получает права сразу записаться обратно.
+    const snap=await ref.get();
+    const local=normalizeProfileData(S);
+    const cloudDoc=snap.exists ? (snap.data()||{}) : null;
+    const cloud=cloudDoc ? normalizeProfileData(cloudDoc.state) : null;
+    if(cloud && cloud.ready){
+      const cloudUpdated=cloudDoc.updatedAt || cloud.updatedAt || 0;
+      // KIRI v040: если облачный профиль уже существует, он всегда главный при входе.
+      // Локальный кэш телефона/ПК не имеет права перезаписывать облако просто из-за повторного входа.
+      window.__cloudApplyingRemote=true;
+      S=cloud;
+      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:cloudUpdated});
+      save();
+      window.__cloudApplyingRemote=false;
+      render();
+      applyDashTab();
+      showToast('Профиль загружен','Данные подтянуты из облака');
+    }else if(local && local.ready){
+      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid});
+      await this.saveNow(true);
+      showToast('Облако подключено','Локальный профиль перенесён в Firebase');
+    }
+    window.__cloudAttaching=false;
+    if(this.unsub) this.unsub();
+    this.unsub=ref.onSnapshot(doc=>{
+      if(!doc.exists || window.__cloudSaving || window.__cloudAttaching) return;
+      const data=doc.data()||{};
+      if(data.sourceDevice===getCloudDeviceId()) { renderCloudSyncStatus(); return; }
+      const remote=normalizeProfileData(data.state);
+      if(!remote || !remote.ready) return;
+      const remoteUpdated=data.updatedAt || remote.updatedAt || 0;
+      const localUpdated=S.updatedAt || 0;
+      if(remoteUpdated>localUpdated+250){
         window.__cloudApplyingRemote=true;
-        S=cloud;
-        S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:cloudUpdated});
+        S=remote;
+        S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:remoteUpdated});
         save();
         window.__cloudApplyingRemote=false;
         render();
         applyDashTab();
-      }else if(local && local.ready){
-        // Облако пустое: первый подключившийся локальный профиль становится стартовой облачной версией.
-        S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid});
-        await this.saveNow(true,{initial:true});
+        renderCloudSyncStatus();
       }
-      if(this.unsub) this.unsub();
-      this.unsub=ref.onSnapshot(doc=>this.handleRemoteSnapshot(doc));
-    }catch(e){
-      console.warn('Cloud attach failed',e);
-      setCloudStatus('error','Ошибка подключения','Не удалось загрузить облачный профиль.',String(e.message||e).slice(0,120));
-    }finally{
-      window.__cloudAttaching=false;
-      // Даем render/пересчётам закончиться, чтобы они не отправили старый кэш в облако.
-      setTimeout(()=>{window.__cloudBootstrapping=false;},1200);
-      renderCloudSyncStatus();
-    }
-  },
-  handleRemoteSnapshot(doc){
-    if(!doc.exists || window.__cloudSaving || window.__cloudAttaching) return;
-    const data=doc.data()||{};
-    const remote=normalizeProfileData(data.state);
-    if(!remote || !remote.ready) return;
-    const remoteUpdated=data.updatedAt || remote.updatedAt || 0;
-    if(remoteUpdated<=this.lastRemoteUpdatedAt) { renderCloudSyncStatus(); return; }
-    this.lastRemoteUpdatedAt=remoteUpdated;
-    // Если это наше же сохранение, просто обновляем отметку облака, UI не трогаем.
-    if(data.sourceDevice===getCloudDeviceId()){
-      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:remoteUpdated});
-      renderCloudSyncStatus();
-      return;
-    }
-    // v041: другое устройство изменило профиль — применяем без обратного сохранения.
-    window.__cloudApplyingRemote=true;
-    window.__cloudSilentApply=true;
-    S=remote;
-    S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:remoteUpdated});
-    save();
-    window.__cloudSilentApply=false;
-    window.__cloudApplyingRemote=false;
-    render();
-    applyDashTab();
+    });
     renderCloudSyncStatus();
   },
   scheduleSave(){
-    if(!this.ready || !this.user || !S.ready || window.__cloudApplyingRemote || window.__cloudAttaching || window.__cloudSigningOut || window.__cloudBootstrapping || window.__cloudSilentApply) return;
+    if(!this.ready || !this.user || !S.ready || window.__cloudApplyingRemote || window.__cloudAttaching || window.__cloudSigningOut) return;
     clearTimeout(this.saveTimer);
     this.saveTimer=setTimeout(()=>this.saveNow(false),900);
   },
-  async saveNow(force,opts={}){
-    if(!this.ready || !this.user || !S.ready || window.__cloudBootstrapping || window.__cloudApplyingRemote || window.__cloudSilentApply) return;
+  async saveNow(force){
+    if(!this.ready || !this.user || !S.ready) return;
     try{
       window.__cloudSaving=true;
-      const ref=this.profileRef();
       const now=Date.now();
-      const localUpdated=S.updatedAt || now;
-      if(!opts.initial){
-        // Перед записью проверяем облако. Если там версия свежее или такая же,
-        // старое устройство не имеет права её затереть.
-        const current=await ref.get();
-        if(current.exists){
-          const currentData=current.data()||{};
-          const currentUpdated=currentData.updatedAt||0;
-          if(currentUpdated>localUpdated && currentData.sourceDevice!==getCloudDeviceId()){
-            const remote=normalizeProfileData(currentData.state);
-            if(remote && remote.ready){
-              this.lastRemoteUpdatedAt=currentUpdated;
-              window.__cloudApplyingRemote=true;
-              window.__cloudSilentApply=true;
-              S=remote;
-              S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:currentUpdated});
-              save();
-              window.__cloudSilentApply=false;
-              window.__cloudApplyingRemote=false;
-              render();
-              applyDashTab();
-              renderCloudSyncStatus();
-            }
-            window.__cloudSaving=false;
-            return;
-          }
-        }
-      }
-      const writeAt=Date.now();
-      S.updatedAt=writeAt;
-      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:writeAt,lastCloudUpdatedAt:writeAt});
+      S.updatedAt=now;
+      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:now,lastCloudUpdatedAt:now});
       const state=cloudSafeState();
-      await ref.set({
+      await this.profileRef().set({
         profileId:CLOUD_PROFILE_ID,
         ownerUid:this.user.uid,
-        updatedAt:writeAt,
+        updatedAt:now,
         sourceDevice:getCloudDeviceId(),
         state,
-        devices:{[getCloudDeviceId()]:{label:deviceLabel(),lastSeen:writeAt,userAgent:(navigator.userAgent||'').slice(0,180)}}
+        devices:{[getCloudDeviceId()]:{label:deviceLabel(),lastSeen:now,userAgent:(navigator.userAgent||'').slice(0,180)}}
       },{merge:true});
-      this.lastRemoteUpdatedAt=writeAt;
       window.__cloudSaving=false;
       renderCloudSyncStatus();
       if(force) showToast('Синхронизировано','Профиль сохранён в облаке');
@@ -7164,8 +7113,6 @@ window.CloudSync={
       console.warn('Cloud save failed',e);
       setCloudStatus('error','Ошибка синхронизации','Не удалось записать данные в Firestore. Проверь правила доступа.',String(e.message||e).slice(0,120));
     }
-  }
-
   }
 };
 
