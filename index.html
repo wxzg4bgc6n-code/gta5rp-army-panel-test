@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ARMY Panel — TEST v007</title>
+<title>ARMY Panel — TEST v008</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2986,7 +2986,7 @@ body{
 }
 
 
-/* KIRI v007: видимый номер теста + достижения за настройку профиля */
+/* KIRI v008: динамический карьерный путь от v007 */
 .test-version-label{
   margin:6px 0 0!important;
   color:var(--muted)!important;
@@ -2996,7 +2996,7 @@ body{
   text-transform:uppercase!important;
 }
 body.ready::after{
-  content:"ARMY Panel — TEST v007";
+  content:"ARMY Panel — TEST v008";
   position:fixed;
   left:14px;
   bottom:14px;
@@ -3014,13 +3014,83 @@ body.ready::after{
 }
 @media(max-width:620px){body.ready::after{display:none}}
 
+
+/* KIRI v008: динамический карьерный путь */
+.dynamic-career-path{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important;
+  gap:10px!important;
+  align-items:stretch!important;
+}
+.dynamic-career-path .path-arrow{
+  display:none!important;
+}
+.dynamic-career-path .path-card{
+  position:relative!important;
+  min-height:122px!important;
+  align-content:start!important;
+  justify-items:start!important;
+  gap:7px!important;
+  padding:14px!important;
+  overflow:hidden!important;
+}
+.dynamic-career-path .path-card.done{
+  border-color:color-mix(in srgb,var(--accent) 30%, rgba(255,255,255,.10))!important;
+}
+.path-step-icon{
+  width:34px;
+  height:34px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.10);
+  color:color-mix(in srgb,var(--accent) 78%, white 12%);
+  font-size:16px;
+  font-weight:950;
+}
+.dynamic-career-path .path-card b{
+  font-size:18px!important;
+  line-height:1.12!important;
+}
+.dynamic-career-path .path-card span{
+  line-height:1.3!important;
+}
+.path-mini-progress{
+  width:100%;
+  height:7px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(255,255,255,.08);
+  margin-top:auto;
+}
+.path-mini-progress i{
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.dynamic-career-path .path-card.active::after{
+  content:"Текущий";
+  position:absolute;
+  top:10px;
+  right:10px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 13%, transparent);
+  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.08));
+  color:color-mix(in srgb,var(--accent) 80%, white 15%);
+  font-size:10px;
+  font-weight:950;
+}
+
 </style>
 </head>
 <body>
 <section class="first-screen">
   <div class="first-card">
     <h1>Создай RP-профиль</h1>
-    <p class="test-version-label">ARMY Panel — TEST v007</p>
+    <p class="test-version-label">ARMY Panel — TEST v008</p>
     <div class="form">
       <label class="field">
         <span>Имя / ник</span>
@@ -3125,14 +3195,8 @@ body.ready::after{
       </div>
 
       <div class="panel dashboard-section" id="dashboardPathProgress">
-        <h2>Прогресс по текущему пути</h2>
-        <div class="path-cards">
-          <div class="path-card" id="academyPathCard"><b>Academy</b><span id="academyPathStatus">—</span></div>
-          <div class="path-arrow">→</div>
-          <div class="path-card active"><b id="pathCurrentSection">Текущий раздел</b><span id="pathCurrentLevel">—</span></div>
-          <div class="path-arrow">→</div>
-          <div class="path-card locked"><b>Следующий этап</b><span>Скоро...</span></div>
-        </div>
+        <h2>Карьерный путь</h2>
+        <div class="path-cards dynamic-career-path" id="careerPathCards"></div>
       </div>
       <div class="panel step" id="orgStep">
         <h2>Выбери организацию</h2>
@@ -4116,14 +4180,83 @@ function renderAchievementPreviews(){
   }).join('');
   grid.querySelectorAll('[data-open-achievements-modal]').forEach(card=>card.onclick=openAchievementsModal);
 }
-function renderPathDashboard(){
-  const sec=$('#pathCurrentSection'), lvl=$('#pathCurrentLevel'), ac=$('#academyPathStatus');
-  if(sec) sec.textContent=S.section||'Текущий раздел';
-  if(lvl) lvl.textContent=S.level||'—';
-  if(ac){
-    const done=achievements()['academy_finished'];
-    ac.textContent=done?'Завершено 100%':(S.section==='Academy'?'В процессе':'Не начато');
+function careerStepCard(step){
+  const cls=['path-card'];
+  if(step.active) cls.push('active');
+  if(step.locked) cls.push('locked');
+  if(step.done) cls.push('done');
+  const icon=step.icon?`<div class="path-step-icon">${step.icon}</div>`:'';
+  const progress=typeof step.progress==='number'?`<div class="path-mini-progress"><i style="width:${Math.max(0,Math.min(100,step.progress))}%"></i></div>`:'';
+  return `<div class="${cls.join(' ')}">${icon}<b>${step.title}</b><span>${step.status}</span>${progress}</div>`;
+}
+function buildCareerPathSteps(){
+  const got=achievements();
+  const p=S.configured?percent():0;
+  const steps=[];
+  steps.push({title:'Начало',status:S.ready?'Профиль создан':'Создай профиль',icon:'◆',done:!!S.ready});
+
+  if(!S.org){
+    steps.push({title:'Организация',status:'Нужно выбрать',icon:'◇',active:!!S.ready,locked:!S.ready});
+    return steps;
   }
+
+  const isArmy=S.org==='ARMY';
+  const academyDone=!!got['academy_finished'];
+  if(isArmy){
+    const academyActive=S.section==='Academy';
+    steps.push({
+      title:'Academy',
+      status:academyDone?'Завершено':(academyActive?`${S.level||'В процессе'} · ${p}%`:'Не отмечено'),
+      icon:'🎓',
+      done:academyDone,
+      active:academyActive,
+      progress:academyActive?p:(academyDone?100:0)
+    });
+    steps.push({
+      title:'ARMY',
+      status:S.section && S.section!=='Academy'?'Фракция активна':(academyActive?'После Academy':'Фракция выбрана'),
+      icon:'★',
+      active:!!S.org && (!S.configured || S.section===''),
+      done:!!S.org
+    });
+    if(S.configured && S.section && S.section!=='Academy'){
+      steps.push({
+        title:S.section,
+        status:`${S.level||'Ступень не выбрана'} · ${p}% до повышения`,
+        icon:'▣',
+        active:true,
+        progress:p
+      });
+    }else{
+      steps.push({title:'Отдел',status:'Выбор после Academy или вручную',icon:'▢',locked:true});
+    }
+  }else{
+    steps.push({
+      title:S.org,
+      status:S.configured?'Организация активна':'Выбери раздел',
+      icon:'★',
+      active:!!S.org && !S.configured,
+      done:!!S.org
+    });
+    if(S.configured && S.section){
+      steps.push({
+        title:S.section,
+        status:`${S.level||'Ступень не выбрана'} · ${p}% до повышения`,
+        icon:'▣',
+        active:true,
+        progress:p
+      });
+    }else{
+      steps.push({title:'Раздел',status:'Нужно выбрать',icon:'▢',locked:true});
+    }
+  }
+  return steps;
+}
+function renderPathDashboard(){
+  const wrap=$('#careerPathCards');
+  if(!wrap) return;
+  const steps=buildCareerPathSteps();
+  wrap.innerHTML=steps.map((step,i)=>careerStepCard(step)+(i<steps.length-1?'<div class="path-arrow">→</div>':'')).join('');
 }
 function renderAchievements(){
   renderAccountBlock();
