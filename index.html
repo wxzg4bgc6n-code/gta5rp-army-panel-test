@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v047</title>
+<title>RP Cabinet TEST v057</title>
 <style>
 :root{
   --bg:#02040a;
@@ -4337,114 +4337,126 @@ body.academy-info-clean #departmentInfoContent .tag{
 
 
 
-/* KIRI v051: Academy — приятный единый стиль внутри блоков + затемнение только области справочника */
+
+
+/* KIRI v057: Academy без блюра. Акценты берутся из выбранной темы через --accent/--glow */
 body.academy-info-clean #departmentInfoContent{
   position:relative !important;
-  isolation:isolate !important;
+  isolation:auto !important;
 }
-
-/* Затемняется только содержимое Academy, профиль/аккаунт/верхние плашки не затрагиваются */
-body.academy-info-clean #departmentInfoContent:has(details.section-toggle[open])::before{
-  content:"";
-  position:absolute;
-  inset:-10px -14px;
-  z-index:2;
-  pointer-events:none;
-  border-radius:24px;
-  background:rgba(0,0,0,.42);
-  backdrop-filter:brightness(.72) saturate(.82);
+body.academy-info-clean #departmentInfoContent::before,
+body.academy-info-clean #departmentInfoContent:has(details.section-toggle[open])::before,
+body.academy-info-clean.academy-dim-active #departmentInfoContent::before,
+body.academy-info-clean.academy-dim-active #departmentInfoContent:has(details.section-toggle[open])::before{
+  display:none !important;
+  content:none !important;
+  opacity:0 !important;
+  background:transparent !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
 }
-body.academy-info-clean #departmentInfoContent > section,
+body.academy-info-clean #departmentInfoContent,
+body.academy-info-clean #departmentInfoContent *,
+body.academy-info-clean.academy-dim-active #departmentInfoContent,
+body.academy-info-clean.academy-dim-active #departmentInfoContent *{
+  filter:none !important;
+  opacity:1 !important;
+  transform:none !important;
+}
+body.academy-info-clean #departmentInfoContent > section{
+  position:relative !important;
+  padding:22px 0 24px !important;
+  border:0 !important;
+  border-bottom:1px solid rgba(255,255,255,.09) !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+body.academy-info-clean #departmentInfoContent > section:first-child{padding-top:6px !important;}
+body.academy-info-clean #departmentInfoContent > section:last-child{border-bottom:0 !important;}
+body.academy-info-clean #departmentInfoContent > section > h2{
+  margin:0 0 8px !important;
+  font-size:clamp(24px,3vw,32px) !important;
+  letter-spacing:-.04em !important;
+}
+body.academy-info-clean #departmentInfoContent > section > .section-desc{
+  margin:0 0 14px !important;
+  padding-bottom:14px !important;
+  border-bottom:1px solid rgba(255,255,255,.08) !important;
+  color:var(--muted) !important;
+  font-weight:850 !important;
+}
 body.academy-info-clean #departmentInfoContent details.section-toggle{
   position:relative !important;
-}
-body.academy-info-clean #departmentInfoContent details.section-toggle[open]{
-  z-index:4 !important;
-}
-body.academy-info-clean #departmentInfoContent > section:has(details.section-toggle[open]){
-  z-index:3 !important;
-}
-
-/* Внешняя секция остается чистой, но разделы внутри читаются как аккуратный справочник */
-body.academy-info-clean #departmentInfoContent > section{
-  padding:22px 0 24px !important;
-}
-body.academy-info-clean #departmentInfoContent details.section-toggle{
-  margin:10px 0 0 !important;
+  margin:0 0 10px !important;
+  padding:0 !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  z-index:auto !important;
 }
 body.academy-info-clean #departmentInfoContent details.section-toggle > summary{
-  min-height:54px !important;
-  padding:14px 18px 14px 46px !important;
-  border-radius:18px !important;
-  border:1px solid rgba(255,255,255,.105) !important;
-  background:
-    linear-gradient(135deg,rgba(178,140,255,.145),rgba(120,170,255,.055)),
-    rgba(255,255,255,.035) !important;
-  box-shadow:0 10px 24px rgba(0,0,0,.18), inset 0 0 0 1px rgba(178,140,255,.08) !important;
-  letter-spacing:-.01em !important;
+  position:relative !important;
+  display:flex !important;
+  align-items:center !important;
+  min-height:50px !important;
+  padding:13px 18px 13px 42px !important;
+  border:1px solid color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.10)) !important;
+  border-radius:14px !important;
+  background:color-mix(in srgb,var(--accent) 9%, rgba(255,255,255,.035)) !important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 7%, transparent) !important;
+  color:var(--text) !important;
+  font-size:16px !important;
+  font-weight:950 !important;
+  cursor:pointer !important;
+  user-select:none !important;
 }
 body.academy-info-clean #departmentInfoContent details.section-toggle > summary::before{
-  content:"›" !important;
-  left:17px !important;
-  width:20px !important;
-  height:20px !important;
-  display:grid !important;
-  place-items:center !important;
-  border-radius:9px !important;
-  background:rgba(178,140,255,.16) !important;
-  color:#d8c8ff !important;
-  font-size:20px !important;
-  font-weight:950 !important;
-  transform:translateY(-50%) rotate(0deg) !important;
-  transition:transform .18s ease, background .18s ease !important;
+  content:"▶" !important;
+  position:absolute !important;
+  left:16px !important;
+  top:50% !important;
+  transform:translateY(-50%) !important;
+  color:var(--accent) !important;
+  font-size:12px !important;
+  line-height:1 !important;
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
 }
-body.academy-info-clean #departmentInfoContent details.section-toggle[open] > summary{
-  margin-bottom:0 !important;
-  border-color:rgba(178,140,255,.50) !important;
-  border-radius:20px 20px 14px 14px !important;
-  background:
-    radial-gradient(circle at 0% 0%,rgba(178,140,255,.24),transparent 36%),
-    linear-gradient(135deg,rgba(178,140,255,.18),rgba(120,170,255,.07)),
-    rgba(14,18,31,.96) !important;
-  box-shadow:0 18px 44px rgba(0,0,0,.34), 0 0 0 1px rgba(178,140,255,.12) !important;
-}
-body.academy-info-clean #departmentInfoContent details.section-toggle[open] > summary::before{
-  content:"›" !important;
-  background:rgba(178,140,255,.28) !important;
-  transform:translateY(-50%) rotate(90deg) !important;
+body.academy-info-clean #departmentInfoContent details.section-toggle > summary::after{
+  display:none !important;
+  content:"" !important;
 }
 body.academy-info-clean #departmentInfoContent details.section-toggle > summary:hover{
-  border-color:rgba(178,140,255,.42) !important;
-  background:linear-gradient(135deg,rgba(178,140,255,.18),rgba(120,170,255,.07)),rgba(255,255,255,.045) !important;
+  border-color:color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.12)) !important;
+  background:color-mix(in srgb,var(--accent) 13%, rgba(255,255,255,.04)) !important;
 }
-
-/* Раскрытый контент: одна мягкая поверхность вместо множества рамок */
+body.academy-info-clean #departmentInfoContent details.section-toggle[open] > summary{
+  margin-bottom:12px !important;
+  border-color:color-mix(in srgb,var(--accent) 55%, rgba(255,255,255,.12)) !important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%, rgba(255,255,255,.035)),rgba(255,255,255,.035)) !important;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 10%, transparent),0 12px 30px var(--glow) !important;
+}
+body.academy-info-clean #departmentInfoContent details.section-toggle[open] > summary::before{
+  content:"▼" !important;
+  color:var(--accent) !important;
+}
 body.academy-info-clean #departmentInfoContent details.section-toggle[open]{
-  padding:0 0 12px !important;
-  border-radius:22px !important;
-  background:linear-gradient(180deg,rgba(13,18,30,.96),rgba(8,12,21,.92)) !important;
-  border:1px solid rgba(178,140,255,.24) !important;
-  box-shadow:0 22px 55px rgba(0,0,0,.40) !important;
-  overflow:hidden !important;
+  border:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  z-index:auto !important;
 }
-body.academy-info-clean #departmentInfoContent details.section-toggle[open] > *:not(summary){
-  padding-left:16px !important;
-  padding-right:16px !important;
+/* Контент без рамка-в-рамке */
+body.academy-info-clean #departmentInfoContent details.section-toggle > *:not(summary){
+  border:0 !important;
+  box-shadow:none !important;
 }
-body.academy-info-clean #departmentInfoContent details.section-toggle[open] > .grid,
-body.academy-info-clean #departmentInfoContent details.section-toggle[open] > .test-grid,
-body.academy-info-clean #departmentInfoContent details.section-toggle[open] > .note-row{
-  margin-top:12px !important;
-  padding-top:6px !important;
-  border-top:1px solid rgba(255,255,255,.075) !important;
-}
-
-/* Внутренние карточки — не отдельные коробки, а чистые строки с акцентом */
 body.academy-info-clean #departmentInfoContent .grid,
 body.academy-info-clean #departmentInfoContent .test-grid,
 body.academy-info-clean #departmentInfoContent .note-row{
   gap:0 !important;
-  border-top:0 !important;
+  border-top:1px solid rgba(255,255,255,.075) !important;
 }
 body.academy-info-clean #departmentInfoContent .card,
 body.academy-info-clean #departmentInfoContent .card.important,
@@ -4454,403 +4466,91 @@ body.academy-info-clean #departmentInfoContent .card.blue,
 body.academy-info-clean #departmentInfoContent .card.purple,
 body.academy-info-clean #departmentInfoContent .note,
 body.academy-info-clean #departmentInfoContent .qa-card{
-  position:relative !important;
-  padding:15px 0 15px 14px !important;
   border:0 !important;
   border-radius:0 !important;
   background:transparent !important;
   box-shadow:none !important;
-  border-bottom:1px solid rgba(255,255,255,.07) !important;
+  padding:16px 0 !important;
+  min-height:0 !important;
+  border-bottom:1px solid rgba(255,255,255,.075) !important;
 }
-body.academy-info-clean #departmentInfoContent .card::before,
-body.academy-info-clean #departmentInfoContent .note::before,
-body.academy-info-clean #departmentInfoContent .qa-card::before{
-  content:"" !important;
-  position:absolute !important;
-  left:0 !important;
-  top:17px !important;
-  bottom:17px !important;
-  width:3px !important;
-  border-radius:999px !important;
-  background:rgba(178,140,255,.58) !important;
-}
-body.academy-info-clean #departmentInfoContent .card.warn::before{background:rgba(255,209,102,.70) !important;}
-body.academy-info-clean #departmentInfoContent .card.danger::before{background:rgba(255,112,112,.72) !important;}
-body.academy-info-clean #departmentInfoContent .card.blue::before{background:rgba(120,170,255,.72) !important;}
-body.academy-info-clean #departmentInfoContent .card.important::before{background:rgba(118,243,197,.72) !important;}
 body.academy-info-clean #departmentInfoContent .card:last-child,
 body.academy-info-clean #departmentInfoContent .note:last-child,
-body.academy-info-clean #departmentInfoContent .qa-card:last-child{
-  border-bottom:0 !important;
+body.academy-info-clean #departmentInfoContent .qa-card:last-child{border-bottom:0 !important;}
+body.academy-info-clean #departmentInfoContent .card h3,
+body.academy-info-clean #departmentInfoContent .qa-card h3{
+  display:flex !important;
+  align-items:center !important;
+  gap:8px !important;
+  margin:0 0 10px !important;
+  color:var(--text) !important;
 }
 body.academy-info-clean #departmentInfoContent .card h3::before,
 body.academy-info-clean #departmentInfoContent .qa-card h3::before{
-  display:none !important;
+  content:"" !important;
+  width:7px !important;
+  height:7px !important;
+  border-radius:999px !important;
+  background:var(--accent) !important;
+  box-shadow:0 0 14px var(--glow) !important;
+  flex:0 0 7px !important;
 }
-body.academy-info-clean #departmentInfoContent .card h3,
-body.academy-info-clean #departmentInfoContent .qa-card h3{
-  margin:0 0 8px !important;
-  font-size:15px !important;
-  line-height:1.32 !important;
-  color:#f4f0ff !important;
-}
-body.academy-info-clean #departmentInfoContent .text,
-body.academy-info-clean #departmentInfoContent .mini,
-body.academy-info-clean #departmentInfoContent p{
-  line-height:1.48 !important;
-}
-
-/* Фразы и ответы — мягкие подсказки */
 body.academy-info-clean #departmentInfoContent .qa,
 body.academy-info-clean #departmentInfoContent .phrase,
 body.academy-info-clean #departmentInfoContent .answer-line{
   border:0 !important;
-  border-left:3px solid rgba(178,140,255,.66) !important;
-  border-radius:12px !important;
-  background:rgba(255,255,255,.045) !important;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.045) !important;
+  border-left:3px solid color-mix(in srgb,var(--accent) 58%, rgba(255,255,255,.12)) !important;
+  border-radius:0 12px 12px 0 !important;
+  background:rgba(255,255,255,.032) !important;
+  box-shadow:none !important;
   margin:8px 0 !important;
-  padding:10px 12px !important;
+  padding:9px 11px !important;
 }
-body.academy-info-clean #departmentInfoContent .answer-options{
-  gap:8px !important;
-}
-body.academy-info-clean #departmentInfoContent .answer-options li{
-  border:0 !important;
-  background:rgba(255,255,255,.04) !important;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.055) !important;
-}
-body.academy-info-clean #departmentInfoContent .answer-options li.correct{
-  background:linear-gradient(135deg,rgba(118,243,197,.13),rgba(255,255,255,.035)) !important;
-  box-shadow:inset 0 0 0 1px rgba(118,243,197,.22) !important;
-}
-
-/* Таблицы — визуально легче, без сетки из ячеек */
 body.academy-info-clean #departmentInfoContent table{
-  margin-top:8px !important;
-  border-collapse:separate !important;
-  border-spacing:0 !important;
-  border-radius:14px !important;
-  overflow:hidden !important;
-  background:rgba(255,255,255,.025) !important;
+  border-collapse:collapse !important;
+  border-radius:0 !important;
+  overflow:visible !important;
+  background:transparent !important;
 }
 body.academy-info-clean #departmentInfoContent th,
 body.academy-info-clean #departmentInfoContent td{
   border:0 !important;
-  border-bottom:1px solid rgba(255,255,255,.065) !important;
+  border-bottom:1px solid rgba(255,255,255,.075) !important;
   background:transparent !important;
-  padding:11px 10px !important;
+  padding:10px 8px !important;
 }
 body.academy-info-clean #departmentInfoContent th{
-  background:rgba(255,255,255,.035) !important;
-  color:#bfc9da !important;
+  color:var(--muted) !important;
+  font-size:12px !important;
+  text-transform:uppercase !important;
+  letter-spacing:.035em !important;
+  font-weight:950 !important;
 }
-body.academy-info-clean #departmentInfoContent tr:hover td{
-  background:rgba(178,140,255,.045) !important;
+body.academy-info-clean #departmentInfoContent tr:last-child td{border-bottom:0 !important;}
+body.academy-info-clean #departmentInfoContent td:first-child{
+  color:var(--accent) !important;
+  font-weight:950 !important;
 }
-body.academy-info-clean #departmentInfoContent tr:last-child td{
-  border-bottom:0 !important;
+body.academy-info-clean #departmentInfoContent .tag{
+  border:0 !important;
+  background:color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.035)) !important;
+  color:color-mix(in srgb,var(--accent) 72%, var(--text)) !important;
 }
-
+body.academy-info-clean #departmentInfoContent ul,
+body.academy-info-clean #departmentInfoContent ol{margin:8px 0 0 !important;padding-left:20px !important;}
+body.academy-info-clean #departmentInfoContent li{margin:6px 0 !important;padding-bottom:6px !important;border-bottom:1px solid rgba(255,255,255,.055) !important;}
+body.academy-info-clean #departmentInfoContent li:last-child{border-bottom:0 !important;padding-bottom:0 !important;}
 @media(max-width:768px){
-  body.academy-info-clean #departmentInfoContent:has(details.section-toggle[open])::before{
-    inset:-6px -8px !important;
-    border-radius:18px !important;
-  }
   body.academy-info-clean #departmentInfoContent details.section-toggle > summary{
-    min-height:50px !important;
-    padding:12px 14px 12px 42px !important;
-    border-radius:16px !important;
+    padding:12px 14px 12px 39px !important;
+    min-height:48px !important;
+    font-size:14px !important;
   }
-  body.academy-info-clean #departmentInfoContent details.section-toggle > summary::before{
-    left:14px !important;
-  }
-  body.academy-info-clean #departmentInfoContent details.section-toggle[open] > *:not(summary){
-    padding-left:12px !important;
-    padding-right:12px !important;
-  }
+  body.academy-info-clean #departmentInfoContent details.section-toggle > summary::before{left:15px !important;}
   body.academy-info-clean #departmentInfoContent .card,
   body.academy-info-clean #departmentInfoContent .note,
-  body.academy-info-clean #departmentInfoContent .qa-card{
-    padding:14px 0 14px 12px !important;
-  }
+  body.academy-info-clean #departmentInfoContent .qa-card{padding:14px 0 !important;}
 }
-
-
-
-/* KIRI v052: адаптив профиля + затемнение Academy без залипания */
-@media (max-width: 768px){
-  .app{
-    width: min(100% - clamp(18px, 7vw, 36px), 1240px) !important;
-    padding-top: clamp(14px, 4vw, 20px) !important;
-  }
-  .main{
-    border-radius: clamp(22px, 6vw, 30px) !important;
-  }
-  .profile-card{
-    padding: clamp(16px, 4.4vw, 22px) !important;
-  }
-  .profile-head{
-    padding-top: 4px !important;
-    padding-bottom: 16px !important;
-  }
-  .initial,
-  .profile-head .initial,
-  .profile-head img,
-  .profile-avatar{
-    width: clamp(92px, 27vw, 126px) !important;
-    height: clamp(92px, 27vw, 126px) !important;
-    border-radius: clamp(22px, 6vw, 34px) !important;
-  }
-  .profile-head h2{
-    font-size: clamp(28px, 8vw, 38px) !important;
-  }
-  .profile-info .row,
-  .profile-info .editable-row,
-  .profile-info .level-row{
-    display:grid !important;
-    grid-template-columns: minmax(92px, 34%) minmax(0, 1fr) 42px !important;
-    gap: 8px 10px !important;
-    align-items:center !important;
-    min-height: 54px !important;
-    padding: 10px 0 !important;
-  }
-  .profile-info .row:not(.editable-row):not(.level-row){
-    grid-template-columns: minmax(92px, 34%) minmax(0, 1fr) !important;
-  }
-  .profile-info .row span,
-  .profile-info .editable-row span,
-  .profile-info .level-row span{
-    grid-column:auto !important;
-    font-size: clamp(13px, 3.4vw, 15px) !important;
-    line-height:1.2 !important;
-  }
-  .profile-info .row b,
-  .profile-info .editable-row b,
-  .profile-info .level-row b,
-  #infoOrg,#infoSection,#infoLevel{
-    min-width:0 !important;
-    font-size: clamp(13px, 3.5vw, 15px) !important;
-    line-height:1.2 !important;
-    overflow-wrap:anywhere !important;
-  }
-  .profile-info .mini-edit{
-    width: 38px !important;
-    height: 38px !important;
-    border-radius: 13px !important;
-    justify-self:end !important;
-  }
-  .achievement-last-card,
-  .account-progress-card,
-  .profile-card .panel,
-  .profile-card [class*="stat"]{
-    border-radius: clamp(18px, 5vw, 24px) !important;
-  }
-}
-@media (max-width: 380px){
-  .profile-info .row,
-  .profile-info .editable-row,
-  .profile-info .level-row{
-    grid-template-columns: 1fr 40px !important;
-  }
-  .profile-info .row:not(.editable-row):not(.level-row){
-    grid-template-columns: 1fr !important;
-  }
-  .profile-info .row span,
-  .profile-info .editable-row span,
-  .profile-info .level-row span{
-    grid-column:1/-1 !important;
-  }
-}
-
-/* v052: старое :has-затемнение больше не включается само по себе */
-body.academy-info-clean:not(.academy-dim-active) #departmentInfoContent:has(details.section-toggle[open])::before{
-  display:none !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent:has(details.section-toggle[open])::before{
-  display:block !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent details.section-toggle[open],
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]){
-  z-index:5 !important;
-}
-@media(max-width:768px){
-  body.academy-info-clean #departmentInfoContent > section{
-    padding:18px 0 20px !important;
-  }
-  body.academy-info-clean #departmentInfoContent details.section-toggle[open]{
-    box-shadow:0 16px 42px rgba(0,0,0,.36) !important;
-  }
-}
-
-
-/* KIRI v053: более гибкий профиль на телефоне — без отдельного телефона-кода, через fluid/clamp */
-@media (max-width: 768px){
-  html body .app{
-    width: min(100% - clamp(22px, 6vw, 42px), 1240px) !important;
-  }
-  html body .profile-card{
-    padding: clamp(18px, 4.8vw, 26px) !important;
-  }
-  html body .profile-card .profile-info .row,
-  html body .profile-card .profile-info .editable-row,
-  html body .profile-card .profile-info .level-row{
-    display:grid !important;
-    grid-template-columns: minmax(118px, 34%) minmax(0, 1fr) clamp(36px, 9vw, 42px) !important;
-    column-gap: clamp(8px, 2.6vw, 14px) !important;
-    row-gap: 4px !important;
-    align-items:center !important;
-    min-height: clamp(50px, 13vw, 62px) !important;
-    padding: clamp(8px, 2.4vw, 12px) 0 !important;
-  }
-  html body .profile-card .profile-info .row:not(.editable-row):not(.level-row){
-    grid-template-columns: minmax(118px, 34%) minmax(0, 1fr) clamp(36px, 9vw, 42px) !important;
-  }
-  html body .profile-card .profile-info .row:not(.editable-row):not(.level-row)::after{
-    content:"" !important;
-    display:block !important;
-    width:clamp(36px, 9vw, 42px) !important;
-    height:1px !important;
-  }
-  html body .profile-card .profile-info .row span,
-  html body .profile-card .profile-info .editable-row span,
-  html body .profile-card .profile-info .level-row span{
-    grid-column:auto !important;
-    min-width:0 !important;
-    font-size: clamp(13px, 3.7vw, 16px) !important;
-    line-height:1.18 !important;
-  }
-  html body .profile-card .profile-info .row b,
-  html body .profile-card .profile-info .editable-row b,
-  html body .profile-card .profile-info .level-row b,
-  html body .profile-card #infoOrg,
-  html body .profile-card #infoSection,
-  html body .profile-card #infoLevel{
-    grid-column:auto !important;
-    min-width:0 !important;
-    font-size: clamp(13px, 3.7vw, 16px) !important;
-    line-height:1.18 !important;
-    overflow-wrap: normal !important;
-    word-break: normal !important;
-  }
-  html body .profile-card .mini-edit{
-    width:clamp(36px, 9vw, 42px) !important;
-    height:clamp(36px, 9vw, 42px) !important;
-    justify-self:end !important;
-  }
-}
-@media (max-width: 360px){
-  html body .profile-card .profile-info .row,
-  html body .profile-card .profile-info .editable-row,
-  html body .profile-card .profile-info .level-row{
-    grid-template-columns: 1fr clamp(36px, 10vw, 40px) !important;
-  }
-  html body .profile-card .profile-info .row:not(.editable-row):not(.level-row){
-    grid-template-columns: 1fr !important;
-  }
-  html body .profile-card .profile-info .row span,
-  html body .profile-card .profile-info .editable-row span,
-  html body .profile-card .profile-info .level-row span{
-    grid-column:1/-1 !important;
-  }
-}
-
-
-
-/* KIRI v054: не просто затемнение — мягкий фокус на открытом блоке Academy */
-body.academy-info-clean #departmentInfoContent:has(details.section-toggle[open])::before,
-body.academy-info-clean.academy-dim-active #departmentInfoContent:has(details.section-toggle[open])::before{
-  display:none !important;
-  content:none !important;
-}
-body.academy-info-clean #departmentInfoContent > section,
-body.academy-info-clean #departmentInfoContent details.section-toggle,
-body.academy-info-clean #departmentInfoContent > section > h2,
-body.academy-info-clean #departmentInfoContent > section > .section-desc{
-  transition:filter .22s ease, opacity .22s ease, transform .22s ease, box-shadow .22s ease !important;
-}
-/* Фокус работает только когда JS включает academy-dim-active: профиль, статистика и верхние плашки не трогаются */
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section{
-  filter:blur(2.2px) brightness(.72) saturate(.78) !important;
-  opacity:.48 !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]){
-  filter:none !important;
-  opacity:1 !important;
-  z-index:6 !important;
-}
-/* Внутри активного раздела блюрим только соседние закрытые блоки, а открытый оставляем резким */
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) > h2,
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) > .section-desc{
-  filter:blur(1.2px) brightness(.80) saturate(.85) !important;
-  opacity:.55 !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) details.section-toggle{
-  filter:blur(1.8px) brightness(.76) saturate(.78) !important;
-  opacity:.46 !important;
-  transform:scale(.992) !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent details.section-toggle[open]{
-  filter:none !important;
-  opacity:1 !important;
-  transform:none !important;
-  z-index:8 !important;
-  box-shadow:0 24px 64px rgba(0,0,0,.46), 0 0 0 1px rgba(178,140,255,.24) !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent details.section-toggle[open] > summary{
-  box-shadow:0 18px 44px rgba(0,0,0,.38), 0 0 0 1px rgba(178,140,255,.18), 0 0 34px rgba(178,140,255,.10) !important;
-}
-@media(max-width:768px){
-  body.academy-info-clean.academy-dim-active #departmentInfoContent > section{
-    filter:blur(1.6px) brightness(.76) saturate(.82) !important;
-    opacity:.52 !important;
-  }
-  body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) details.section-toggle{
-    filter:blur(1.3px) brightness(.78) saturate(.82) !important;
-    opacity:.50 !important;
-  }
-  body.academy-info-clean.academy-dim-active #departmentInfoContent details.section-toggle[open]{
-    filter:none !important;
-    opacity:1 !important;
-  }
-}
-
-
-/* KIRI v055: фокус-блюр исправлен — открытый блок полностью чёткий, блюрятся только соседи */
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]){
-  filter:none !important;
-  opacity:1 !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) details.section-toggle{
-  filter:blur(1.55px) brightness(.78) saturate(.82) !important;
-  opacity:.48 !important;
-  transform:scale(.994) !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) details.section-toggle[open],
-body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) details.section-toggle[open] *,
-body.academy-info-clean.academy-dim-active #departmentInfoContent details.section-toggle[open],
-body.academy-info-clean.academy-dim-active #departmentInfoContent details.section-toggle[open] *{
-  filter:none !important;
-  opacity:1 !important;
-  transform:none !important;
-}
-body.academy-info-clean.academy-dim-active #departmentInfoContent details.section-toggle[open]{
-  position:relative !important;
-  z-index:20 !important;
-  box-shadow:0 24px 64px rgba(0,0,0,.46), 0 0 0 1px rgba(178,140,255,.30), 0 0 46px rgba(178,140,255,.13) !important;
-}
-@media(max-width:768px){
-  body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) details.section-toggle{
-    filter:blur(1.05px) brightness(.80) saturate(.84) !important;
-    opacity:.52 !important;
-  }
-  body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) details.section-toggle[open],
-  body.academy-info-clean.academy-dim-active #departmentInfoContent > section:has(details.section-toggle[open]) details.section-toggle[open] *{
-    filter:none !important;
-    opacity:1 !important;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -8467,102 +8167,7 @@ applyDashTab();
 CloudSync.init();
 </script>
 
-<script>
-/* KIRI v055: фокус-блюр Academy — не гаснет от микроскролла, открытый блок остаётся чётким */
-(function(){
-  let dimStartY=0;
-  let dimStartRootTop=0;
-  let wheelSum=0;
-  let touchStartY=null;
-  const SCROLL_CLOSE_DISTANCE = 220;
-  const WHEEL_CLOSE_DISTANCE = 260;
 
-  function isAcademyView(){
-    return document.body.classList.contains('academy-info-clean') && document.body.dataset.activeDashTab === 'department';
-  }
-  function academyContent(){ return document.getElementById('departmentInfoContent'); }
-  function openedBlock(){
-    const root=academyContent();
-    return root ? root.querySelector('details.section-toggle[open]') : null;
-  }
-  function isDim(){ return document.body.classList.contains('academy-dim-active'); }
-  function enableDim(){
-    const root=academyContent();
-    if(isAcademyView() && openedBlock() && root){
-      dimStartY = window.scrollY || window.pageYOffset || 0;
-      dimStartRootTop = root.getBoundingClientRect().top;
-      wheelSum = 0;
-      touchStartY = null;
-      document.body.classList.add('academy-dim-active');
-      document.documentElement.classList.add('academy-focus-open');
-    }
-  }
-  function disableDim(){
-    document.body.classList.remove('academy-dim-active');
-    document.documentElement.classList.remove('academy-focus-open');
-    wheelSum = 0;
-    touchStartY = null;
-  }
-  function closeDimAfterRealDepartmentScroll(forceDistance){
-    if(!isDim()) return;
-    const root=academyContent();
-    if(!root || !isAcademyView()){ disableDim(); return; }
-    const open=openedBlock();
-    if(!open){ disableDim(); return; }
-    const currentY = window.scrollY || window.pageYOffset || 0;
-    const rootShift = Math.abs(root.getBoundingClientRect().top - dimStartRootTop);
-    const pageShift = Math.abs(currentY - dimStartY);
-    const dist = forceDistance || SCROLL_CLOSE_DISTANCE;
-    if(pageShift >= dist || rootShift >= dist){
-      disableDim();
-    }
-  }
-
-  document.addEventListener('click', function(e){
-    const root=academyContent();
-    if(!root || !isAcademyView()){ disableDim(); return; }
-    const summary=e.target.closest('#departmentInfoContent details.section-toggle > summary');
-    if(summary){
-      setTimeout(function(){
-        if(summary.parentElement && summary.parentElement.open) enableDim();
-        else disableDim();
-      },0);
-      return;
-    }
-    const open=openedBlock();
-    if(open && !open.contains(e.target)) disableDim();
-    if(e.target.closest('.dash-tab,.profile-card,.mode-tabs,.desktop-side-quick,.mobile-panel-toggle,.academy-nav')) disableDim();
-  }, true);
-
-  window.addEventListener('scroll', function(){ closeDimAfterRealDepartmentScroll(); }, {passive:true});
-  document.addEventListener('wheel', function(e){
-    if(!isDim()) return;
-    const root=academyContent();
-    if(!root || !root.contains(e.target)) return;
-    wheelSum += Math.abs(e.deltaY || 0);
-    if(wheelSum >= WHEEL_CLOSE_DISTANCE) disableDim();
-  }, {passive:true});
-  document.addEventListener('touchstart', function(e){
-    if(!isDim()) return;
-    const root=academyContent();
-    if(!root || !root.contains(e.target)) return;
-    touchStartY = e.touches && e.touches[0] ? e.touches[0].clientY : null;
-  }, {passive:true});
-  document.addEventListener('touchmove', function(e){
-    if(!isDim() || touchStartY === null) return;
-    const root=academyContent();
-    if(!root || !root.contains(e.target)) return;
-    const y = e.touches && e.touches[0] ? e.touches[0].clientY : touchStartY;
-    if(Math.abs(y - touchStartY) >= 160) disableDim();
-  }, {passive:true});
-
-  document.addEventListener('keydown', function(e){ if(e.key==='Escape') disableDim(); });
-  const oldApply=window.applyDashTab;
-  if(typeof oldApply==='function'){
-    window.applyDashTab=function(){ disableDim(); return oldApply.apply(this, arguments); };
-  }
-})();
-</script>
 
 </body>
 </html>
