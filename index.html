@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ARMY Panel — TEST v018</title>
+<title>GTA5RP ARMY Panel — TEST v026 safe base</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2073,17 +2073,6 @@ body{
 .profile-icon-choice.rarity-epic{
   box-shadow:0 0 0 1px rgba(178,140,255,.14),0 0 22px rgba(178,140,255,.13)!important;
 }
-
-.achievement-card .achievement-date{
-  color:var(--muted)!important;
-  font-size:12px!important;
-  font-weight:850!important;
-  margin-top:7px!important;
-}
-.achievement-card:not(.locked) .achievement-date{
-  color:color-mix(in srgb,var(--rarity) 72%, var(--muted))!important;
-}
-
 .profile-icon-choice .rarity-label,
 .achievement-card .rarity-label{
   display:inline-flex;
@@ -2712,800 +2701,6 @@ body{
   }
 }
 
-
-
-/* KIRI v001: вкладки кабинета как на референсе — меняем только форму/раскладку, палитру оставляем текущей */
-.dashboard-tabs{
-  display:grid!important;
-  grid-template-columns:repeat(5,minmax(136px,1fr))!important;
-  gap:4px!important;
-  margin:0 0 26px!important;
-  align-items:stretch!important;
-}
-.dashboard-tabs .dash-tab{
-  position:relative!important;
-  min-height:56px!important;
-  height:56px!important;
-  padding:0 18px 0 56px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:flex-start!important;
-  gap:0!important;
-  border-radius:10px!important;
-  border:1px solid rgba(255,255,255,.075)!important;
-  background:rgba(4,7,14,.58)!important;
-  color:var(--muted)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 10px 24px rgba(0,0,0,.18)!important;
-  overflow:hidden!important;
-  text-transform:uppercase!important;
-  letter-spacing:.015em!important;
-  font-size:12px!important;
-  font-weight:950!important;
-  line-height:1!important;
-  transition:border-color .18s ease, background .18s ease, box-shadow .18s ease, color .18s ease, transform .18s ease!important;
-}
-.dashboard-tabs .dash-tab::before{
-  content:""!important;
-  position:absolute!important;
-  inset:0!important;
-  pointer-events:none!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,0))!important;
-}
-.dashboard-tabs .dash-tab-icon{
-  position:absolute!important;
-  left:23px!important;
-  top:50%!important;
-  width:20px!important;
-  height:20px!important;
-  transform:translateY(-50%)!important;
-  display:grid!important;
-  place-items:center!important;
-  color:color-mix(in srgb,var(--accent) 70%, #f59e0b 30%)!important;
-  opacity:.95!important;
-}
-.dashboard-tabs .dash-tab-icon svg{
-  width:20px!important;
-  height:20px!important;
-  display:block!important;
-  fill:none!important;
-  stroke:currentColor!important;
-  stroke-width:1.9!important;
-  stroke-linecap:round!important;
-  stroke-linejoin:round!important;
-  filter:drop-shadow(0 0 8px color-mix(in srgb,var(--accent) 18%, transparent))!important;
-}
-.dashboard-tabs .dash-tab-label{
-  display:block!important;
-  white-space:nowrap!important;
-  overflow:hidden!important;
-  text-overflow:ellipsis!important;
-  padding-top:1px!important;
-}
-.dashboard-tabs .dash-tab.active,
-.dashboard-tabs .dash-tab:hover{
-  color:var(--text)!important;
-  border-color:color-mix(in srgb,var(--accent) 45%, rgba(255,255,255,.10))!important;
-  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 20%, rgba(255,255,255,.035)),color-mix(in srgb,var(--accent) 10%, rgba(5,8,15,.58)))!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 0 0 1px color-mix(in srgb,var(--accent) 10%, transparent),0 14px 30px rgba(0,0,0,.24),0 0 24px color-mix(in srgb,var(--accent) 16%, transparent)!important;
-}
-.dashboard-tabs .dash-tab.active .dash-tab-icon,
-.dashboard-tabs .dash-tab:hover .dash-tab-icon{
-  color:var(--accent)!important;
-  opacity:1!important;
-}
-@media(max-width:900px){
-  .dashboard-tabs{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:7px!important;
-  }
-  .dashboard-tabs .dash-tab{
-    min-height:54px!important;
-    height:54px!important;
-    padding-left:52px!important;
-  }
-  .dashboard-tabs .dash-tab-icon{left:20px!important;}
-}
-@media(max-width:520px){
-  .dashboard-tabs{
-    grid-template-columns:1fr!important;
-  }
-}
-
-
-
-/* KIRI v002: витрина достижений — пользователь выбирает сам, иначе показываем самые редкие */
-.achievement-showcase-toolbar{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:flex-end!important;
-  gap:9px!important;
-  flex-wrap:wrap!important;
-}
-.achievement-showcase-note{
-  margin:-4px 0 13px!important;
-  color:var(--muted)!important;
-  font-size:12px!important;
-  font-weight:850!important;
-}
-.achievement-preview{
-  position:relative!important;
-  min-height:150px!important;
-  padding:15px 12px 13px!important;
-}
-.achievement-preview .showcase-pin{
-  position:absolute!important;
-  right:9px!important;
-  top:9px!important;
-  min-width:25px!important;
-  height:25px!important;
-  padding:0 7px!important;
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  border-radius:999px!important;
-  border:1px solid color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.14))!important;
-  background:color-mix(in srgb,var(--accent) 13%, rgba(0,0,0,.28))!important;
-  color:var(--text)!important;
-  font-size:11px!important;
-  font-weight:950!important;
-  line-height:1!important;
-}
-.achievement-preview .ap-icon{
-  font-size:36px!important;
-  filter:drop-shadow(0 0 14px color-mix(in srgb,var(--accent) 18%, transparent))!important;
-}
-.achievement-preview b{
-  min-height:32px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  line-height:1.18!important;
-}
-.achievement-preview span{
-  line-height:1.2!important;
-}
-.achievement-preview .rarity-label{
-  justify-self:center!important;
-  margin-top:2px!important;
-  padding:4px 8px!important;
-  border-radius:999px!important;
-  border:1px solid color-mix(in srgb,var(--rarity, var(--accent)) 35%, rgba(255,255,255,.10))!important;
-  background:color-mix(in srgb,var(--rarity, var(--accent)) 10%, rgba(0,0,0,.22))!important;
-  color:color-mix(in srgb,var(--rarity, var(--accent)) 75%, white 12%)!important;
-  font-size:10px!important;
-  font-style:normal!important;
-  font-weight:950!important;
-  text-transform:uppercase!important;
-  letter-spacing:.03em!important;
-}
-.achievement-card{
-  position:relative!important;
-}
-.achievement-card .showcase-select-btn{
-  margin-top:8px!important;
-  width:100%!important;
-  min-height:34px!important;
-  border-radius:11px!important;
-  border:1px solid color-mix(in srgb,var(--accent) 32%, rgba(255,255,255,.12))!important;
-  background:color-mix(in srgb,var(--accent) 9%, rgba(255,255,255,.035))!important;
-  color:var(--text)!important;
-  font-size:12px!important;
-  font-weight:950!important;
-}
-.achievement-card .showcase-select-btn.active{
-  border-color:color-mix(in srgb,var(--accent) 58%, rgba(255,255,255,.10))!important;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 22%, rgba(255,255,255,.04)),rgba(0,0,0,.12))!important;
-}
-.achievement-card .showcase-select-btn:disabled{
-  opacity:.45!important;
-  cursor:not-allowed!important;
-}
-.showcase-modal-tip{
-  margin:10px 0 0!important;
-  padding:10px 12px!important;
-  border-radius:14px!important;
-  border:1px solid color-mix(in srgb,var(--accent) 22%, rgba(255,255,255,.12))!important;
-  background:color-mix(in srgb,var(--accent) 7%, rgba(255,255,255,.025))!important;
-  color:var(--muted)!important;
-  font-size:12px!important;
-  font-weight:850!important;
-}
-@media(max-width:620px){
-  .achievement-showcase-toolbar{justify-content:stretch!important;}
-  .achievement-showcase-toolbar .btn{width:100%!important;}
-}
-
-
-/* KIRI v005: кнопка "Все достижения" как на референсе, без смены цветовой палитры */
-.hero-all-achievements-btn{
-  min-height:50px!important;
-  padding:0 18px!important;
-  display:inline-flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:12px!important;
-  border-radius:13px!important;
-  border:1px solid color-mix(in srgb,var(--accent) 55%, rgba(255,255,255,.10))!important;
-  background:color-mix(in srgb,var(--accent) 8%, rgba(5,8,16,.46))!important;
-  color:color-mix(in srgb,var(--accent) 84%, white 8%)!important;
-  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 9%, transparent), inset 0 0 22px color-mix(in srgb,var(--accent) 5%, transparent)!important;
-  font-size:13px!important;
-  font-weight:950!important;
-  letter-spacing:.01em!important;
-  white-space:nowrap!important;
-}
-.hero-all-achievements-btn svg{
-  width:18px!important;
-  height:18px!important;
-  flex:0 0 18px!important;
-  fill:none!important;
-  stroke:currentColor!important;
-  stroke-width:2.2!important;
-  stroke-linecap:round!important;
-  stroke-linejoin:round!important;
-  filter:drop-shadow(0 0 8px color-mix(in srgb,var(--accent) 30%, transparent))!important;
-}
-.hero-all-achievements-btn:hover{
-  transform:translateY(-1px)!important;
-  border-color:color-mix(in srgb,var(--accent) 76%, rgba(255,255,255,.12))!important;
-  background:color-mix(in srgb,var(--accent) 13%, rgba(5,8,16,.50))!important;
-}
-@media(max-width:620px){
-  .hero-all-achievements-btn{
-    width:100%!important;
-    min-height:48px!important;
-  }
-}
-
-
-
-/* KIRI v006: мягкий hover по достижениям в профиле + клик открывает коллекцию */
-.achievement-preview{
-  cursor:pointer!important;
-  transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease,filter .18s ease!important;
-}
-.achievement-preview.open:hover{
-  transform:translateY(-3px)!important;
-  border-color:color-mix(in srgb,var(--accent) 48%, rgba(255,255,255,.16))!important;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.045)),rgba(255,255,255,.04))!important;
-  box-shadow:0 16px 34px rgba(0,0,0,.30),0 0 0 1px color-mix(in srgb,var(--accent) 10%, transparent),0 0 22px color-mix(in srgb,var(--accent) 12%, transparent)!important;
-}
-.achievement-preview.locked:hover{
-  transform:translateY(-2px)!important;
-  filter:brightness(1.06)!important;
-  border-color:rgba(255,255,255,.18)!important;
-}
-.achievement-preview:active{
-  transform:translateY(-1px) scale(.992)!important;
-}
-.achievement-preview.open:hover .ap-icon{
-  transform:scale(1.035)!important;
-}
-.achievement-preview .ap-icon{
-  transition:transform .18s ease,filter .18s ease!important;
-}
-
-
-
-
-/* KIRI v010: прогресс повышения перенесён во вкладку */
-
-#dashboardPathProgress .career-path-head{margin-bottom:14px!important;}
-#dashboardPathProgress .career-title-icon{
-  display:inline-block;
-  font-size:1em;
-  line-height:1;
-  vertical-align:-.04em;
-  margin-right:2px;
-}
-
-.dynamic-career-path{
-  display:grid!important;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important;
-  gap:10px!important;
-  align-items:stretch!important;
-}
-.dynamic-career-path .path-arrow{
-  display:none!important;
-}
-.dynamic-career-path .path-card{
-  position:relative!important;
-  min-height:122px!important;
-  align-content:start!important;
-  justify-items:start!important;
-  gap:7px!important;
-  padding:14px!important;
-  overflow:hidden!important;
-}
-.dynamic-career-path .path-card.done{
-  border-color:color-mix(in srgb,var(--accent) 30%, rgba(255,255,255,.10))!important;
-}
-.path-step-icon{
-  width:34px;
-  height:34px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-  background:rgba(255,255,255,.055);
-  border:1px solid rgba(255,255,255,.10);
-  color:color-mix(in srgb,var(--accent) 78%, white 12%);
-  font-size:16px;
-  font-weight:950;
-}
-.dynamic-career-path .path-card b{
-  font-size:18px!important;
-  line-height:1.12!important;
-}
-.dynamic-career-path .path-card span{
-  line-height:1.3!important;
-}
-.path-mini-progress{
-  width:100%;
-  height:7px;
-  border-radius:999px;
-  overflow:hidden;
-  background:rgba(255,255,255,.08);
-  margin-top:auto;
-}
-.path-mini-progress i{
-  display:block;
-  height:100%;
-  border-radius:999px;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-}
-.dynamic-career-path .path-card.active::after{
-  content:"Текущий";
-  position:absolute;
-  top:10px;
-  right:10px;
-  padding:4px 7px;
-  border-radius:999px;
-  background:color-mix(in srgb,var(--accent) 13%, transparent);
-  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.08));
-  color:color-mix(in srgb,var(--accent) 80%, white 15%);
-  font-size:10px;
-  font-weight:950;
-}
-
-
-/* KIRI v010: прогресс повышения внутри вкладки профиля */
-.progress-tab-card{
-  display:none;
-  margin-top:14px;
-  padding:0;
-  background:transparent;
-  border:0;
-}
-.progress-tab-card.show{display:block;}
-#dashboardAchievements .progress-layout{
-  margin-top:10px;
-}
-#dashboardAchievements .ring{
-  flex-shrink:0;
-}
-@media(max-width:900px){
-  #dashboardAchievements .progress-layout{
-    grid-template-columns:1fr!important;
-    padding-left:0!important;
-  }
-}
-
-
-
-/* KIRI v012: иконка вкладки Прогресс заменена, логика v011 сохранена */
-.flow-tab-hidden{display:none!important;}
-body[data-active-dash-tab="profile"] #dashboardAchievements,
-body[data-active-dash-tab="profile"] #dashboardPathProgress{display:block!important;}
-body[data-active-dash-tab="achievements"] #dashboardAchievements,
-body[data-active-dash-tab="achievements"] #dashboardPathProgress{display:none!important;}
-body[data-active-dash-tab="achievements"] #progressStep.show,
-body[data-active-dash-tab="achievements"] #orgStep.show,
-body[data-active-dash-tab="achievements"] #setupStep.show{display:block!important;}
-body[data-active-dash-tab="profile"] #progressStep,
-body[data-active-dash-tab="profile"] #orgStep,
-body[data-active-dash-tab="profile"] #setupStep{display:none!important;}
-body[data-active-dash-tab="academy"] #dashboardAchievements,
-body[data-active-dash-tab="academy"] #dashboardPathProgress,
-body[data-active-dash-tab="academy"] #progressStep,
-body[data-active-dash-tab="academy"] #orgStep,
-body[data-active-dash-tab="academy"] #setupStep,
-body[data-active-dash-tab="army"] #dashboardAchievements,
-body[data-active-dash-tab="army"] #dashboardPathProgress,
-body[data-active-dash-tab="army"] #progressStep,
-body[data-active-dash-tab="army"] #orgStep,
-body[data-active-dash-tab="army"] #setupStep,
-body[data-active-dash-tab="reports"] #dashboardAchievements,
-body[data-active-dash-tab="reports"] #dashboardPathProgress,
-body[data-active-dash-tab="reports"] #progressStep,
-body[data-active-dash-tab="reports"] #orgStep,
-body[data-active-dash-tab="reports"] #setupStep{display:none!important;}
-
-
-/* KIRI v014: вкладка Отчёты и премии + калькулятор премии из старой панели */
-#dashboardReports{display:none;}
-body[data-active-dash-tab="reports"] #dashboardReports{display:block!important;}
-body[data-active-dash-tab="profile"] #dashboardReports,
-body[data-active-dash-tab="achievements"] #dashboardReports,
-body[data-active-dash-tab="academy"] #dashboardReports,
-body[data-active-dash-tab="army"] #dashboardReports{display:none!important;}
-.reports-premium-card{display:grid;gap:16px;}
-.premium-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;}
-.premium-header-row h2{margin:0;}
-.premium-header-row p{max-width:720px;margin-top:5px;}
-.premium-pill{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:7px 11px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 32%, rgba(255,255,255,.12));background:color-mix(in srgb,var(--accent) 10%, transparent);color:color-mix(in srgb,var(--accent) 82%, white 12%);font-size:12px;font-weight:950;}
-.premium-rules-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;}
-.premium-rule-card,.premium-calculator-card,.premium-activity-card,.premium-selected-box,.premium-report-card{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045);border-radius:20px;padding:14px;box-shadow:0 14px 34px rgba(0,0,0,.18);}
-.premium-rule-card h3,.premium-activity-card h4,.premium-report-card h3{margin:0 0 8px;}
-.premium-rule-card ul,.premium-report-card ul{margin:8px 0 0;padding-left:20px;color:var(--muted);font-weight:760;}
-.premium-rule-danger{border-color:rgba(251,113,133,.25);background:rgba(251,113,133,.055);}
-.premium-card-head,.premium-section-subhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
-.premium-card-head h3,.premium-card-head h4,.premium-section-subhead h3{margin:0;}
-.premium-mini-note{font-size:13px;font-weight:850;color:var(--muted);margin-bottom:12px;}
-.premium-calculator-card{border-color:color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.10));background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 7%, transparent),rgba(255,255,255,.035));}
-.premium-calc-grid{display:grid;grid-template-columns:1fr 180px;gap:11px;margin:10px 0 12px;}
-.premium-calc-grid label{display:grid;gap:7px;color:var(--muted);font-size:12px;font-weight:950;}
-.premium-calc-grid select,.premium-calc-grid input{width:100%;height:46px;border-radius:15px;border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.24);color:var(--text);padding:0 12px;font-weight:900;outline:none;}
-.premium-calc-grid select:focus,.premium-calc-grid input:focus{border-color:color-mix(in srgb,var(--accent) 58%, transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 13%, transparent);}
-.premium-result-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;}
-.premium-result-grid div{border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);border-radius:16px;padding:11px;}
-.premium-result-grid span{display:block;color:var(--muted);font-size:12px;font-weight:900;margin-bottom:4px;}
-.premium-result-grid strong{font-size:18px;letter-spacing:-.03em;}
-.premium-selected-box{background:rgba(0,0,0,.14);}
-.premium-selected-box.is-empty{opacity:.82;}
-.premium-selected-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;}
-.premium-selected-head h4{margin:0;}
-.premium-selected-head span{color:var(--muted);font-size:12px;font-weight:850;}
-.premium-selected-list{display:grid;gap:7px;}
-.premium-selected-empty{margin:0;color:var(--muted);font-weight:850;}
-.premium-selected-item{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;text-align:left;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);color:var(--text);border-radius:14px;padding:9px 10px;cursor:pointer;}
-.premium-selected-item:hover{border-color:color-mix(in srgb,var(--accent) 42%, transparent);background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.035));}
-.premium-selected-name{font-weight:950;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.premium-selected-note{display:block;color:var(--muted);font-size:12px;font-weight:800;grid-column:1/-1;margin-top:-4px;}
-.premium-selected-points{color:color-mix(in srgb,var(--accent) 82%, white 10%);font-weight:950;}
-.premium-selected-count{border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.22);padding:3px 8px;font-size:12px;font-weight:950;color:var(--muted);}
-.premium-calc-actions{display:flex;justify-content:flex-end;margin-top:11px;}
-.premium-reset-btn{height:40px;padding:0 13px;border-radius:14px;border:1px solid rgba(251,113,133,.28);background:rgba(251,113,133,.08);color:var(--text);font-weight:950;}
-.premium-reset-btn:hover{background:rgba(251,113,133,.14);}
-.premium-activity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;}
-.premium-activity-list{display:grid;gap:7px;}
-.premium-activity-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(0,0,0,.16);padding:10px;cursor:pointer;transition:.15s ease;}
-.premium-activity-row:hover,.premium-activity-row:focus-visible{transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent) 44%, transparent);background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.035));outline:none;}
-.premium-activity-row.premium-row-clicked{transform:scale(.985);}
-.premium-activity-name{font-weight:950;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.premium-activity-note{color:var(--muted);font-size:12px;font-weight:850;}
-.premium-activity-row strong{color:color-mix(in srgb,var(--accent) 84%, white 8%);font-weight:950;white-space:nowrap;}
-.premium-reports-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;}
-.premium-report-card .tag-like{display:inline-flex;margin-bottom:8px;padding:5px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:var(--muted);font-size:11px;font-weight:950;background:rgba(255,255,255,.045);}
-@media(max-width:1050px){.premium-result-grid,.premium-reports-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.premium-activity-grid{grid-template-columns:1fr;}}
-@media(max-width:700px){.premium-rules-grid,.premium-calc-grid,.premium-result-grid,.premium-reports-grid{grid-template-columns:1fr;}.premium-selected-head,.premium-card-head,.premium-section-subhead{align-items:flex-start;flex-direction:column;}.premium-activity-row,.premium-selected-item{grid-template-columns:1fr auto;}.premium-activity-note{grid-column:1/2;}.premium-activity-row strong{grid-column:2/3;grid-row:1/3;}.premium-selected-points{grid-column:2/3;grid-row:1/2;}.premium-selected-count{grid-column:2/3;grid-row:2/3;}}
-
-
-/* KIRI v015: переработка блока премий под стиль личного кабинета */
-.premium-profile-card{
-  margin-top:14px;
-  border:1px solid rgba(255,255,255,.11);
-  border-radius:18px;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%, transparent),rgba(255,255,255,.04));
-  padding:13px;
-}
-.premium-profile-title{font-size:13px;font-weight:950;color:var(--text);margin-bottom:10px;}
-.premium-profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.premium-profile-grid div{border:1px solid rgba(255,255,255,.09);background:rgba(0,0,0,.16);border-radius:14px;padding:9px;}
-.premium-profile-grid span,.premium-profile-limit{display:block;color:var(--muted);font-size:12px;font-weight:850;}
-.premium-profile-grid b{display:block;margin-top:3px;font-size:16px;color:var(--text);}
-.premium-profile-limit{margin-top:9px;}
-.premium-profile-limit b{color:var(--text);}
-#dashboardReports{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;}
-.reports-premium-card{gap:14px!important;}
-.premium-header-row{padding:0 2px 2px!important;border:0!important;background:transparent!important;}
-.premium-header-row h2{font-size:clamp(24px,3vw,34px)!important;letter-spacing:-.04em!important;}
-.premium-pill{display:none!important;}
-.premium-rules-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;}
-.premium-rule-card,.premium-calculator-card,.premium-activity-card,.premium-selected-box,.premium-report-card{
-  border:1px solid rgba(255,255,255,.11)!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.025))!important;
-  border-radius:22px!important;
-  padding:16px!important;
-  box-shadow:none!important;
-}
-.premium-rule-danger{border-color:rgba(251,113,133,.22)!important;background:linear-gradient(135deg,rgba(251,113,133,.07),rgba(255,255,255,.025))!important;}
-.premium-card-head,.premium-section-subhead{margin-bottom:12px!important;border-bottom:1px solid rgba(255,255,255,.075)!important;padding-bottom:10px!important;}
-.premium-card-head h3,.premium-card-head h4,.premium-section-subhead h3{font-size:18px!important;letter-spacing:-.025em!important;}
-.premium-rule-card ul,.premium-report-card ul{color:var(--muted)!important;font-weight:800!important;line-height:1.45!important;}
-.premium-calculator-card{border-color:color-mix(in srgb,var(--accent) 28%, rgba(255,255,255,.10))!important;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, transparent),rgba(255,255,255,.032))!important;}
-.premium-mini-note{margin:0 0 12px!important;color:var(--muted)!important;}
-.premium-result-grid div,.premium-selected-item,.premium-activity-row{
-  border:1px solid rgba(255,255,255,.10)!important;
-  background:rgba(0,0,0,.18)!important;
-  border-radius:16px!important;
-}
-.premium-result-grid strong{font-size:20px!important;}
-.premium-result-grid div:nth-child(3){border-color:color-mix(in srgb,var(--accent) 35%, rgba(255,255,255,.08))!important;background:color-mix(in srgb,var(--accent) 8%, rgba(0,0,0,.18))!important;}
-.premium-activity-card{padding:14px!important;}
-.premium-activity-row{min-height:50px!important;}
-.premium-activity-row:hover,.premium-activity-row:focus-visible{transform:translateY(-1px)!important;border-color:color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.10))!important;background:color-mix(in srgb,var(--accent) 8%, rgba(0,0,0,.18))!important;}
-.premium-selected-box{margin-top:12px!important;}
-.premium-reports-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-.premium-report-card .tag-like{display:none!important;}
-@media(max-width:900px){.premium-rules-grid,.premium-reports-grid{grid-template-columns:1fr!important;}}
-
-
-
-/* KIRI v016: премия перенесена в карьерный путь и приведена к единому стилю темы */
-#premiumProfileCard.premium-profile-card{display:none!important;}
-.career-premium-card{
-  margin-top:14px;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(360px,520px);
-  gap:12px;
-  align-items:stretch;
-  padding:14px;
-  border-radius:22px;
-  border:1px solid color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.12));
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%, transparent),rgba(255,255,255,.035));
-  box-shadow:0 14px 34px rgba(0,0,0,.22), inset 0 0 28px color-mix(in srgb,var(--accent) 4%, transparent);
-}
-.career-premium-main{display:flex;align-items:center;gap:12px;min-width:0;}
-.career-premium-icon{
-  width:46px;height:46px;border-radius:16px;display:grid;place-items:center;flex:0 0 46px;
-  border:1px solid color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.12));
-  background:color-mix(in srgb,var(--accent) 12%, rgba(0,0,0,.18));
-  color:color-mix(in srgb,var(--accent) 86%, white 8%);
-  font-size:22px;font-weight:950;line-height:1;
-}
-.career-premium-title{font-size:16px;font-weight:950;color:var(--text);letter-spacing:-.02em;}
-.career-premium-sub{margin-top:3px;color:var(--muted);font-size:12px;font-weight:850;}
-.career-premium-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
-.career-premium-stats div{border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);border-radius:16px;padding:10px 11px;min-width:0;}
-.career-premium-stats span{display:block;color:var(--muted);font-size:12px;font-weight:900;margin-bottom:3px;}
-.career-premium-stats b{display:block;color:var(--text);font-size:16px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.reports-premium-card{gap:16px!important;}
-.premium-header-row{display:none!important;}
-.premium-rules-grid{grid-template-columns:1.35fr .85fr!important;}
-.premium-rule-card,.premium-calculator-card,.premium-activity-card,.premium-selected-box,.premium-report-card{
-  border-color:rgba(255,255,255,.105)!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.052),rgba(255,255,255,.026))!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.18)!important;
-}
-.premium-rule-danger{
-  border-color:rgba(255,255,255,.105)!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.052),rgba(255,255,255,.026))!important;
-}
-.premium-rule-danger .premium-card-head h3::before{content:"⚠️ ";}
-.premium-card-head,.premium-section-subhead{border-bottom:1px solid rgba(255,255,255,.075)!important;}
-.premium-calculator-card{
-  border-color:color-mix(in srgb,var(--accent) 34%, rgba(255,255,255,.10))!important;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%, transparent),rgba(255,255,255,.032))!important;
-}
-.premium-result-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
-.premium-result-grid div,.premium-selected-item,.premium-activity-row{
-  border-color:rgba(255,255,255,.10)!important;
-  background:rgba(0,0,0,.16)!important;
-}
-.premium-result-grid div:nth-child(3){
-  border-color:color-mix(in srgb,var(--accent) 36%, rgba(255,255,255,.10))!important;
-  background:color-mix(in srgb,var(--accent) 8%, rgba(0,0,0,.18))!important;
-}
-.premium-selected-box{border-style:dashed!important;}
-.premium-reset-btn{
-  border-color:rgba(255,255,255,.13)!important;
-  background:rgba(255,255,255,.055)!important;
-  color:var(--muted)!important;
-}
-.premium-reset-btn:hover{
-  border-color:color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.13))!important;
-  background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.045))!important;
-  color:var(--text)!important;
-}
-.premium-reports-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-@media(max-width:980px){.career-premium-card{grid-template-columns:1fr;}.premium-rules-grid{grid-template-columns:1fr!important;}.premium-result-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
-@media(max-width:700px){.career-premium-stats,.premium-result-grid,.premium-reports-grid{grid-template-columns:1fr!important;}.career-premium-card{padding:12px;border-radius:20px;}.career-premium-main{align-items:flex-start;}}
-
-
-
-/* KIRI v017: премия стала обычной карточкой карьерного пути + оформление премий под стиль профиля */
-.dynamic-career-path{
-  grid-template-columns:repeat(4,minmax(190px,1fr))!important;
-}
-.dynamic-career-path .path-card{
-  border-color:color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.12))!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.026))!important;
-  box-shadow:0 14px 34px rgba(0,0,0,.16)!important;
-}
-.dynamic-career-path .path-card.active,
-.dynamic-career-path .path-card.done{
-  border-color:color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.12))!important;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.04)),rgba(255,255,255,.028))!important;
-}
-.path-premium-card{
-  min-height:122px!important;
-}
-.path-premium-card::after{display:none!important;}
-.premium-path-icon{
-  font-size:18px!important;
-}
-.path-premium-stats{
-  width:100%;
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:6px;
-  margin-top:auto;
-}
-.path-premium-stats div{
-  min-width:0;
-  border:1px solid rgba(255,255,255,.085);
-  background:rgba(0,0,0,.14);
-  border-radius:12px;
-  padding:7px 8px;
-}
-.path-premium-stats em{
-  display:block;
-  font-style:normal;
-  color:var(--muted);
-  font-size:10px;
-  font-weight:950;
-  margin-bottom:2px;
-}
-.path-premium-stats strong{
-  display:block;
-  color:var(--text);
-  font-size:13px;
-  font-weight:950;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.career-premium-card{display:none!important;}
-
-#dashboardReports{
-  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.025)),rgba(18,23,35,.86)!important;
-  border-color:rgba(255,255,255,.12)!important;
-}
-#dashboardReports .reports-premium-card{
-  display:grid!important;
-  gap:14px!important;
-}
-#dashboardReports .premium-header-row{display:none!important;}
-#dashboardReports .premium-rules-grid{
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:12px!important;
-}
-#dashboardReports .premium-rule-card,
-#dashboardReports .premium-calculator-card,
-#dashboardReports .premium-activity-card,
-#dashboardReports .premium-selected-box,
-#dashboardReports .premium-report-card{
-  border:1px solid rgba(255,255,255,.105)!important;
-  border-radius:22px!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.052),rgba(255,255,255,.025))!important;
-  box-shadow:none!important;
-}
-#dashboardReports .premium-rule-danger{
-  border-color:rgba(255,255,255,.105)!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.052),rgba(255,255,255,.025))!important;
-}
-#dashboardReports .premium-rule-danger .premium-card-head h3::before{content:""!important;}
-#dashboardReports .premium-card-head,
-#dashboardReports .premium-section-subhead{
-  border-bottom:1px solid rgba(255,255,255,.075)!important;
-  padding-bottom:10px!important;
-  margin-bottom:12px!important;
-}
-#dashboardReports .premium-card-head h3,
-#dashboardReports .premium-card-head h4,
-#dashboardReports .premium-section-subhead h3{
-  font-size:18px!important;
-  letter-spacing:-.025em!important;
-}
-#dashboardReports .premium-rule-card ul,
-#dashboardReports .premium-report-card ul{
-  color:var(--muted)!important;
-  font-weight:850!important;
-  line-height:1.45!important;
-}
-#dashboardReports .premium-calculator-card{
-  border-color:color-mix(in srgb,var(--accent) 28%, rgba(255,255,255,.10))!important;
-  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 7%, rgba(255,255,255,.035)),rgba(255,255,255,.026))!important;
-}
-#dashboardReports .premium-mini-note{
-  color:var(--muted)!important;
-  font-weight:850!important;
-}
-#dashboardReports .premium-calc-grid select,
-#dashboardReports .premium-calc-grid input{
-  border-color:rgba(255,255,255,.11)!important;
-  background:rgba(0,0,0,.18)!important;
-}
-#dashboardReports .premium-result-grid div,
-#dashboardReports .premium-selected-item,
-#dashboardReports .premium-activity-row{
-  border-color:rgba(255,255,255,.095)!important;
-  background:rgba(0,0,0,.14)!important;
-  box-shadow:none!important;
-}
-#dashboardReports .premium-result-grid div:nth-child(3){
-  border-color:color-mix(in srgb,var(--accent) 34%, rgba(255,255,255,.10))!important;
-  background:color-mix(in srgb,var(--accent) 7%, rgba(0,0,0,.14))!important;
-}
-#dashboardReports .premium-activity-grid{
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:12px!important;
-}
-#dashboardReports .premium-activity-row{
-  min-height:52px!important;
-  transition:transform .15s ease,border-color .15s ease,background .15s ease!important;
-}
-#dashboardReports .premium-activity-row:hover,
-#dashboardReports .premium-activity-row:focus-visible,
-#dashboardReports .premium-selected-item:hover{
-  transform:translateY(-1px)!important;
-  border-color:color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.10))!important;
-  background:color-mix(in srgb,var(--accent) 7%, rgba(0,0,0,.16))!important;
-}
-#dashboardReports .premium-activity-row strong,
-#dashboardReports .premium-selected-points{
-  color:color-mix(in srgb,var(--accent) 82%, white 10%)!important;
-}
-#dashboardReports .premium-selected-box{
-  border-style:solid!important;
-  background:rgba(0,0,0,.10)!important;
-}
-#dashboardReports .premium-reset-btn{
-  border-color:rgba(255,255,255,.13)!important;
-  background:rgba(255,255,255,.055)!important;
-  color:var(--muted)!important;
-}
-#dashboardReports .premium-reset-btn:hover{
-  border-color:color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.13))!important;
-  background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.045))!important;
-  color:var(--text)!important;
-}
-@media(max-width:1050px){
-  .dynamic-career-path{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
-  #dashboardReports .premium-activity-grid,#dashboardReports .premium-rules-grid{grid-template-columns:1fr!important;}
-}
-@media(max-width:700px){
-  .dynamic-career-path{grid-template-columns:1fr!important;}
-  .path-premium-stats,#dashboardReports .premium-result-grid{grid-template-columns:1fr!important;}
-}
-
-
-/* KIRI v018: ранг премии только из текущего прогресса, без ручного выбора */
-#dashboardReports .premium-rank-select:disabled{
-  opacity:1!important;
-  cursor:default!important;
-  color:var(--text)!important;
-  background:color-mix(in srgb,var(--accent) 7%, rgba(0,0,0,.18))!important;
-  border-color:color-mix(in srgb,var(--accent) 28%, rgba(255,255,255,.11))!important;
-  appearance:none!important;
-  -webkit-appearance:none!important;
-}
-#dashboardReports .premium-calc-grid label:first-child::after{
-  content:"автоматически";
-  justify-self:start;
-  margin-top:-3px;
-  padding:3px 7px;
-  border-radius:999px;
-  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.10));
-  color:color-mix(in srgb,var(--accent) 82%, white 8%);
-  background:color-mix(in srgb,var(--accent) 7%, transparent);
-  font-size:10px;
-  font-weight:950;
-  letter-spacing:.02em;
-}
-
-
-
-/* KIRI v025: безопасно от v018 — отчёты без ручных баллов, без смены сохранений профиля */
-#dashboardReports .premium-mini-note{display:none!important;}
-#dashboardReports .premium-calc-grid{grid-template-columns:1fr!important;}
-#dashboardReports .premium-calc-grid label:has(.premium-points-input){display:none!important;}
-#dashboardReports .premium-points-input{display:none!important;}
-#dashboardReports .premium-rank-select{pointer-events:none!important;opacity:1!important;cursor:default!important;}
-#dashboardReports .premium-reset-btn{width:42px!important;height:38px!important;padding:0!important;display:inline-grid!important;place-items:center!important;font-size:16px!important;}
-#dashboardReports .premium-calc-actions{margin-top:8px!important;}
-#dashboardReports .premium-selected-head span{font-size:11px!important;}
-
 </style>
 </head>
 <body>
@@ -3597,28 +2792,30 @@ body[data-active-dash-tab="army"] #dashboardReports{display:none!important;}
 
     <section class="flow">
       <div class="dashboard-tabs">
-        <button class="dash-tab active" data-dash-tab="profile"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></span><span class="dash-tab-label">Профиль</span></button>
-        <button class="dash-tab" data-dash-tab="achievements"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M7 16V9"/><path d="M12 16V5"/><path d="M17 16v-4"/><path d="M15 6l-3-3-3 3"/></svg></span><span class="dash-tab-label">Прогресс</span></button>
-        <button class="dash-tab" data-dash-tab="academy"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3.5 2 8.5 2 12 0v-5"/><path d="M22 10v6"/></svg></span><span class="dash-tab-label">Academy</span></button>
-        <button class="dash-tab" data-dash-tab="army"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 2.85 6.18 6.75.8-4.98 4.63 1.32 6.67L12 16.95l-5.94 3.33 1.32-6.67L2.4 8.98l6.75-.8L12 2Z"/></svg></span><span class="dash-tab-label">Армия</span></button>
-        <button class="dash-tab" data-dash-tab="reports"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h6"/></svg></span><span class="dash-tab-label">Отчёты и премии</span></button>
+        <button class="dash-tab active" data-dash-tab="profile">👤 Профиль</button>
+        <button class="dash-tab" data-dash-tab="achievements">🏆 Достижения</button>
+        <button class="dash-tab" data-dash-tab="academy">🎓 Academy</button>
+        <button class="dash-tab" data-dash-tab="army">⭐ ARMY</button>
+        <button class="dash-tab" data-dash-tab="reports">📋 Отчёты</button>
       </div>
 
       <div class="panel dashboard-section" id="dashboardAchievements">
         <div class="dash-section-head">
-          <div><h2>🏆 Достижения</h2></div>
-          <div class="achievement-showcase-toolbar">
-            <button class="btn soft hero-all-achievements-btn" id="openAchievementsHero"><span>Все достижения</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7"/><path d="M9 7h8v8"/><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg></button>
-          </div>
+          <div><h2>🏆 Достижения</h2><p>Ваши достижения сохраняются навсегда</p></div>
+          <button class="btn soft" id="openAchievementsHero">Все достижения ↗</button>
         </div>
-        <div class="achievement-showcase-note" id="achievementShowcaseNote">—</div>
         <div class="achievement-preview-grid" id="achievementPreviewGrid"></div>
       </div>
 
-
       <div class="panel dashboard-section" id="dashboardPathProgress">
-        <div class="dash-section-head career-path-head"><div><h2><span class="career-title-icon" aria-hidden="true">🧭</span> Карьерный путь</h2></div></div>
-        <div class="path-cards dynamic-career-path" id="careerPathCards"></div>
+        <h2>Прогресс по текущему пути</h2>
+        <div class="path-cards">
+          <div class="path-card" id="academyPathCard"><b>Academy</b><span id="academyPathStatus">—</span></div>
+          <div class="path-arrow">→</div>
+          <div class="path-card active"><b id="pathCurrentSection">Текущий раздел</b><span id="pathCurrentLevel">—</span></div>
+          <div class="path-arrow">→</div>
+          <div class="path-card locked"><b>Следующий этап</b><span>Скоро...</span></div>
+        </div>
       </div>
       <div class="panel step" id="orgStep">
         <h2>Выбери организацию</h2>
@@ -3656,111 +2853,6 @@ body[data-active-dash-tab="army"] #dashboardReports{display:none!important;}
           </div>
         </div>
 </div>
-
-      <div class="panel dashboard-section" id="dashboardReports">
-        <div class="reports-premium-card" data-premium-calculator="reports">
-          <div class="premium-header-row">
-            <div>
-              <h2>📋 Отчёты и премии</h2>
-            </div>
-          </div>
-
-          <div class="premium-rules-grid">
-            <article class="premium-rule-card">
-              <div class="premium-card-head"><h3>Правила отчётности</h3></div>
-              <ul>
-                <li>На всех скриншотах должно быть время: HUD / time.</li>
-                <li>КПП и патруль: доклад в рацию каждые 15 минут.</li>
-                <li>СО/МП: скрин строя до выезда + скрин с места или уведомление о завершении.</li>
-              </ul>
-            </article>
-            <article class="premium-rule-card premium-rule-danger">
-              <div class="premium-card-head"><h3>Подделка скриншотов</h3></div>
-              <p>Подделка старых скриншотов — увольнение + ЧС.</p>
-            </article>
-          </div>
-
-          <article class="premium-calculator-card">
-            <div class="premium-card-head premium-main-head"><h3>Калькулятор премии</h3></div>
-            
-            <div class="premium-calc-grid">
-              <label>Ранг из прогресса
-                <select class="premium-rank-select" disabled aria-label="Ранг берётся автоматически из прогресса">
-                  <option data-limit="35000" value="1">1 ранг — 35 000$</option>
-                  <option data-limit="50000" value="2">2 ранг — 50 000$</option>
-                  <option data-limit="100000" value="3">3 ранг — 100 000$</option>
-                  <option data-limit="120000" value="4">4 ранг — 120 000$</option>
-                  <option data-limit="160000" value="5">5 ранг — 160 000$</option>
-                  <option data-limit="240000" value="6">6 ранг — 240 000$</option>
-                  <option data-limit="270000" value="7">7 ранг — 270 000$</option>
-                  <option data-limit="350000" value="8">8 ранг — 350 000$</option>
-                  <option data-limit="450000" value="9">9 ранг — 450 000$</option>
-                  <option data-limit="550000" value="10">10 ранг — 550 000$</option>
-                  <option data-limit="650000" value="11">11 ранг — 650 000$</option>
-                  <option data-limit="700000" value="12">12 ранг — 700 000$</option>
-                  <option data-limit="750000" value="13">13 ранг — 750 000$</option>
-                  <option data-limit="820000" value="14">14 ранг — 820 000$</option>
-                  <option data-limit="900000" value="15">15 ранг — 900 000$</option>
-                  <option data-limit="1000000" value="16">16 ранг — 1 000 000$</option>
-                </select>
-              </label>
-              <label>Баллы
-                <input class="premium-points-input" inputmode="decimal" min="0" step="0.5" type="number" value="0"/>
-              </label>
-            </div>
-            <div aria-live="polite" class="premium-result-grid">
-              <div><span>По баллам</span><strong data-premium-output="raw">0$</strong></div>
-              <div><span>Лимит ранга</span><strong data-premium-output="limit">0$</strong></div>
-              <div><span>К выплате</span><strong data-premium-output="pay">0$</strong></div>
-              <div><span>Сгорит сверх лимита</span><strong data-premium-output="burn">0$</strong></div>
-            </div>
-            <div class="premium-selected-box is-empty" data-premium-selected-box>
-              <div class="premium-selected-head"><h4>Выбранные активности</h4><span>Нажми по строке, чтобы убрать один повтор</span></div>
-              <div class="premium-selected-list" data-premium-selected-list>
-                <p class="premium-selected-empty">Выбранные активности появятся здесь.</p>
-              </div>
-            </div>
-            <div class="premium-calc-actions"><button class="premium-reset-btn" type="button" title="Сбросить выбранные активности">🗑</button></div>
-          </article>
-
-          <div class="premium-activity-inside">
-            <div class="premium-section-subhead"><h3>Активности</h3></div>
-            <div class="premium-activity-grid">
-              <article class="premium-activity-card"><div class="premium-card-head"><h4>Посты и патрули</h4></div><div class="premium-activity-list">
-                <div class="premium-activity-row" data-premium-add="3" role="button" tabindex="0"><span class="premium-activity-name">Дежурство на КПП</span><span class="premium-activity-note">1 час</span><strong>+3 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="3" role="button" tabindex="0"><span class="premium-activity-name">Патруль штата</span><span class="premium-activity-note">1 час</span><strong>+3 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="4" role="button" tabindex="0"><span class="premium-activity-name">Участие в наборе MA</span><span class="premium-activity-note">1 час, для MA/MP</span><strong>+4 б.</strong></div>
-              </div></article>
-              <article class="premium-activity-card"><div class="premium-card-head"><h4>Спецоперации</h4></div><div class="premium-activity-list">
-                <div class="premium-activity-row" data-premium-add="1" role="button" tabindex="0"><span class="premium-activity-name">Дроп</span><span class="premium-activity-note">участие</span><strong>+1 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="1.5" role="button" tabindex="0"><span class="premium-activity-name">Поставка материалов/аптечек</span><span class="premium-activity-note">участие</span><strong>+1,5 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="2.5" role="button" tabindex="0"><span class="premium-activity-name">Чёрный рынок</span><span class="premium-activity-note">участие</span><strong>+2,5 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="1.5" role="button" tabindex="0"><span class="premium-activity-name">Шпак</span><span class="premium-activity-note">участие</span><strong>+1,5 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="3" role="button" tabindex="0"><span class="premium-activity-name">Отбитие ФЗ / ФТ</span><span class="premium-activity-note">участие</span><strong>+3 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="4" role="button" tabindex="0"><span class="premium-activity-name">Защита поезда</span><span class="premium-activity-note">участие</span><strong>+4 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="5" role="button" tabindex="0"><span class="premium-activity-name">Рейд / оцепление</span><span class="premium-activity-note">участие</span><strong>+5 б.</strong></div>
-              </div></article>
-              <article class="premium-activity-card"><div class="premium-card-head"><h4>Обучение</h4></div><div class="premium-activity-list">
-                <div class="premium-activity-row" data-premium-add="1" role="button" tabindex="0"><span class="premium-activity-name">Проведение лекции</span><span class="premium-activity-note">инструкторы</span><strong>+1 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="1.5" role="button" tabindex="0"><span class="premium-activity-name">Принятие экзамена</span><span class="premium-activity-note">инструкторы</span><strong>+1,5 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="2.5" role="button" tabindex="0"><span class="premium-activity-name">Проведение тренировки</span><span class="premium-activity-note">инструкторы</span><strong>+2,5 б.</strong></div>
-              </div></article>
-              <article class="premium-activity-card"><div class="premium-card-head"><h4>Мероприятия</h4></div><div class="premium-activity-list">
-                <div class="premium-activity-row" data-premium-add="1.5" role="button" tabindex="0"><span class="premium-activity-name">ВФМП или МФМА</span><span class="premium-activity-note">участие</span><strong>+1,5 б.</strong></div>
-                <div class="premium-activity-row" data-premium-add="4" role="button" tabindex="0"><span class="premium-activity-name">ГМП</span><span class="premium-activity-note">участие</span><strong>+4 б.</strong></div>
-              </div></article>
-            </div>
-          </div>
-
-          <div class="premium-reports-grid">
-            <article class="premium-report-card"><span class="tag-like">Отчёт</span><h3>Тренировка</h3><ul><li>Скрин начала тренировки.</li><li>Скрин процесса: прыжок с парашютом, перестрелка и т.п.</li><li>Скрин окончания, где проводящий выдал баллы.</li></ul></article>
-            <article class="premium-report-card"><span class="tag-like">РП</span><h3>РП ситуации</h3><ul><li>Техническое обслуживание ВТ, обмундирования, проверка парашюта и т.д.</li><li>На скрине/скринах должно быть не менее 10 строк.</li><li>Обязательно использовать /me /do /try.</li></ul></article>
-            <article class="premium-report-card"><span class="tag-like">Discord</span><h3>Благодарности и баллы</h3><ul><li>Нужен скриншот с Discord.</li><li>Если благодарность за СО, приложить скрин, что ты участвовал в спецоперации.</li></ul></article>
-            <article class="premium-report-card"><span class="tag-like">Экзамен</span><h3>Экзамены</h3><ul><li>Скриншот из канала ✍запись-на-экзамен.</li><li>КД между неудачными сдачами экзамена — 1 час.</li></ul></article>
-          </div>
-        </div>
-      </div>
-
     </section>
   </main>
 </div>
@@ -3784,7 +2876,7 @@ body[data-active-dash-tab="army"] #dashboardReports{display:none!important;}
 <div class="modal" id="achievementsModal">
   <div class="modal-card achievements-modal">
     <h2>Коллекция достижений</h2>
-    <div class="showcase-modal-tip" id="showcaseModalTip">В витрину можно закрепить до 6 открытых достижений. Если ничего не выбрано, профиль сам покажет самые редкие.</div>
+    <p>Достижения сохраняются на аккаунте и не пропадают при смене проекта, госки, крайма или организации.</p>
 
     <div class="account-modal-summary">
       <div class="summary-block">
@@ -3937,12 +3029,6 @@ const ACHIEVEMENT_DEFS=[
   {id:'path_crime',cat:'Крайм',icon:'🕶️',rarity:'common',title:'Тёмная сторона',desc:'Выбрать путь крайма.',xp:0},
   {id:'org_army',cat:'ARMY',icon:'🪖',rarity:'common',title:'Служба в ARMY',desc:'Выбрать ARMY.',xp:0},
 
-  {id:'profile_renamed',cat:'Профиль',icon:'✍️',rarity:'common',title:'Новое имя',desc:'Изменить имя профиля в настройках.',xp:0},
-  {id:'theme_changed',cat:'Профиль',icon:'🎨',rarity:'common',title:'Свой стиль',desc:'Изменить цветовой стиль панели.',xp:0},
-  {id:'profile_icon_set',cat:'Профиль',icon:'🖼️',rarity:'rare',title:'Личный значок',desc:'Поставить значок профиля из открытых достижений.',xp:0},
-  {id:'showcase_customized',cat:'Профиль',icon:'💎',rarity:'epic',title:'Своя витрина',desc:'Добавить достижение в витрину профиля.',xp:0},
-  {id:'showcase_full',cat:'Профиль',icon:'🌟',rarity:'legendary',title:'Полная витрина',desc:'Заполнить все 6 мест витрины достижений.',xp:0},
-
   {id:'academy_started',cat:'Academy',icon:'📚',rarity:'common',title:'Курсант Academy',desc:'Начать путь в Academy.',xp:0},
   {id:'academy_half',cat:'Academy',icon:'📘',rarity:'rare',title:'Половина Academy',desc:'Дойти до 50% на любой ступени Academy.',xp:0},
   {id:'academy_finished',cat:'Academy',icon:'🎓',rarity:'epic',title:'Academy закрыта',desc:'Закрыть последнюю ступень Academy.',xp:0},
@@ -3997,7 +3083,7 @@ const ACHIEVEMENT_DEFS=[
 ];
 let activeAchCategory='Все';
 
-let S={ready:false,name:'',project:'GTA5RP',path:'Государственная служба',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now(),initialName:''}};
+let S={ready:false,name:'',project:'GTA5RP',path:'Государственная служба',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now()}};
 let displayedProgress=0;
 let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
@@ -4043,7 +3129,6 @@ function load(){
       if(!S.account) S.account={achievements:{}};
       if(!S.account.achievements) S.account.achievements={};
       if(!S.account.createdAt) S.account.createdAt=Date.now();
-      if(!S.account.initialName) S.account.initialName=S.name||'';
       save();
     }
   }catch(e){}
@@ -4087,8 +3172,6 @@ function render(){
   renderSetup();
   renderProgress();
   renderAchievements();
-  if(typeof window.KiriPremiumSync==='function') window.KiriPremiumSync();
-  if(typeof applyDashTab==='function') applyDashTab();
 }
 function renderOrgs(){
   const grid=$('#orgGrid');
@@ -4346,7 +3429,7 @@ function selectedProfileIconDef(){
 }
 
 function displayPathName(value){
-  return value === 'Государственная служба' ? 'Государственная служба' : (value || '');
+  return value === 'Госка' ? 'Государственная служба' : (value || '');
 }
 function renderProfileIcon(){
   const def=selectedProfileIconDef();
@@ -4376,7 +3459,6 @@ function closeProfileIconModal(){
 function setProfileIcon(id){
   if(!S.account) S.account={achievements:{}};
   S.account.profileIconAchievementId=id;
-  unlockAchievement('profile_icon_set');
   save();
   renderProfileIcon();
   renderAccountStats();
@@ -4443,10 +3525,6 @@ function checkAchievements(){
   if(S.project==='GTA5RP') unlockAchievement('project_gta5rp');
   if(S.project==='Majestic RP') unlockAchievement('project_majestic');
   if(S.org==='ARMY') unlockAchievement('org_army');
-  if(S.account.profileIconAchievementId) unlockAchievement('profile_icon_set');
-  if(Array.isArray(S.account.showcaseAchievements) && S.account.showcaseAchievements.length>0) unlockAchievement('showcase_customized');
-  if(Array.isArray(S.account.showcaseAchievements) && S.account.showcaseAchievements.length>=6) unlockAchievement('showcase_full');
-  if(S.style && S.style!=='style-violet') unlockAchievement('theme_changed');
 
   if(S.section) S.account.seenSections[S.section]=true;
 
@@ -4541,93 +3619,26 @@ function renderAccountBlock(){
 function rarityName(r){
   return ({common:'обычное',rare:'редкое',epic:'эпическое',legendary:'легендарное'}[r]||'обычное');
 }
-
-function rarityWeight(r){
-  return ({common:1,rare:2,epic:3,legendary:4}[r]||1);
-}
-function ensureShowcase(){
-  if(!S.account) S.account={achievements:{}};
-  if(!Array.isArray(S.account.showcaseAchievements)) S.account.showcaseAchievements=[];
-  const got=achievements();
-  S.account.showcaseAchievements=S.account.showcaseAchievements.filter(id=>got[id]);
-  return S.account.showcaseAchievements;
-}
-function autoShowcaseList(limit=6){
-  const got=achievements();
-  return ACHIEVEMENT_DEFS
-    .filter(a=>got[a.id])
-    .sort((a,b)=>
-      (rarityWeight(b.rarity)-rarityWeight(a.rarity)) ||
-      ((got[b.id]?.time||0)-(got[a.id]?.time||0)) ||
-      a.title.localeCompare(b.title,'ru')
-    )
-    .slice(0,limit);
-}
-function showcaseList(limit=6){
-  const got=achievements();
-  const picked=ensureShowcase()
-    .map(id=>ACHIEVEMENT_DEFS.find(a=>a.id===id))
-    .filter(a=>a && got[a.id])
-    .slice(0,limit);
-  return picked.length ? picked : autoShowcaseList(limit);
-}
-function toggleShowcaseAchievement(id){
-  const got=achievements();
-  if(!got[id]) return;
-  const list=ensureShowcase();
-  const idx=list.indexOf(id);
-  if(idx>=0){
-    list.splice(idx,1);
-  }else{
-    if(list.length>=6){
-      showToast('Витрина заполнена','Можно закрепить максимум 6 достижений');
-      return;
-    }
-    list.push(id);
-    unlockAchievement('showcase_customized');
-    if(list.length>=6) unlockAchievement('showcase_full');
-  }
-  save();
-  renderAchievementPreviews();
-  renderAchievementModal();
-}
-function clearShowcase(){
-  ensureShowcase().splice(0);
-  save();
-  renderAchievementPreviews();
-  renderAchievementModal();
-  showToast('Витрина очищена','Теперь показываются самые редкие достижения');
-}
-
 function renderAchievementModal(){
   const got=achievements();
-  const picked=ensureShowcase();
   const cats=['Все',...Array.from(new Set(ACHIEVEMENT_DEFS.map(a=>a.cat)))];
   $('#achievementTabs').innerHTML=cats.map(cat=>`<button class="achievement-tab ${activeAchCategory===cat?'active':''}" data-ach-cat="${cat}">${cat}</button>`).join('');
   document.querySelectorAll('[data-ach-cat]').forEach(btn=>{
     btn.onclick=()=>{activeAchCategory=btn.dataset.achCat;renderAchievementModal()};
   });
-  const tip=$('#showcaseModalTip');
-  if(tip) tip.innerHTML=`Витрина: <b>${picked.length} / 6</b>. Нажми «В витрину» на открытом достижении. Если ничего не выбрано, профиль сам покажет самые редкие.`;
   const list=activeAchCategory==='Все'?ACHIEVEMENT_DEFS:ACHIEVEMENT_DEFS.filter(a=>a.cat===activeAchCategory);
   $('#achievementGrid').innerHTML=list.map(a=>{
     const open=!!got[a.id];
-    const selected=picked.includes(a.id);
-    const blocked=open && !selected && picked.length>=6;
     return `<div class="achievement-card ${open?'':'locked'} rarity-${a.rarity||'common'}">
       <div class="icon">${open?a.icon:'🔒'}</div>
       <strong>${open?a.title:'Скрытое достижение'}</strong>
       <span>${open?a.desc:'Откроется после выполнения условия.'}</span>
-      <span class="achievement-date">${open?`Получено: ${formatProfileDate(got[a.id]?.time)}`:'Не получено'}</span>
+      <span>${open?`+${a.xp} XP`:''}</span>
       ${open?`<em class="rarity-label">${rarityName(a.rarity)}</em>`:''}
-      ${open?`<button class="showcase-select-btn ${selected?'active':''}" data-showcase-pick="${a.id}" ${blocked?'disabled':''}>${selected?'✓ В витрине':'В витрину'}</button>`:''}
     </div>`;
   }).join('');
-  document.querySelectorAll('[data-showcase-pick]').forEach(btn=>{
-    btn.onclick=(e)=>{e.stopPropagation();toggleShowcaseAchievement(btn.dataset.showcasePick)};
-  });
   const mrt=$('#modalRankTitle'); if(mrt) mrt.textContent='Достижения';
-  const mlt=$('#modalLevelText'); if(mlt) mlt.innerHTML=picked.length ? `Витрина выбрана: ${picked.length} / 6` : 'Автовитрина: самые редкие';
+  const mlt=$('#modalLevelText'); if(mlt) mlt.textContent='Коллекция профиля';
   $('#modalAchCount').textContent=`${ACHIEVEMENT_DEFS.filter(a=>got[a.id]).length} / ${ACHIEVEMENT_DEFS.length}`;
 }
 function openAchievementsModal(){
@@ -4677,127 +3688,24 @@ function renderAchievementPreviews(){
   const grid=$('#achievementPreviewGrid');
   if(!grid) return;
   const got=achievements();
-  const picked=ensureShowcase();
-  const selected=showcaseList(6);
-  const note=$('#achievementShowcaseNote');
-  if(note){
-    note.textContent=picked.length
-      ? `Закреплено в витрине: ${picked.length} / 6. Эти достижения будут видны в профиле.`
-      : 'Автовитрина: сейчас показываются самые редкие открытые достижения. Можно выбрать свои.';
-  }
-  if(!selected.length){
-    const starter=ACHIEVEMENT_DEFS.slice(0,6);
-    grid.innerHTML=starter.map(a=>`<div class="achievement-preview locked rarity-${a.rarity||'common'}" data-open-achievements-modal="1" title="Открыть все достижения">
-      <span class="showcase-pin">?</span>
-      <div class="ap-icon">🔒</div>
-      <b>Скрыто</b>
-      <span>Откроется позже</span>
-    </div>`).join('');
-    grid.querySelectorAll('[data-open-achievements-modal]').forEach(card=>card.onclick=openAchievementsModal);
-    return;
-  }
-  grid.innerHTML=selected.map((a,i)=>{
+  const preview=ACHIEVEMENT_DEFS.slice(0,6);
+  grid.innerHTML=preview.map(a=>{
     const open=!!got[a.id];
-    const manual=picked.includes(a.id);
-    return `<div class="achievement-preview ${open?'open':'locked'} rarity-${a.rarity||'common'}" data-open-achievements-modal="1" title="Открыть все достижения">
-      <span class="showcase-pin">${manual?'★':i+1}</span>
+    return `<div class="achievement-preview ${open?'open':'locked'} rarity-${a.rarity||'common'}">
       <div class="ap-icon">${open?a.icon:'🔒'}</div>
       <b>${open?a.title:'Скрыто'}</b>
-      <span>${open?a.desc:'Не получено'}</span>
-      ${open?`<em class="rarity-label">${rarityName(a.rarity)}</em>`:''}
+      <span>${open?rarityName(a.rarity):'Не получено'}</span>
     </div>`;
   }).join('');
-  grid.querySelectorAll('[data-open-achievements-modal]').forEach(card=>card.onclick=openAchievementsModal);
-}
-function careerStepCard(step){
-  const cls=['path-card'];
-  if(step.active) cls.push('active');
-  if(step.locked) cls.push('locked');
-  if(step.done) cls.push('done');
-  const icon=step.icon?`<div class="path-step-icon">${step.icon}</div>`:'';
-  const progress=typeof step.progress==='number'?`<div class="path-mini-progress"><i style="width:${Math.max(0,Math.min(100,step.progress))}%"></i></div>`:'';
-  return `<div class="${cls.join(' ')}">${icon}<b>${step.title}</b><span>${step.status}</span>${progress}</div>`;
-}
-function buildCareerPathSteps(){
-  const got=achievements();
-  const p=S.configured?percent():0;
-  const steps=[];
-
-  if(!S.org){
-    steps.push({title:'Фракция',status:'Нужно выбрать',icon:'★',active:!!S.ready,locked:!S.ready});
-    return steps;
-  }
-
-  const isArmy=S.org==='ARMY';
-  const academyDone=!!got['academy_finished'];
-  if(isArmy){
-    const academyActive=S.section==='Academy';
-    steps.push({
-      title:'ARMY',
-      status:S.section && S.section!=='Academy'?'Фракция активна':(academyActive?'Текущая фракция':'Фракция выбрана'),
-      icon:'★',
-      active:!!S.org && (!S.configured || S.section===''),
-      done:!!S.org
-    });
-    steps.push({
-      title:'Academy',
-      status:academyDone?'Завершено':(academyActive?`${S.level||'В процессе'} · ${p}%`:'Не отмечено'),
-      icon:'🎓',
-      done:academyDone,
-      active:academyActive,
-      progress:academyActive?p:(academyDone?100:0)
-    });
-    if(S.configured && S.section && S.section!=='Academy'){
-      steps.push({
-        title:S.section,
-        status:`${S.level||'Ступень не выбрана'} · ${p}% до повышения`,
-        icon:'▣',
-        active:true,
-        progress:p
-      });
-    }else{
-      steps.push({title:'Отдел',status:'Выбор после Academy или вручную',icon:'▢',locked:true});
-    }
-  }else{
-    steps.push({
-      title:S.org,
-      status:S.configured?'Фракция активна':'Выбери раздел',
-      icon:'★',
-      active:!!S.org && !S.configured,
-      done:!!S.org
-    });
-    if(S.configured && S.section){
-      steps.push({
-        title:S.section,
-        status:`${S.level||'Ступень не выбрана'} · ${p}% до повышения`,
-        icon:'▣',
-        active:true,
-        progress:p
-      });
-    }else{
-      steps.push({title:'Раздел',status:'Нужно выбрать',icon:'▢',locked:true});
-    }
-  }
-  return steps;
-}
-function premiumCareerCard(){
-  return `<div class="path-card path-premium-card" id="premiumCareerPathCard">
-    <div class="path-step-icon premium-path-icon">$</div>
-    <b>Премия</b>
-    <span>За неделю по отчётам</span>
-    <div class="path-premium-stats">
-      <div><em>Баллы</em><strong id="profilePremiumPoints">0</strong></div>
-      <div><em>Выплата</em><strong id="profilePremiumPay">0$</strong></div>
-      <div><em>Лимит</em><strong id="profilePremiumLimit">0$</strong></div>
-    </div>
-  </div>`;
 }
 function renderPathDashboard(){
-  const wrap=$('#careerPathCards');
-  if(!wrap) return;
-  const steps=buildCareerPathSteps();
-  wrap.innerHTML=steps.map(step=>careerStepCard(step)).join('')+premiumCareerCard();
-  if(typeof window.KiriPremiumSync==='function') window.KiriPremiumSync();
+  const sec=$('#pathCurrentSection'), lvl=$('#pathCurrentLevel'), ac=$('#academyPathStatus');
+  if(sec) sec.textContent=S.section||'Текущий раздел';
+  if(lvl) lvl.textContent=S.level||'—';
+  if(ac){
+    const done=achievements()['academy_finished'];
+    ac.textContent=done?'Завершено 100%':(S.section==='Academy'?'В процессе':'Не начато');
+  }
 }
 function renderAchievements(){
   renderAccountBlock();
@@ -4820,8 +3728,6 @@ function closeSettings(){
   $('#settingsModal').classList.remove('open');
 }
 function saveSettings(){
-  const oldName=S.name||'';
-  const oldStyle=S.style||'style-violet';
   const newName=$('#settingsName').value.trim() || S.name || 'Игрок';
   const newProject=$('#settingsProject').value;
   const newPath=$('#settingsPath').value;
@@ -4831,8 +3737,6 @@ function saveSettings(){
   S.project=newProject;
   S.path=newPath;
   S.style=active;
-  if(newName && oldName && newName!==oldName) unlockAchievement('profile_renamed');
-  if(active!==oldStyle) unlockAchievement('theme_changed');
   if(changedMain){
     S.org='';
     S.section='';
@@ -4850,7 +3754,7 @@ $('#createProfile').onclick=()=>{
   const name=$('#firstName').value.trim();
   if(!name){$('#firstError').classList.add('show');return}
   $('#firstError').classList.remove('show');
-  S={ready:true,name,project:$('#firstProject').value,path:document.querySelector('[name="path"]:checked').value,style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now(),initialName:name}};
+  S={ready:true,name,project:$('#firstProject').value,path:document.querySelector('[name="path"]:checked').value,style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{}}};
   save();
   render();
 };
@@ -4894,22 +3798,17 @@ $('#clearProfileIcon').onclick=clearProfileIcon;
 $('#profileIconModal').onclick=e=>{if(e.target.id==='profileIconModal')closeProfileIconModal()};
 $('#openAchievements').onclick=openAchievementsModal;
 const openHero=$('#openAchievementsHero'); if(openHero) openHero.onclick=openAchievementsModal;
-const openShowcase=$('#openShowcaseSettings'); if(openShowcase) openShowcase.onclick=openAchievementsModal;
 const openHeroMini=$('#openAchievementsHeroMini'); if(openHeroMini) openHeroMini.onclick=openAchievementsModal;
 document.addEventListener('click',e=>{
   if(e.target && (e.target.id==='openAchievements' || e.target.id==='openAchievementsHero' || e.target.id==='openAchievementsHeroMini')) openAchievementsModal();
 });
 $('#closeAchievements').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
-let activeDashTab='profile';
-function applyDashTab(){
-  document.body.dataset.activeDashTab=activeDashTab;
-  document.querySelectorAll('.dash-tab').forEach(b=>b.classList.toggle('active', b.dataset.dashTab===activeDashTab));
-}
 document.querySelectorAll('.dash-tab').forEach(btn=>{
   btn.onclick=()=>{
-    activeDashTab=btn.dataset.dashTab||'profile';
-    applyDashTab();
+    document.querySelectorAll('.dash-tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    if(btn.dataset.dashTab==='achievements') openAchievementsModal();
   };
 });
 $('#openSettings').onclick=openSettings;
@@ -4924,111 +3823,8 @@ document.querySelectorAll('.theme-card').forEach(card=>{
     card.classList.add('active');
   };
 });
-
-/* KIRI v015: калькулятор премии во вкладке Отчёты и премии */
-(function(){
-  const RATE=10000;
-  const KEY='kiri:army-panel:v018:reports-premium';
-  const root=document.querySelector('[data-premium-calculator="reports"]');
-  if(!root) return;
-  const select=root.querySelector('.premium-rank-select');
-  const input=root.querySelector('.premium-points-input');
-  const selectedBox=root.querySelector('[data-premium-selected-box]');
-  const selectedList=root.querySelector('[data-premium-selected-list]');
-  let selected=[];
-  let rankWasTouched=false; // v018: ручной выбор ранга отключён
-  const parsePoints=v=>{const n=parseFloat(String(v??'0').replace(',','.'));return Number.isFinite(n)?Math.max(0,n):0;};
-  const norm=v=>Math.max(0,Math.round((Number(v)||0)*10)/10);
-  const ptxt=v=>String(norm(v)).replace('.',',');
-  const money=v=>new Intl.NumberFormat('ru-RU').format(Math.max(0,Math.round(Number(v)||0)))+'$';
-  const setPoints=v=>{if(input) input.value=String(norm(v));};
-  const getPoints=()=>input?parsePoints(input.value):0;
-  const getLimit=()=>{const opt=select?.selectedOptions?.[0];return Number(opt?.dataset?.limit||0)||0;};
-  const getRankFromProfile=()=>{
-    const readRankFromText=(txt)=>{
-      const n=parseInt((String(txt||'').match(/\d+/)||[])[0]||'',10);
-      return Number.isFinite(n)&&n>0?Math.max(1,Math.min(16,n)):null;
-    };
-    try{
-      const direct=readRankFromText(window.S?.level);
-      if(direct) return direct;
-      const info=readRankFromText(document.getElementById('infoLevel')?.textContent);
-      if(info) return info;
-      const current=readRankFromText(document.querySelector('.path-card.active .path-card-sub, .path-card.current .path-card-sub, .path-card.active p, .path-card.current p')?.textContent);
-      if(current) return current;
-    }catch(e){}
-    return null;
-  };
-  const syncRankFromProfile=()=>{
-    const r=getRankFromProfile();
-    if(!r || !select) return;
-    if(select.value!==String(r)) select.value=String(r);
-  };
-  const keyOf=(name,note,points)=>[name,note,String(norm(points))].join('||');
-  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({rank:select?.value||'',rankWasTouched:false,points:getPoints(),selected:selected}));}catch(e){}};
-  const totalSelected=()=>selected.reduce((sum,x)=>sum+norm(x.points)*(Math.max(1,Math.round(Number(x.count)||1))),0);
-  const loadPremium=()=>{try{const raw=localStorage.getItem(KEY)||localStorage.getItem('kiri:army-panel:v016:reports-premium')||localStorage.getItem('kiri:army-panel:v015:reports-premium')||localStorage.getItem('kiri:army-panel:v014:reports-premium'); if(!raw)return; const data=JSON.parse(raw); rankWasTouched=false; selected=Array.isArray(data.selected)?data.selected.filter(x=>x&&x.name&&norm(x.points)>0&&Number(x.count)>0):[]; setPoints(totalSelected());}catch(e){}};
-  const updateProfilePremium=vals=>{
-    const pts=document.getElementById('profilePremiumPoints');
-    const pay=document.getElementById('profilePremiumPay');
-    const lim=document.getElementById('profilePremiumLimit');
-    if(pts) pts.textContent=ptxt(getPoints());
-    if(pay) pay.textContent=money(vals.pay||0);
-    if(lim) lim.textContent=money(vals.limit||0);
-  };
-  const update=()=>{
-    const points=getPoints(), limit=getLimit(), raw=points*RATE, pay=Math.min(raw,limit), burn=Math.max(0,raw-limit);
-    const vals={raw,limit,pay,burn};
-    Object.entries(vals).forEach(([k,v])=>{const el=root.querySelector(`[data-premium-output="${k}"]`); if(el)el.textContent=money(v);});
-    updateProfilePremium(vals);
-  };
-  const renderSelected=()=>{
-    if(!selectedList||!selectedBox)return;
-    selected=selected.filter(x=>x&&x.name&&norm(x.points)>0&&Number(x.count)>0).map(x=>({key:x.key||keyOf(x.name,x.note||'',x.points),name:String(x.name),note:String(x.note||''),points:norm(x.points),count:Math.max(1,Math.round(Number(x.count)||1))}));
-    if(!selected.length){selectedBox.classList.add('is-empty');selectedList.innerHTML='<p class="premium-selected-empty">Выбранные активности появятся здесь.</p>';return;}
-    selectedBox.classList.remove('is-empty');
-    selectedList.innerHTML=selected.map(item=>`<button class="premium-selected-item" type="button" data-premium-remove="${item.key.replace(/"/g,'&quot;')}" title="Убрать один повтор"><span class="premium-selected-name">${item.name}</span>${item.note?`<span class="premium-selected-note">${item.note}</span>`:''}<strong class="premium-selected-points">+${ptxt(item.points)} б.</strong><span class="premium-selected-count">×${item.count}</span></button>`).join('');
-  };
-  const addRow=row=>{
-    const points=parsePoints(row.getAttribute('data-premium-add'));
-    if(!points)return;
-    const name=row.querySelector('.premium-activity-name')?.textContent.trim()||'Активность';
-    const note=row.querySelector('.premium-activity-note')?.textContent.trim()||'';
-    const key=keyOf(name,note,points);
-    const found=selected.find(x=>x.key===key);
-    if(found) found.count=Math.max(1,Number(found.count)||1)+1;
-    else selected.push({key,name,note,points:norm(points),count:1});
-    setPoints(getPoints()+points); renderSelected(); update(); save();
-    row.classList.add('premium-row-clicked'); setTimeout(()=>row.classList.remove('premium-row-clicked'),170);
-  };
-  const removeKey=key=>{
-    const item=selected.find(x=>x.key===key); if(!item)return;
-    item.count=Math.max(0,(Number(item.count)||1)-1);
-    if(item.count<=0) selected=selected.filter(x=>x!==item);
-    setPoints(Math.max(0,getPoints()-norm(item.points))); renderSelected(); update(); save();
-  };
-  const reset=()=>{selected=[]; setPoints(0); renderSelected(); update(); save();};
-  root.addEventListener('click',e=>{
-    const add=e.target.closest('.premium-activity-row[data-premium-add]');
-    if(add&&root.contains(add)){e.preventDefault();addRow(add);return;}
-    const rem=e.target.closest('.premium-selected-item[data-premium-remove]');
-    if(rem&&root.contains(rem)){e.preventDefault();removeKey(rem.getAttribute('data-premium-remove')||'');return;}
-    const rst=e.target.closest('.premium-reset-btn');
-    if(rst&&root.contains(rst)){e.preventDefault();reset();}
-  });
-  root.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return; const row=e.target.closest('.premium-activity-row[data-premium-add]'); if(row&&root.contains(row)){e.preventDefault();addRow(row);}});
-  if(select){select.addEventListener('mousedown',e=>e.preventDefault()); select.addEventListener('keydown',e=>e.preventDefault());}
-  if(input){input.addEventListener('input',()=>{update();save();}); input.addEventListener('change',()=>{setPoints(getPoints());update();save();});}
-  const syncAll=()=>{syncRankFromProfile(); update(); save();};
-  window.KiriPremiumSync=syncAll;
-  document.addEventListener('click',()=>setTimeout(syncAll,60),true);
-  try{new MutationObserver(()=>syncAll()).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true});}catch(e){}
-  loadPremium(); syncRankFromProfile(); renderSelected(); update();
-})();
-
 load();
 render();
-applyDashTab();
 </script>
 </body>
 </html>
