@@ -5190,6 +5190,74 @@ body.academy-info-clean #departmentInfoContent details.section-toggle.academy-ex
   background:transparent !important;
 }
 
+
+
+/* KIRI v066: телефон — строки Организация / Раздел / Ступень снова в один ряд.
+   Трогаем только этот кусок профиля, остальные карточки и ПК не меняем. */
+@media (max-width:620px){
+  .profile-card .profile-info .editable-row,
+  .profile-card .profile-info .level-row{
+    display:grid!important;
+    grid-template-columns:104px minmax(0,1fr) 34px!important;
+    align-items:center!important;
+    column-gap:8px!important;
+    min-height:50px!important;
+    padding:0!important;
+  }
+  .profile-card .profile-info .editable-row span,
+  .profile-card .profile-info .level-row span{
+    grid-column:1!important;
+    grid-row:1!important;
+    align-self:center!important;
+    justify-self:start!important;
+    margin:0!important;
+    white-space:nowrap!important;
+    font-size:13px!important;
+    line-height:1.15!important;
+  }
+  .profile-card .profile-info .editable-row b,
+  .profile-card .profile-info .level-row b{
+    grid-column:2!important;
+    grid-row:1!important;
+    align-self:center!important;
+    justify-self:start!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin:0!important;
+    text-align:left!important;
+    white-space:normal!important;
+    overflow:visible!important;
+    text-overflow:clip!important;
+    font-size:13px!important;
+    line-height:1.18!important;
+  }
+  .profile-card .profile-info .editable-row .mini-edit,
+  .profile-card .profile-info .level-row .mini-edit{
+    grid-column:3!important;
+    grid-row:1!important;
+    justify-self:end!important;
+    align-self:center!important;
+    width:32px!important;
+    height:32px!important;
+    min-width:32px!important;
+    min-height:32px!important;
+    margin:0!important;
+  }
+}
+@media (max-width:380px){
+  .profile-card .profile-info .editable-row,
+  .profile-card .profile-info .level-row{
+    grid-template-columns:96px minmax(0,1fr) 32px!important;
+    column-gap:7px!important;
+  }
+  .profile-card .profile-info .editable-row span,
+  .profile-card .profile-info .level-row span,
+  .profile-card .profile-info .editable-row b,
+  .profile-card .profile-info .level-row b{
+    font-size:12.5px!important;
+  }
+}
+
 </style>
 </head>
 <body>
