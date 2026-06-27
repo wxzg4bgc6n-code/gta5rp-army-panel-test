@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>RP Cabinet v133</title>
+<title>ARMY Panel — TEST v007</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2985,12 +2985,42 @@ body{
   transition:transform .18s ease,filter .18s ease!important;
 }
 
+
+/* KIRI v007: видимый номер теста + достижения за настройку профиля */
+.test-version-label{
+  margin:6px 0 0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  letter-spacing:.04em!important;
+  text-transform:uppercase!important;
+}
+body.ready::after{
+  content:"ARMY Panel — TEST v007";
+  position:fixed;
+  left:14px;
+  bottom:14px;
+  z-index:60;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.10));
+  background:rgba(8,12,22,.72);
+  color:var(--muted);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.03em;
+  backdrop-filter:blur(12px);
+  pointer-events:none;
+}
+@media(max-width:620px){body.ready::after{display:none}}
+
 </style>
 </head>
 <body>
 <section class="first-screen">
   <div class="first-card">
     <h1>Создай RP-профиль</h1>
+    <p class="test-version-label">ARMY Panel — TEST v007</p>
     <div class="form">
       <label class="field">
         <span>Имя / ник</span>
@@ -3316,6 +3346,12 @@ const ACHIEVEMENT_DEFS=[
   {id:'path_crime',cat:'Крайм',icon:'🕶️',rarity:'common',title:'Тёмная сторона',desc:'Выбрать путь крайма.',xp:0},
   {id:'org_army',cat:'ARMY',icon:'🪖',rarity:'common',title:'Служба в ARMY',desc:'Выбрать ARMY.',xp:0},
 
+  {id:'profile_renamed',cat:'Профиль',icon:'✍️',rarity:'common',title:'Новое имя',desc:'Изменить имя профиля в настройках.',xp:0},
+  {id:'theme_changed',cat:'Профиль',icon:'🎨',rarity:'common',title:'Свой стиль',desc:'Изменить цветовой стиль панели.',xp:0},
+  {id:'profile_icon_set',cat:'Профиль',icon:'🖼️',rarity:'rare',title:'Личный значок',desc:'Поставить значок профиля из открытых достижений.',xp:0},
+  {id:'showcase_customized',cat:'Профиль',icon:'💎',rarity:'epic',title:'Своя витрина',desc:'Добавить достижение в витрину профиля.',xp:0},
+  {id:'showcase_full',cat:'Профиль',icon:'🌟',rarity:'legendary',title:'Полная витрина',desc:'Заполнить все 6 мест витрины достижений.',xp:0},
+
   {id:'academy_started',cat:'Academy',icon:'📚',rarity:'common',title:'Курсант Academy',desc:'Начать путь в Academy.',xp:0},
   {id:'academy_half',cat:'Academy',icon:'📘',rarity:'rare',title:'Половина Academy',desc:'Дойти до 50% на любой ступени Academy.',xp:0},
   {id:'academy_finished',cat:'Academy',icon:'🎓',rarity:'epic',title:'Academy закрыта',desc:'Закрыть последнюю ступень Academy.',xp:0},
@@ -3370,7 +3406,7 @@ const ACHIEVEMENT_DEFS=[
 ];
 let activeAchCategory='Все';
 
-let S={ready:false,name:'',project:'GTA5RP',path:'Государственная служба',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now()}};
+let S={ready:false,name:'',project:'GTA5RP',path:'Государственная служба',style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now(),initialName:''}};
 let displayedProgress=0;
 let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
@@ -3416,6 +3452,7 @@ function load(){
       if(!S.account) S.account={achievements:{}};
       if(!S.account.achievements) S.account.achievements={};
       if(!S.account.createdAt) S.account.createdAt=Date.now();
+      if(!S.account.initialName) S.account.initialName=S.name||'';
       save();
     }
   }catch(e){}
@@ -3746,6 +3783,7 @@ function closeProfileIconModal(){
 function setProfileIcon(id){
   if(!S.account) S.account={achievements:{}};
   S.account.profileIconAchievementId=id;
+  unlockAchievement('profile_icon_set');
   save();
   renderProfileIcon();
   renderAccountStats();
@@ -3812,6 +3850,10 @@ function checkAchievements(){
   if(S.project==='GTA5RP') unlockAchievement('project_gta5rp');
   if(S.project==='Majestic RP') unlockAchievement('project_majestic');
   if(S.org==='ARMY') unlockAchievement('org_army');
+  if(S.account.profileIconAchievementId) unlockAchievement('profile_icon_set');
+  if(Array.isArray(S.account.showcaseAchievements) && S.account.showcaseAchievements.length>0) unlockAchievement('showcase_customized');
+  if(Array.isArray(S.account.showcaseAchievements) && S.account.showcaseAchievements.length>=6) unlockAchievement('showcase_full');
+  if(S.style && S.style!=='style-violet') unlockAchievement('theme_changed');
 
   if(S.section) S.account.seenSections[S.section]=true;
 
@@ -3949,6 +3991,8 @@ function toggleShowcaseAchievement(id){
       return;
     }
     list.push(id);
+    unlockAchievement('showcase_customized');
+    if(list.length>=6) unlockAchievement('showcase_full');
   }
   save();
   renderAchievementPreviews();
@@ -4102,6 +4146,8 @@ function closeSettings(){
   $('#settingsModal').classList.remove('open');
 }
 function saveSettings(){
+  const oldName=S.name||'';
+  const oldStyle=S.style||'style-violet';
   const newName=$('#settingsName').value.trim() || S.name || 'Игрок';
   const newProject=$('#settingsProject').value;
   const newPath=$('#settingsPath').value;
@@ -4111,6 +4157,8 @@ function saveSettings(){
   S.project=newProject;
   S.path=newPath;
   S.style=active;
+  if(newName && oldName && newName!==oldName) unlockAchievement('profile_renamed');
+  if(active!==oldStyle) unlockAchievement('theme_changed');
   if(changedMain){
     S.org='';
     S.section='';
@@ -4128,7 +4176,7 @@ $('#createProfile').onclick=()=>{
   const name=$('#firstName').value.trim();
   if(!name){$('#firstError').classList.add('show');return}
   $('#firstError').classList.remove('show');
-  S={ready:true,name,project:$('#firstProject').value,path:document.querySelector('[name="path"]:checked').value,style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{}}};
+  S={ready:true,name,project:$('#firstProject').value,path:document.querySelector('[name="path"]:checked').value,style:'style-violet',org:'',section:'',level:'',configured:false,tasks:{},account:{achievements:{},createdAt:Date.now(),initialName:name}};
   save();
   render();
 };
