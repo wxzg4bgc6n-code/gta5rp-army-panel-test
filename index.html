@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ARMY Panel — TEST v012</title>
+<title>ARMY Panel — TEST v016</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2986,33 +2986,6 @@ body{
 }
 
 
-/* KIRI v010: прогресс повышения перенесён во вкладку */
-.test-version-label{
-  margin:6px 0 0!important;
-  color:var(--muted)!important;
-  font-size:12px!important;
-  font-weight:900!important;
-  letter-spacing:.04em!important;
-  text-transform:uppercase!important;
-}
-body.ready::after{
-  content:"ARMY Panel — TEST v012";
-  position:fixed;
-  left:14px;
-  bottom:14px;
-  z-index:60;
-  padding:7px 10px;
-  border-radius:999px;
-  border:1px solid color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.10));
-  background:rgba(8,12,22,.72);
-  color:var(--muted);
-  font-size:11px;
-  font-weight:950;
-  letter-spacing:.03em;
-  backdrop-filter:blur(12px);
-  pointer-events:none;
-}
-@media(max-width:620px){body.ready::after{display:none}}
 
 
 /* KIRI v010: прогресс повышения перенесён во вкладку */
@@ -3147,13 +3120,193 @@ body[data-active-dash-tab="reports"] #progressStep,
 body[data-active-dash-tab="reports"] #orgStep,
 body[data-active-dash-tab="reports"] #setupStep{display:none!important;}
 
+
+/* KIRI v014: вкладка Отчёты и премии + калькулятор премии из старой панели */
+#dashboardReports{display:none;}
+body[data-active-dash-tab="reports"] #dashboardReports{display:block!important;}
+body[data-active-dash-tab="profile"] #dashboardReports,
+body[data-active-dash-tab="achievements"] #dashboardReports,
+body[data-active-dash-tab="academy"] #dashboardReports,
+body[data-active-dash-tab="army"] #dashboardReports{display:none!important;}
+.reports-premium-card{display:grid;gap:16px;}
+.premium-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+.premium-header-row h2{margin:0;}
+.premium-header-row p{max-width:720px;margin-top:5px;}
+.premium-pill{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:7px 11px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent) 32%, rgba(255,255,255,.12));background:color-mix(in srgb,var(--accent) 10%, transparent);color:color-mix(in srgb,var(--accent) 82%, white 12%);font-size:12px;font-weight:950;}
+.premium-rules-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;}
+.premium-rule-card,.premium-calculator-card,.premium-activity-card,.premium-selected-box,.premium-report-card{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045);border-radius:20px;padding:14px;box-shadow:0 14px 34px rgba(0,0,0,.18);}
+.premium-rule-card h3,.premium-activity-card h4,.premium-report-card h3{margin:0 0 8px;}
+.premium-rule-card ul,.premium-report-card ul{margin:8px 0 0;padding-left:20px;color:var(--muted);font-weight:760;}
+.premium-rule-danger{border-color:rgba(251,113,133,.25);background:rgba(251,113,133,.055);}
+.premium-card-head,.premium-section-subhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.premium-card-head h3,.premium-card-head h4,.premium-section-subhead h3{margin:0;}
+.premium-mini-note{font-size:13px;font-weight:850;color:var(--muted);margin-bottom:12px;}
+.premium-calculator-card{border-color:color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.10));background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 7%, transparent),rgba(255,255,255,.035));}
+.premium-calc-grid{display:grid;grid-template-columns:1fr 180px;gap:11px;margin:10px 0 12px;}
+.premium-calc-grid label{display:grid;gap:7px;color:var(--muted);font-size:12px;font-weight:950;}
+.premium-calc-grid select,.premium-calc-grid input{width:100%;height:46px;border-radius:15px;border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.24);color:var(--text);padding:0 12px;font-weight:900;outline:none;}
+.premium-calc-grid select:focus,.premium-calc-grid input:focus{border-color:color-mix(in srgb,var(--accent) 58%, transparent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 13%, transparent);}
+.premium-result-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;}
+.premium-result-grid div{border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);border-radius:16px;padding:11px;}
+.premium-result-grid span{display:block;color:var(--muted);font-size:12px;font-weight:900;margin-bottom:4px;}
+.premium-result-grid strong{font-size:18px;letter-spacing:-.03em;}
+.premium-selected-box{background:rgba(0,0,0,.14);}
+.premium-selected-box.is-empty{opacity:.82;}
+.premium-selected-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;}
+.premium-selected-head h4{margin:0;}
+.premium-selected-head span{color:var(--muted);font-size:12px;font-weight:850;}
+.premium-selected-list{display:grid;gap:7px;}
+.premium-selected-empty{margin:0;color:var(--muted);font-weight:850;}
+.premium-selected-item{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;text-align:left;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);color:var(--text);border-radius:14px;padding:9px 10px;cursor:pointer;}
+.premium-selected-item:hover{border-color:color-mix(in srgb,var(--accent) 42%, transparent);background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.035));}
+.premium-selected-name{font-weight:950;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.premium-selected-note{display:block;color:var(--muted);font-size:12px;font-weight:800;grid-column:1/-1;margin-top:-4px;}
+.premium-selected-points{color:color-mix(in srgb,var(--accent) 82%, white 10%);font-weight:950;}
+.premium-selected-count{border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.22);padding:3px 8px;font-size:12px;font-weight:950;color:var(--muted);}
+.premium-calc-actions{display:flex;justify-content:flex-end;margin-top:11px;}
+.premium-reset-btn{height:40px;padding:0 13px;border-radius:14px;border:1px solid rgba(251,113,133,.28);background:rgba(251,113,133,.08);color:var(--text);font-weight:950;}
+.premium-reset-btn:hover{background:rgba(251,113,133,.14);}
+.premium-activity-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;}
+.premium-activity-list{display:grid;gap:7px;}
+.premium-activity-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.10);border-radius:14px;background:rgba(0,0,0,.16);padding:10px;cursor:pointer;transition:.15s ease;}
+.premium-activity-row:hover,.premium-activity-row:focus-visible{transform:translateY(-1px);border-color:color-mix(in srgb,var(--accent) 44%, transparent);background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.035));outline:none;}
+.premium-activity-row.premium-row-clicked{transform:scale(.985);}
+.premium-activity-name{font-weight:950;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.premium-activity-note{color:var(--muted);font-size:12px;font-weight:850;}
+.premium-activity-row strong{color:color-mix(in srgb,var(--accent) 84%, white 8%);font-weight:950;white-space:nowrap;}
+.premium-reports-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;}
+.premium-report-card .tag-like{display:inline-flex;margin-bottom:8px;padding:5px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:var(--muted);font-size:11px;font-weight:950;background:rgba(255,255,255,.045);}
+@media(max-width:1050px){.premium-result-grid,.premium-reports-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.premium-activity-grid{grid-template-columns:1fr;}}
+@media(max-width:700px){.premium-rules-grid,.premium-calc-grid,.premium-result-grid,.premium-reports-grid{grid-template-columns:1fr;}.premium-selected-head,.premium-card-head,.premium-section-subhead{align-items:flex-start;flex-direction:column;}.premium-activity-row,.premium-selected-item{grid-template-columns:1fr auto;}.premium-activity-note{grid-column:1/2;}.premium-activity-row strong{grid-column:2/3;grid-row:1/3;}.premium-selected-points{grid-column:2/3;grid-row:1/2;}.premium-selected-count{grid-column:2/3;grid-row:2/3;}}
+
+
+/* KIRI v015: переработка блока премий под стиль личного кабинета */
+.premium-profile-card{
+  margin-top:14px;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%, transparent),rgba(255,255,255,.04));
+  padding:13px;
+}
+.premium-profile-title{font-size:13px;font-weight:950;color:var(--text);margin-bottom:10px;}
+.premium-profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.premium-profile-grid div{border:1px solid rgba(255,255,255,.09);background:rgba(0,0,0,.16);border-radius:14px;padding:9px;}
+.premium-profile-grid span,.premium-profile-limit{display:block;color:var(--muted);font-size:12px;font-weight:850;}
+.premium-profile-grid b{display:block;margin-top:3px;font-size:16px;color:var(--text);}
+.premium-profile-limit{margin-top:9px;}
+.premium-profile-limit b{color:var(--text);}
+#dashboardReports{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;}
+.reports-premium-card{gap:14px!important;}
+.premium-header-row{padding:0 2px 2px!important;border:0!important;background:transparent!important;}
+.premium-header-row h2{font-size:clamp(24px,3vw,34px)!important;letter-spacing:-.04em!important;}
+.premium-pill{display:none!important;}
+.premium-rules-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;}
+.premium-rule-card,.premium-calculator-card,.premium-activity-card,.premium-selected-box,.premium-report-card{
+  border:1px solid rgba(255,255,255,.11)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.025))!important;
+  border-radius:22px!important;
+  padding:16px!important;
+  box-shadow:none!important;
+}
+.premium-rule-danger{border-color:rgba(251,113,133,.22)!important;background:linear-gradient(135deg,rgba(251,113,133,.07),rgba(255,255,255,.025))!important;}
+.premium-card-head,.premium-section-subhead{margin-bottom:12px!important;border-bottom:1px solid rgba(255,255,255,.075)!important;padding-bottom:10px!important;}
+.premium-card-head h3,.premium-card-head h4,.premium-section-subhead h3{font-size:18px!important;letter-spacing:-.025em!important;}
+.premium-rule-card ul,.premium-report-card ul{color:var(--muted)!important;font-weight:800!important;line-height:1.45!important;}
+.premium-calculator-card{border-color:color-mix(in srgb,var(--accent) 28%, rgba(255,255,255,.10))!important;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, transparent),rgba(255,255,255,.032))!important;}
+.premium-mini-note{margin:0 0 12px!important;color:var(--muted)!important;}
+.premium-result-grid div,.premium-selected-item,.premium-activity-row{
+  border:1px solid rgba(255,255,255,.10)!important;
+  background:rgba(0,0,0,.18)!important;
+  border-radius:16px!important;
+}
+.premium-result-grid strong{font-size:20px!important;}
+.premium-result-grid div:nth-child(3){border-color:color-mix(in srgb,var(--accent) 35%, rgba(255,255,255,.08))!important;background:color-mix(in srgb,var(--accent) 8%, rgba(0,0,0,.18))!important;}
+.premium-activity-card{padding:14px!important;}
+.premium-activity-row{min-height:50px!important;}
+.premium-activity-row:hover,.premium-activity-row:focus-visible{transform:translateY(-1px)!important;border-color:color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.10))!important;background:color-mix(in srgb,var(--accent) 8%, rgba(0,0,0,.18))!important;}
+.premium-selected-box{margin-top:12px!important;}
+.premium-reports-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+.premium-report-card .tag-like{display:none!important;}
+@media(max-width:900px){.premium-rules-grid,.premium-reports-grid{grid-template-columns:1fr!important;}}
+
+
+
+/* KIRI v016: премия перенесена в карьерный путь и приведена к единому стилю темы */
+#premiumProfileCard.premium-profile-card{display:none!important;}
+.career-premium-card{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(360px,520px);
+  gap:12px;
+  align-items:stretch;
+  padding:14px;
+  border-radius:22px;
+  border:1px solid color-mix(in srgb,var(--accent) 26%, rgba(255,255,255,.12));
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%, transparent),rgba(255,255,255,.035));
+  box-shadow:0 14px 34px rgba(0,0,0,.22), inset 0 0 28px color-mix(in srgb,var(--accent) 4%, transparent);
+}
+.career-premium-main{display:flex;align-items:center;gap:12px;min-width:0;}
+.career-premium-icon{
+  width:46px;height:46px;border-radius:16px;display:grid;place-items:center;flex:0 0 46px;
+  border:1px solid color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.12));
+  background:color-mix(in srgb,var(--accent) 12%, rgba(0,0,0,.18));
+  color:color-mix(in srgb,var(--accent) 86%, white 8%);
+  font-size:22px;font-weight:950;line-height:1;
+}
+.career-premium-title{font-size:16px;font-weight:950;color:var(--text);letter-spacing:-.02em;}
+.career-premium-sub{margin-top:3px;color:var(--muted);font-size:12px;font-weight:850;}
+.career-premium-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.career-premium-stats div{border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.16);border-radius:16px;padding:10px 11px;min-width:0;}
+.career-premium-stats span{display:block;color:var(--muted);font-size:12px;font-weight:900;margin-bottom:3px;}
+.career-premium-stats b{display:block;color:var(--text);font-size:16px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.reports-premium-card{gap:16px!important;}
+.premium-header-row{display:none!important;}
+.premium-rules-grid{grid-template-columns:1.35fr .85fr!important;}
+.premium-rule-card,.premium-calculator-card,.premium-activity-card,.premium-selected-box,.premium-report-card{
+  border-color:rgba(255,255,255,.105)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.052),rgba(255,255,255,.026))!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.18)!important;
+}
+.premium-rule-danger{
+  border-color:rgba(255,255,255,.105)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.052),rgba(255,255,255,.026))!important;
+}
+.premium-rule-danger .premium-card-head h3::before{content:"⚠️ ";}
+.premium-card-head,.premium-section-subhead{border-bottom:1px solid rgba(255,255,255,.075)!important;}
+.premium-calculator-card{
+  border-color:color-mix(in srgb,var(--accent) 34%, rgba(255,255,255,.10))!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 9%, transparent),rgba(255,255,255,.032))!important;
+}
+.premium-result-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
+.premium-result-grid div,.premium-selected-item,.premium-activity-row{
+  border-color:rgba(255,255,255,.10)!important;
+  background:rgba(0,0,0,.16)!important;
+}
+.premium-result-grid div:nth-child(3){
+  border-color:color-mix(in srgb,var(--accent) 36%, rgba(255,255,255,.10))!important;
+  background:color-mix(in srgb,var(--accent) 8%, rgba(0,0,0,.18))!important;
+}
+.premium-selected-box{border-style:dashed!important;}
+.premium-reset-btn{
+  border-color:rgba(255,255,255,.13)!important;
+  background:rgba(255,255,255,.055)!important;
+  color:var(--muted)!important;
+}
+.premium-reset-btn:hover{
+  border-color:color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.13))!important;
+  background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.045))!important;
+  color:var(--text)!important;
+}
+.premium-reports-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+@media(max-width:980px){.career-premium-card{grid-template-columns:1fr;}.premium-rules-grid{grid-template-columns:1fr!important;}.premium-result-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}}
+@media(max-width:700px){.career-premium-stats,.premium-result-grid,.premium-reports-grid{grid-template-columns:1fr!important;}.career-premium-card{padding:12px;border-radius:20px;}.career-premium-main{align-items:flex-start;}}
+
 </style>
 </head>
 <body>
 <section class="first-screen">
   <div class="first-card">
     <h1>Создай RP-профиль</h1>
-    <p class="test-version-label">ARMY Panel — TEST v012</p>
     <div class="form">
       <label class="field">
         <span>Имя / ник</span>
@@ -3243,7 +3396,7 @@ body[data-active-dash-tab="reports"] #setupStep{display:none!important;}
         <button class="dash-tab" data-dash-tab="achievements"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M7 16V9"/><path d="M12 16V5"/><path d="M17 16v-4"/><path d="M15 6l-3-3-3 3"/></svg></span><span class="dash-tab-label">Прогресс</span></button>
         <button class="dash-tab" data-dash-tab="academy"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3.5 2 8.5 2 12 0v-5"/><path d="M22 10v6"/></svg></span><span class="dash-tab-label">Academy</span></button>
         <button class="dash-tab" data-dash-tab="army"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 2 2.85 6.18 6.75.8-4.98 4.63 1.32 6.67L12 16.95l-5.94 3.33 1.32-6.67L2.4 8.98l6.75-.8L12 2Z"/></svg></span><span class="dash-tab-label">Армия</span></button>
-        <button class="dash-tab" data-dash-tab="reports"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h6"/></svg></span><span class="dash-tab-label">Отчеты</span></button>
+        <button class="dash-tab" data-dash-tab="reports"><span class="dash-tab-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h6"/></svg></span><span class="dash-tab-label">Отчёты и премии</span></button>
       </div>
 
       <div class="panel dashboard-section" id="dashboardAchievements">
@@ -3261,6 +3414,20 @@ body[data-active-dash-tab="reports"] #setupStep{display:none!important;}
       <div class="panel dashboard-section" id="dashboardPathProgress">
         <div class="dash-section-head career-path-head"><div><h2><span class="career-title-icon" aria-hidden="true">🧭</span> Карьерный путь</h2></div></div>
         <div class="path-cards dynamic-career-path" id="careerPathCards"></div>
+        <div class="career-premium-card" id="premiumProfileCard">
+          <div class="career-premium-main">
+            <div class="career-premium-icon" aria-hidden="true">$</div>
+            <div>
+              <div class="career-premium-title">Премия за неделю</div>
+              <div class="career-premium-sub">По выбранным активностям в отчётах</div>
+            </div>
+          </div>
+          <div class="career-premium-stats">
+            <div><span>Баллы</span><b id="profilePremiumPoints">0</b></div>
+            <div><span>К выплате</span><b id="profilePremiumPay">0$</b></div>
+            <div><span>Лимит ранга</span><b id="profilePremiumLimit">0$</b></div>
+          </div>
+        </div>
       </div>
       <div class="panel step" id="orgStep">
         <h2>Выбери организацию</h2>
@@ -3298,6 +3465,111 @@ body[data-active-dash-tab="reports"] #setupStep{display:none!important;}
           </div>
         </div>
 </div>
+
+      <div class="panel dashboard-section" id="dashboardReports">
+        <div class="reports-premium-card" data-premium-calculator="reports">
+          <div class="premium-header-row">
+            <div>
+              <h2>📋 Отчёты и премии</h2>
+            </div>
+          </div>
+
+          <div class="premium-rules-grid">
+            <article class="premium-rule-card">
+              <div class="premium-card-head"><h3>Правила отчётности</h3></div>
+              <ul>
+                <li>На всех скриншотах должно быть время: HUD / time.</li>
+                <li>КПП и патруль: доклад в рацию каждые 15 минут.</li>
+                <li>СО/МП: скрин строя до выезда + скрин с места или уведомление о завершении.</li>
+              </ul>
+            </article>
+            <article class="premium-rule-card premium-rule-danger">
+              <div class="premium-card-head"><h3>Подделка скриншотов</h3></div>
+              <p>Подделка старых скриншотов — увольнение + ЧС.</p>
+            </article>
+          </div>
+
+          <article class="premium-calculator-card">
+            <div class="premium-card-head premium-main-head"><h3>Калькулятор премии</h3></div>
+            <p class="premium-mini-note">Лимит подтягивается по текущему рангу из профиля. При необходимости ранг можно изменить вручную.</p>
+            <div class="premium-calc-grid">
+              <label>Ранг
+                <select class="premium-rank-select">
+                  <option data-limit="35000" value="1">1 ранг — 35 000$</option>
+                  <option data-limit="50000" value="2">2 ранг — 50 000$</option>
+                  <option data-limit="100000" value="3">3 ранг — 100 000$</option>
+                  <option data-limit="145000" value="4">4 ранг — 145 000$</option>
+                  <option data-limit="180000" value="5">5 ранг — 180 000$</option>
+                  <option data-limit="240000" value="6">6 ранг — 240 000$</option>
+                  <option data-limit="300000" value="7">7 ранг — 300 000$</option>
+                  <option data-limit="340000" value="8">8 ранг — 340 000$</option>
+                  <option data-limit="400000" value="9">9 ранг — 400 000$</option>
+                  <option data-limit="450000" value="10">10 ранг — 450 000$</option>
+                  <option data-limit="500000" value="11">11 ранг — 500 000$</option>
+                  <option data-limit="550000" value="12">12 ранг — 550 000$</option>
+                  <option data-limit="600000" value="13">13 ранг — 600 000$</option>
+                  <option data-limit="650000" value="14">14 ранг — 650 000$</option>
+                  <option data-limit="700000" value="15">15 ранг — 700 000$</option>
+                  <option data-limit="750000" value="16">16 ранг — 750 000$</option>
+                </select>
+              </label>
+              <label>Баллы
+                <input class="premium-points-input" inputmode="decimal" min="0" step="0.5" type="number" value="0"/>
+              </label>
+            </div>
+            <div aria-live="polite" class="premium-result-grid">
+              <div><span>По баллам</span><strong data-premium-output="raw">0$</strong></div>
+              <div><span>Лимит ранга</span><strong data-premium-output="limit">0$</strong></div>
+              <div><span>К выплате</span><strong data-premium-output="pay">0$</strong></div>
+              <div><span>Сгорит сверх лимита</span><strong data-premium-output="burn">0$</strong></div>
+            </div>
+            <div class="premium-selected-box is-empty" data-premium-selected-box>
+              <div class="premium-selected-head"><h4>Выбранные активности</h4><span>Нажми по строке, чтобы убрать один повтор</span></div>
+              <div class="premium-selected-list" data-premium-selected-list>
+                <p class="premium-selected-empty">Выбранные активности появятся здесь.</p>
+              </div>
+            </div>
+            <div class="premium-calc-actions"><button class="premium-reset-btn" type="button">Сбросить баллы</button></div>
+          </article>
+
+          <div class="premium-activity-inside">
+            <div class="premium-section-subhead"><h3>Активности</h3></div>
+            <div class="premium-activity-grid">
+              <article class="premium-activity-card"><div class="premium-card-head"><h4>Посты и патрули</h4></div><div class="premium-activity-list">
+                <div class="premium-activity-row" data-premium-add="3" role="button" tabindex="0"><span class="premium-activity-name">Дежурство на КПП</span><span class="premium-activity-note">1 час</span><strong>+3 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="3" role="button" tabindex="0"><span class="premium-activity-name">Патруль штата</span><span class="premium-activity-note">1 час</span><strong>+3 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="4" role="button" tabindex="0"><span class="premium-activity-name">Участие в наборе MA</span><span class="premium-activity-note">1 час, для MA/MP</span><strong>+4 б.</strong></div>
+              </div></article>
+              <article class="premium-activity-card"><div class="premium-card-head"><h4>Спецоперации</h4></div><div class="premium-activity-list">
+                <div class="premium-activity-row" data-premium-add="1" role="button" tabindex="0"><span class="premium-activity-name">Дроп</span><span class="premium-activity-note">участие</span><strong>+1 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="1.5" role="button" tabindex="0"><span class="premium-activity-name">Поставка материалов/аптечек</span><span class="premium-activity-note">участие</span><strong>+1,5 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="2.5" role="button" tabindex="0"><span class="premium-activity-name">Чёрный рынок</span><span class="premium-activity-note">участие</span><strong>+2,5 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="1.5" role="button" tabindex="0"><span class="premium-activity-name">Шпак</span><span class="premium-activity-note">участие</span><strong>+1,5 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="3" role="button" tabindex="0"><span class="premium-activity-name">Отбитие ФЗ / ФТ</span><span class="premium-activity-note">участие</span><strong>+3 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="4" role="button" tabindex="0"><span class="premium-activity-name">Защита поезда</span><span class="premium-activity-note">участие</span><strong>+4 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="5" role="button" tabindex="0"><span class="premium-activity-name">Рейд / оцепление</span><span class="premium-activity-note">участие</span><strong>+5 б.</strong></div>
+              </div></article>
+              <article class="premium-activity-card"><div class="premium-card-head"><h4>Обучение</h4></div><div class="premium-activity-list">
+                <div class="premium-activity-row" data-premium-add="1" role="button" tabindex="0"><span class="premium-activity-name">Проведение лекции</span><span class="premium-activity-note">инструкторы</span><strong>+1 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="1.5" role="button" tabindex="0"><span class="premium-activity-name">Принятие экзамена</span><span class="premium-activity-note">инструкторы</span><strong>+1,5 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="2.5" role="button" tabindex="0"><span class="premium-activity-name">Проведение тренировки</span><span class="premium-activity-note">инструкторы</span><strong>+2,5 б.</strong></div>
+              </div></article>
+              <article class="premium-activity-card"><div class="premium-card-head"><h4>Мероприятия</h4></div><div class="premium-activity-list">
+                <div class="premium-activity-row" data-premium-add="1.5" role="button" tabindex="0"><span class="premium-activity-name">ВФМП или МФМА</span><span class="premium-activity-note">участие</span><strong>+1,5 б.</strong></div>
+                <div class="premium-activity-row" data-premium-add="4" role="button" tabindex="0"><span class="premium-activity-name">ГМП</span><span class="premium-activity-note">участие</span><strong>+4 б.</strong></div>
+              </div></article>
+            </div>
+          </div>
+
+          <div class="premium-reports-grid">
+            <article class="premium-report-card"><span class="tag-like">Отчёт</span><h3>Тренировка</h3><ul><li>Скрин начала тренировки.</li><li>Скрин процесса: прыжок с парашютом, перестрелка и т.п.</li><li>Скрин окончания, где проводящий выдал баллы.</li></ul></article>
+            <article class="premium-report-card"><span class="tag-like">РП</span><h3>РП ситуации</h3><ul><li>Техническое обслуживание ВТ, обмундирования, проверка парашюта и т.д.</li><li>На скрине/скринах должно быть не менее 10 строк.</li><li>Обязательно использовать /me /do /try.</li></ul></article>
+            <article class="premium-report-card"><span class="tag-like">Discord</span><h3>Благодарности и баллы</h3><ul><li>Нужен скриншот с Discord.</li><li>Если благодарность за СО, приложить скрин, что ты участвовал в спецоперации.</li></ul></article>
+            <article class="premium-report-card"><span class="tag-like">Экзамен</span><h3>Экзамены</h3><ul><li>Скриншот из канала ✍запись-на-экзамен.</li><li>КД между неудачными сдачами экзамена — 1 час.</li></ul></article>
+          </div>
+        </div>
+      </div>
+
     </section>
   </main>
 </div>
@@ -3624,6 +3896,7 @@ function render(){
   renderSetup();
   renderProgress();
   renderAchievements();
+  if(typeof window.KiriPremiumSync==='function') window.KiriPremiumSync();
   if(typeof applyDashTab==='function') applyDashTab();
 }
 function renderOrgs(){
@@ -4447,6 +4720,97 @@ document.querySelectorAll('.theme-card').forEach(card=>{
     card.classList.add('active');
   };
 });
+
+/* KIRI v015: калькулятор премии во вкладке Отчёты и премии */
+(function(){
+  const RATE=10000;
+  const KEY='kiri:army-panel:v016:reports-premium';
+  const root=document.querySelector('[data-premium-calculator="reports"]');
+  if(!root) return;
+  const select=root.querySelector('.premium-rank-select');
+  const input=root.querySelector('.premium-points-input');
+  const selectedBox=root.querySelector('[data-premium-selected-box]');
+  const selectedList=root.querySelector('[data-premium-selected-list]');
+  let selected=[];
+  let rankWasTouched=false;
+  const parsePoints=v=>{const n=parseFloat(String(v??'0').replace(',','.'));return Number.isFinite(n)?Math.max(0,n):0;};
+  const norm=v=>Math.max(0,Math.round((Number(v)||0)*10)/10);
+  const ptxt=v=>String(norm(v)).replace('.',',');
+  const money=v=>new Intl.NumberFormat('ru-RU').format(Math.max(0,Math.round(Number(v)||0)))+'$';
+  const setPoints=v=>{if(input) input.value=String(norm(v));};
+  const getPoints=()=>input?parsePoints(input.value):0;
+  const getLimit=()=>{const opt=select?.selectedOptions?.[0];return Number(opt?.dataset?.limit||0)||0;};
+  const getRankFromProfile=()=>{
+    try{
+      const raw=String(window.S?.level||'');
+      const n=parseInt((raw.match(/\d+/)||[])[0]||'',10);
+      if(Number.isFinite(n) && n>0) return Math.max(1,Math.min(16,n));
+    }catch(e){}
+    return null;
+  };
+  const syncRankFromProfile=()=>{
+    const r=getRankFromProfile();
+    if(!r || !select || rankWasTouched) return;
+    if(select.value!==String(r)) select.value=String(r);
+  };
+  const keyOf=(name,note,points)=>[name,note,String(norm(points))].join('||');
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify({rank:select?.value||'',rankWasTouched,points:getPoints(),selected:selected}));}catch(e){}};
+  const loadPremium=()=>{try{const raw=localStorage.getItem(KEY)||localStorage.getItem('kiri:army-panel:v015:reports-premium')||localStorage.getItem('kiri:army-panel:v014:reports-premium'); if(!raw)return; const data=JSON.parse(raw); rankWasTouched=!!data.rankWasTouched; if(select&&data.rank&&rankWasTouched)select.value=String(data.rank); if(input)setPoints(parsePoints(data.points)); selected=Array.isArray(data.selected)?data.selected.filter(x=>x&&x.name&&norm(x.points)>0&&Number(x.count)>0):[];}catch(e){}};
+  const updateProfilePremium=vals=>{
+    const pts=document.getElementById('profilePremiumPoints');
+    const pay=document.getElementById('profilePremiumPay');
+    const lim=document.getElementById('profilePremiumLimit');
+    if(pts) pts.textContent=ptxt(getPoints());
+    if(pay) pay.textContent=money(vals.pay||0);
+    if(lim) lim.textContent=money(vals.limit||0);
+  };
+  const update=()=>{
+    const points=getPoints(), limit=getLimit(), raw=points*RATE, pay=Math.min(raw,limit), burn=Math.max(0,raw-limit);
+    const vals={raw,limit,pay,burn};
+    Object.entries(vals).forEach(([k,v])=>{const el=root.querySelector(`[data-premium-output="${k}"]`); if(el)el.textContent=money(v);});
+    updateProfilePremium(vals);
+  };
+  const renderSelected=()=>{
+    if(!selectedList||!selectedBox)return;
+    selected=selected.filter(x=>x&&x.name&&norm(x.points)>0&&Number(x.count)>0).map(x=>({key:x.key||keyOf(x.name,x.note||'',x.points),name:String(x.name),note:String(x.note||''),points:norm(x.points),count:Math.max(1,Math.round(Number(x.count)||1))}));
+    if(!selected.length){selectedBox.classList.add('is-empty');selectedList.innerHTML='<p class="premium-selected-empty">Выбранные активности появятся здесь.</p>';return;}
+    selectedBox.classList.remove('is-empty');
+    selectedList.innerHTML=selected.map(item=>`<button class="premium-selected-item" type="button" data-premium-remove="${item.key.replace(/"/g,'&quot;')}" title="Убрать один повтор"><span class="premium-selected-name">${item.name}</span>${item.note?`<span class="premium-selected-note">${item.note}</span>`:''}<strong class="premium-selected-points">+${ptxt(item.points)} б.</strong><span class="premium-selected-count">×${item.count}</span></button>`).join('');
+  };
+  const addRow=row=>{
+    const points=parsePoints(row.getAttribute('data-premium-add'));
+    if(!points)return;
+    const name=row.querySelector('.premium-activity-name')?.textContent.trim()||'Активность';
+    const note=row.querySelector('.premium-activity-note')?.textContent.trim()||'';
+    const key=keyOf(name,note,points);
+    const found=selected.find(x=>x.key===key);
+    if(found) found.count=Math.max(1,Number(found.count)||1)+1;
+    else selected.push({key,name,note,points:norm(points),count:1});
+    setPoints(getPoints()+points); renderSelected(); update(); save();
+    row.classList.add('premium-row-clicked'); setTimeout(()=>row.classList.remove('premium-row-clicked'),170);
+  };
+  const removeKey=key=>{
+    const item=selected.find(x=>x.key===key); if(!item)return;
+    item.count=Math.max(0,(Number(item.count)||1)-1);
+    if(item.count<=0) selected=selected.filter(x=>x!==item);
+    setPoints(Math.max(0,getPoints()-norm(item.points))); renderSelected(); update(); save();
+  };
+  const reset=()=>{selected=[]; setPoints(0); renderSelected(); update(); save();};
+  root.addEventListener('click',e=>{
+    const add=e.target.closest('.premium-activity-row[data-premium-add]');
+    if(add&&root.contains(add)){e.preventDefault();addRow(add);return;}
+    const rem=e.target.closest('.premium-selected-item[data-premium-remove]');
+    if(rem&&root.contains(rem)){e.preventDefault();removeKey(rem.getAttribute('data-premium-remove')||'');return;}
+    const rst=e.target.closest('.premium-reset-btn');
+    if(rst&&root.contains(rst)){e.preventDefault();reset();}
+  });
+  root.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return; const row=e.target.closest('.premium-activity-row[data-premium-add]'); if(row&&root.contains(row)){e.preventDefault();addRow(row);}});
+  if(select)select.addEventListener('change',()=>{rankWasTouched=true;update();save();});
+  if(input){input.addEventListener('input',()=>{update();save();}); input.addEventListener('change',()=>{setPoints(getPoints());update();save();});}
+  window.KiriPremiumSync=()=>{syncRankFromProfile();update();save();};
+  loadPremium(); syncRankFromProfile(); renderSelected(); update();
+})();
+
 load();
 render();
 applyDashTab();
