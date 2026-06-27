@@ -524,8 +524,32 @@ input:focus,select:focus{
     0 0 62px var(--glow)!important;
 }
 @media(max-width:620px){
-  .editable-row{grid-template-columns:1fr 38px}
-  .editable-row span{grid-column:1/-1}
+  .editable-row{
+    grid-template-columns:1fr 34px!important;
+    grid-template-areas:"label edit" "value edit";
+    gap:4px 10px;
+    align-items:center;
+    padding:12px 0;
+  }
+  .editable-row span{
+    grid-area:label;
+    font-size:12px;
+  }
+  .editable-row b,
+  .editable-row #infoOrg,
+  .editable-row #infoSection,
+  .editable-row #infoLevel{
+    grid-area:value;
+    line-height:1.25;
+    padding-right:8px;
+  }
+  .editable-row .mini-edit{
+    grid-area:edit;
+    width:30px;
+    height:30px;
+    border-radius:10px;
+    justify-self:end;
+  }
 }
 
 
