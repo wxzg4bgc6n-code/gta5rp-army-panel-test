@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v068</title>
+<title>RP Cabinet TEST v069</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5476,6 +5476,48 @@ body.academy-info-clean #departmentInfoContent details.section-toggle.academy-ex
   .profile-card .profile-info .level-row span,
   .profile-card .profile-info .level-row b{
     font-size:12px!important;
+  }
+}
+
+
+
+/* KIRI v069: ПК — компактнее строки профиля, шире колонка значений, меньше карандаши.
+   Мобильные правки v068 не трогаем. */
+@media (min-width:621px){
+  .profile-card .profile-info .row,
+  .profile-card .profile-info .editable-row,
+  .profile-card .profile-info .level-row{
+    grid-template-columns:104px minmax(0,1fr) 30px!important;
+    min-height:38px!important;
+    column-gap:8px!important;
+    padding:0!important;
+  }
+
+  .profile-card .profile-info .row:not(.editable-row):not(.level-row)::after{
+    width:30px!important;
+    height:30px!important;
+  }
+
+  .profile-card .profile-info .row span{
+    font-size:12.5px!important;
+    line-height:1.15!important;
+  }
+
+  .profile-card .profile-info .row b{
+    font-size:13px!important;
+    line-height:1.18!important;
+  }
+
+  .profile-card .profile-info .mini-edit{
+    width:30px!important;
+    height:30px!important;
+    min-width:30px!important;
+    min-height:30px!important;
+    border-radius:9px!important;
+  }
+
+  .profile-card .profile-info .mini-edit::before{
+    font-size:13px!important;
   }
 }
 
