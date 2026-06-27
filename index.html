@@ -3973,11 +3973,6 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 </div>
 <div id="departmentInfoContent"></div>
 <template id="academyInfoTemplate">
-<div class="department-info-grid">
-<article class="department-info-card"><span>Отдел</span><h3>Academy</h3><p>Здесь собрана вся информация из старой панели, которая относится к Академии: повышение, термины, КПП, посты, патрули, построения, тен-коды и правила.</p></article>
-<article class="department-info-card"><span>Отдельно</span><h3>Тесты вынесены во вкладку «Тесты»</h3><p>Чтобы блок Academy не смешивался с экзаменационными вопросами, готовые ответы находятся в отдельной плашке.</p></article>
-<article class="department-info-card"><span>Логика</span><h3>Показывается только при выборе Academy</h3><p>Если отдел не выбран, вкладки отдела и тестов скрыты. При выборе другого отдела вкладка меняется под него.</p></article>
-</div>
 <section id="academy-terms">
 <h2>Термины и сокращения</h2>
 <p class="section-desc">Короткий блок для вопросов вида «что означает…». Указаны русское и английское названия, чтобы проще выбирать ответ на тесте.</p>
@@ -5489,7 +5484,7 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v031_profile_achievements_cleanup';
+const VERSION_KEY='rp_panel_v032_storage_fix_academy_cleanup';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -5648,46 +5643,66 @@ function save(){
   localStorage.setItem(KEY,data);
   localStorage.setItem(VERSION_KEY,data);
 }
-function load(){
+function normalizeProfileData(d){
+  if(!d || typeof d!=='object') return null;
+  const merged=Object.assign({}, S, d);
+  if(!merged.account || typeof merged.account!=='object') merged.account={achievements:{}};
+  if(!merged.account.achievements || typeof merged.account.achievements!=='object') merged.account.achievements={};
+  if(!merged.account.createdAt) merged.account.createdAt=Date.now();
+  if(!merged.account.initialName) merged.account.initialName=merged.name||'';
+  return merged;
+}
+function safeReadProfileKey(key){
   try{
-    let raw=localStorage.getItem(KEY);
-
-    const migrateKeys=[
-      VERSION_KEY,
-      'rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
-      'rp_panel_v112_rank_emblem_nick_settings',
-      'rp_panel_v111_achievements_button_last_badge',
-      'rp_panel_v110_account_rank_achievements',
-      'rp_panel_v109_academy_department_fixed',
-      'rp_panel_v108_academy_to_department_flow',
-      'rp_panel_v105_ring_crop_fix_glow_restore',
-      'rp_panel_v104_edit_org_section_ring_fix',
-      'rp_panel_v103_persist_unified',
-      'rp_panel_v102_level_edit_profile',
-      'rp_panel_v101_clean_flow_promotion',
-      'rp_panel_v100_clean_base'
-    ];
-
-    if(!raw){
-      for(const key of migrateKeys){
-        const old=localStorage.getItem(key);
-        if(old){
-          raw=old;
-          break;
-        }
-      }
-    }
-
-    const d=raw?JSON.parse(raw):null;
-    if(d){
-      S=Object.assign(S,d);
-      if(!S.account) S.account={achievements:{}};
-      if(!S.account.achievements) S.account.achievements={};
-      if(!S.account.createdAt) S.account.createdAt=Date.now();
-      if(!S.account.initialName) S.account.initialName=S.name||'';
-      save();
+    const raw=localStorage.getItem(key);
+    if(!raw) return null;
+    return normalizeProfileData(JSON.parse(raw));
+  }catch(e){
+    return null;
+  }
+}
+function load(){
+  const migrateKeys=[
+    KEY,
+    VERSION_KEY,
+    'rp_panel_v031_profile_achievements_cleanup',
+    'rp_panel_v030_department_info_tests',
+    'rp_panel_v029_dynamic_department_academy',
+    'rp_panel_v028_premiums_rank_progress',
+    'rp_panel_v133_profile_rows_gov_service_pencil_fix',
+    'rp_panel_v114_stable_save_account_progress',
+    'rp_panel_v113_last_ach_badge_usaf_from_3',
+    'rp_panel_v112_rank_emblem_nick_settings',
+    'rp_panel_v111_achievements_button_last_badge',
+    'rp_panel_v110_account_rank_achievements',
+    'rp_panel_v109_academy_department_fixed',
+    'rp_panel_v108_academy_to_department_flow',
+    'rp_panel_v105_ring_crop_fix_glow_restore',
+    'rp_panel_v104_edit_org_section_ring_fix',
+    'rp_panel_v103_persist_unified',
+    'rp_panel_v102_level_edit_profile',
+    'rp_panel_v101_clean_flow_promotion',
+    'rp_panel_v100_clean_base'
+  ];
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k && k.startsWith('rp_panel_') && !migrateKeys.includes(k)) migrateKeys.push(k);
     }
   }catch(e){}
+
+  let best=null;
+  for(const key of migrateKeys){
+    const data=safeReadProfileKey(key);
+    if(!data) continue;
+    if(key===KEY){ best=data; break; }
+    if(data.ready){ best=data; break; }
+    if(!best) best=data;
+  }
+  if(best){
+    S=best;
+    save();
+  }
 }
 function theme(){
   document.body.classList.toggle('ready',!!S.ready);
@@ -6798,7 +6813,7 @@ function renderDynamicDepartmentDashboard(){
   const badge=document.getElementById('departmentInfoBadge');
   const content=document.getElementById('departmentInfoContent');
   if(title) title.textContent=has ? departmentInfoTitle(section) : 'Отдел';
-  if(desc) desc.textContent=section==='Academy' ? 'Вся информация по Academy из старой панели, без старого оформления.' : `Информация по отделу ${section}.`;
+  if(desc) desc.textContent=section==='Academy' ? 'Справочник Academy: термины, КПП, посты, патрули, построения, тен-коды и правила.' : `Информация по отделу ${section}.`;
   if(badge) badge.textContent=section ? section.toUpperCase() : '—';
   if(content){
     if(!has){content.innerHTML='';}
@@ -6818,8 +6833,8 @@ function renderDynamicDepartmentDashboard(){
   const testsBadge=document.getElementById('departmentTestsBadge');
   const testsContent=document.getElementById('departmentTestsContent');
   if(testsTitle) testsTitle.textContent=has ? sectionTestsTitle(section) : 'Тесты';
-  if(testsDesc) testsDesc.textContent=section==='Academy' ? 'Готовые ответы Academy из старой панели.' : `Готовые тесты для отдела ${section}.`;
-  if(testsBadge) testsBadge.textContent=section ? ('ТЕСТЫ · '+section.toUpperCase()) : 'ТЕСТЫ';
+  if(testsDesc) testsDesc.textContent=section ? `Готовые тесты для отдела ${section}.` : 'Готовые ответы меняются под выбранный отдел.';
+  if(testsBadge) testsBadge.textContent=section ? section.toUpperCase() : 'ТЕСТЫ';
   if(testsContent){
     if(!has){testsContent.innerHTML='';}
     else if(section==='Academy'){
