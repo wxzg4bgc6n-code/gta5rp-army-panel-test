@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v035</title>
+<title>RP Cabinet TEST v036</title>
 <style>
 :root{
   --bg:#02040a;
@@ -3881,6 +3881,106 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
   display:none!important;
 }
 
+
+
+/* KIRI v036: витрина — открытые достижения сверху; Academy визуально мягче и меньше перегруза */
+#achievementGrid .achievement-card.locked{
+  order:50!important;
+}
+#achievementGrid .achievement-card:not(.locked){
+  order:1!important;
+}
+#achievementGrid .achievement-card .showcase-select-btn.active{
+  order:-1!important;
+}
+
+#dashboardDepartment .department-info-head{
+  margin-bottom:18px!important;
+}
+#dashboardDepartment .department-info-badge{
+  opacity:.78!important;
+  background:rgba(255,255,255,.035)!important;
+  border-color:color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.10))!important;
+}
+#dashboardDepartment .department-content section{
+  padding:16px!important;
+  border-radius:20px!important;
+  background:rgba(5,8,16,.22)!important;
+  border:1px solid rgba(255,255,255,.085)!important;
+  box-shadow:none!important;
+  margin-bottom:12px!important;
+}
+#dashboardDepartment .department-content section h2,
+#dashboardDepartment .department-content section h3{
+  font-size:clamp(20px,2vw,26px)!important;
+  letter-spacing:-.035em!important;
+  margin-bottom:8px!important;
+}
+#dashboardDepartment .department-content section > p,
+#dashboardDepartment .department-content .section-desc{
+  font-size:13px!important;
+  line-height:1.42!important;
+  opacity:.92!important;
+}
+#dashboardDepartment .department-content details,
+#dashboardDepartment .department-content details.section-toggle,
+#dashboardDepartment .department-content details.code-group{
+  border:0!important;
+  background:transparent!important;
+  padding:0!important;
+  margin:8px 0 0!important;
+  box-shadow:none!important;
+}
+#dashboardDepartment .department-content details > summary,
+#dashboardDepartment .department-content details.section-toggle > summary,
+#dashboardDepartment .department-content details.code-group > summary{
+  min-height:42px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  padding:10px 12px!important;
+  border-radius:14px!important;
+  border:1px solid rgba(255,255,255,.085)!important;
+  background:rgba(255,255,255,.038)!important;
+  color:var(--text)!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  box-shadow:none!important;
+}
+#dashboardDepartment .department-content details > summary::before,
+#dashboardDepartment .department-content details.section-toggle > summary::before,
+#dashboardDepartment .department-content details.code-group > summary::before{
+  content:"›"!important;
+  color:color-mix(in srgb,var(--accent) 76%, white 10%)!important;
+  font-size:16px!important;
+  line-height:1!important;
+  transform:translateY(-1px)!important;
+}
+#dashboardDepartment .department-content details[open] > summary{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 11%, rgba(255,255,255,.035)),rgba(255,255,255,.028))!important;
+  border-color:color-mix(in srgb,var(--accent) 30%, rgba(255,255,255,.09))!important;
+  margin-bottom:10px!important;
+}
+#dashboardDepartment .department-content details[open] > summary::before{
+  content:"⌄"!important;
+}
+#dashboardDepartment .department-content table,
+#dashboardDepartment .department-content .qa-list,
+#dashboardDepartment .department-content .grid,
+#dashboardDepartment .department-content ul,
+#dashboardDepartment .department-content ol,
+#dashboardDepartment .department-content .phrase{
+  margin-top:10px!important;
+}
+#dashboardDepartment .department-content th,
+#dashboardDepartment .department-content td{
+  padding:8px 9px!important;
+  font-size:13px!important;
+}
+@media(max-width:900px){
+  #dashboardDepartment .department-content section{padding:14px!important;}
+}
+
 </style>
 </head>
 <body>
@@ -5566,7 +5666,7 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <div class="toast" id="toast"><b>Готово</b><span id="toastText">Обновлено</span></div>
 <script>
 const KEY='rp_panel_account_profile_STABLE';
-const VERSION_KEY='rp_panel_v035_storage_priority_title_fix';
+const VERSION_KEY='rp_panel_v036_showcase_sort_academy_soft';
 const FALLBACK_KEYS=[
  'rp_panel_v102_level_edit_profile','rp_panel_v103_persist_unified','rp_panel_v104_edit_org_section_ring_fix','rp_panel_v105_ring_crop_fix_glow_restore','rp_panel_v108_academy_to_department_flow','rp_panel_v109_academy_department_fixed','rp_panel_v110_account_rank_achievements','rp_panel_v111_achievements_button_last_badge','rp_panel_v112_rank_emblem_nick_settings','rp_panel_v113_last_ach_badge_usaf_from_3','rp_panel_v114_stable_save_account_progress',
  'rp_panel_v101_clean_flow_promotion',
@@ -6455,7 +6555,19 @@ function renderAchievementModal(){
   });
   const tip=$('#showcaseModalTip');
   if(tip) tip.innerHTML=`Витрина: <b>${picked.length} / 6</b>. Нажми «В витрину» на открытом достижении. Если ничего не выбрано, профиль сам покажет самые редкие.`;
-  const list=activeAchCategory==='Все'?ACHIEVEMENT_DEFS:ACHIEVEMENT_DEFS.filter(a=>a.cat===activeAchCategory);
+  const sourceList=activeAchCategory==='Все'?ACHIEVEMENT_DEFS:ACHIEVEMENT_DEFS.filter(a=>a.cat===activeAchCategory);
+  const list=[...sourceList].sort((a,b)=>{
+    const ao=got[a.id]?1:0;
+    const bo=got[b.id]?1:0;
+    if(ao!==bo) return bo-ao; // открытые всегда выше закрытых
+    if(ao && bo){
+      const ap=picked.includes(a.id)?1:0;
+      const bp=picked.includes(b.id)?1:0;
+      if(ap!==bp) return bp-ap; // выбранные в витрину первыми среди открытых
+      return ((got[b.id]?.time||0)-(got[a.id]?.time||0)) || (rarityWeight(b.rarity)-rarityWeight(a.rarity)) || a.title.localeCompare(b.title,'ru');
+    }
+    return (rarityWeight(b.rarity)-rarityWeight(a.rarity)) || a.title.localeCompare(b.title,'ru');
+  });
   $('#achievementGrid').innerHTML=list.map(a=>{
     const open=!!got[a.id];
     const selected=picked.includes(a.id);
