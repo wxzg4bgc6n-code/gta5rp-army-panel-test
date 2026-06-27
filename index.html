@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v072</title>
+<title>RP Cabinet TEST v073</title>
 <style>
 :root{
   --bg:#02040a;
@@ -5692,6 +5692,142 @@ body[data-active-dash-tab="reports"] #dashboardProfileInfo{display:none!importan
   .profile-top-strip .row:last-child,
   .profile-top-strip .level-row:last-child{border-bottom:0!important;}
   .profile-top-strip .row b{font-size:17px!important;}
+}
+
+
+/* v073: компактная стеклянная верхняя плашка профиля как iPhone glass */
+#dashboardProfileInfo.profile-top-strip{
+  display:none;
+  margin:0 0 16px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border-radius:24px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,.085), rgba(255,255,255,.032)),
+    color-mix(in srgb, var(--panel) 72%, transparent)!important;
+  box-shadow:
+    0 18px 46px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.07),
+    inset 0 -1px 0 rgba(0,0,0,.18)!important;
+  backdrop-filter:blur(18px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+}
+body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{display:block!important;}
+.profile-top-strip .profile-info{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:0!important;
+  padding:0!important;
+  background:transparent!important;
+}
+.profile-top-strip .row,
+.profile-top-strip .editable-row,
+.profile-top-strip .level-row{
+  position:relative!important;
+  min-height:78px!important;
+  padding:15px 20px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 24px!important;
+  grid-template-rows:auto auto!important;
+  align-content:center!important;
+  gap:6px 8px!important;
+  border-bottom:0!important;
+  border-right:1px solid rgba(255,255,255,.085)!important;
+  background:transparent!important;
+}
+.profile-top-strip .row:last-child,
+.profile-top-strip .level-row:last-child{
+  border-right:0!important;
+}
+.profile-top-strip .row::after,
+.profile-top-strip .editable-row::after,
+.profile-top-strip .level-row::after{
+  content:"";
+  position:absolute;
+  top:18px;
+  right:-1px;
+  width:1px;
+  height:calc(100% - 36px);
+  background:linear-gradient(180deg, transparent, rgba(255,255,255,.14), transparent);
+  pointer-events:none;
+}
+.profile-top-strip .row:last-child::after,
+.profile-top-strip .level-row:last-child::after{display:none!important;}
+.profile-top-strip .row span{
+  grid-column:1/-1!important;
+  color:var(--muted)!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  text-transform:uppercase!important;
+  letter-spacing:.075em!important;
+  line-height:1!important;
+  opacity:.96!important;
+}
+.profile-top-strip .row b{
+  grid-column:1/2!important;
+  grid-row:2/3!important;
+  color:var(--text)!important;
+  font-size:17px!important;
+  font-weight:950!important;
+  line-height:1.14!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:normal!important;
+}
+.profile-top-strip .mini-edit{
+  grid-column:2/3!important;
+  grid-row:2/3!important;
+  align-self:center!important;
+  justify-self:end!important;
+  width:24px!important;
+  height:24px!important;
+  min-width:24px!important;
+  min-height:24px!important;
+  border-radius:9px!important;
+  font-size:11px!important;
+  line-height:1!important;
+  color:var(--accent)!important;
+  border:1px solid color-mix(in srgb,var(--accent) 32%, rgba(255,255,255,.10))!important;
+  background:color-mix(in srgb,var(--accent) 8%, rgba(255,255,255,.035))!important;
+  box-shadow:none!important;
+  opacity:.9!important;
+}
+.profile-top-strip .mini-edit.show{display:grid!important;place-items:center!important;}
+.profile-top-strip .editable-row:hover,
+.profile-top-strip .level-row:hover{
+  background:color-mix(in srgb,var(--accent) 5%, transparent)!important;
+}
+.profile-top-strip .editable-row:hover .mini-edit,
+.profile-top-strip .level-row:hover .mini-edit{
+  border-color:color-mix(in srgb,var(--accent) 55%, rgba(255,255,255,.10))!important;
+  background:color-mix(in srgb,var(--accent) 14%, rgba(255,255,255,.045))!important;
+  opacity:1!important;
+}
+@media(max-width:1100px){
+  .profile-top-strip .profile-info{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  .profile-top-strip .row:nth-child(3){border-right:0!important;}
+  .profile-top-strip .row:nth-child(3)::after{display:none!important;}
+}
+@media(max-width:700px){
+  #dashboardProfileInfo.profile-top-strip{border-radius:22px!important;margin-bottom:14px!important;}
+  .profile-top-strip .profile-info{grid-template-columns:1fr!important;}
+  .profile-top-strip .row,
+  .profile-top-strip .editable-row,
+  .profile-top-strip .level-row{
+    min-height:58px!important;
+    padding:11px 14px!important;
+    border-right:0!important;
+    border-bottom:1px solid rgba(255,255,255,.075)!important;
+    grid-template-columns:minmax(0,1fr) 24px!important;
+  }
+  .profile-top-strip .row::after,
+  .profile-top-strip .editable-row::after,
+  .profile-top-strip .level-row::after{display:none!important;}
+  .profile-top-strip .row:last-child,
+  .profile-top-strip .level-row:last-child{border-bottom:0!important;}
+  .profile-top-strip .row b{font-size:15px!important;}
 }
 
 </style>
