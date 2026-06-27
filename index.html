@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v075</title>
+<title>RP Cabinet TEST v076</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6047,6 +6047,43 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
     padding:8px 12px!important;
   }
   .profile-top-strip .row b{font-size:14px!important;}
+}
+
+
+/* v076: верхняя плашка профиля в цвете и заливке карточек "Карьерный путь" */
+#dashboardProfileInfo.profile-top-strip{
+  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.12))!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.026))!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.16)!important;
+}
+.profile-top-strip .row,
+.profile-top-strip .editable-row,
+.profile-top-strip .level-row{
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.026))!important;
+  border-right:1px solid color-mix(in srgb,var(--accent) 18%, rgba(255,255,255,.10))!important;
+}
+.profile-top-strip .row::after,
+.profile-top-strip .editable-row::after,
+.profile-top-strip .level-row::after{
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 28%, rgba(255,255,255,.08)),transparent)!important;
+}
+.profile-top-strip .row:last-child,
+.profile-top-strip .level-row:last-child{
+  border-right:0!important;
+}
+.profile-top-strip .editable-row:hover,
+.profile-top-strip .level-row:hover{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.04)),rgba(255,255,255,.028))!important;
+}
+@media(max-width:700px){
+  .profile-top-strip .row,
+  .profile-top-strip .editable-row,
+  .profile-top-strip .level-row{
+    border-right:0!important;
+    border-bottom:1px solid color-mix(in srgb,var(--accent) 18%, rgba(255,255,255,.10))!important;
+  }
+  .profile-top-strip .row:last-child,
+  .profile-top-strip .level-row:last-child{border-bottom:0!important;}
 }
 
 </style>
