@@ -2025,6 +2025,35 @@ body{
   content:"";
   display:none;
 }
+/* v043: Google avatar can be used as the first profile showcase icon */
+.profile-achievement-icon.google-avatar-active{
+  padding:0!important;
+  overflow:hidden!important;
+  background:rgba(255,255,255,.045)!important;
+}
+.profile-achievement-icon.google-avatar-active #rankIcon{
+  display:none!important;
+}
+.profile-achievement-icon .google-profile-avatar{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  border-radius:inherit;
+}
+.profile-icon-choice.google-avatar-choice{
+  border-color:color-mix(in srgb,var(--accent) 58%, white 0%)!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 13%, transparent),rgba(255,255,255,.045))!important;
+}
+.profile-icon-choice.google-avatar-choice img{
+  width:46px;
+  height:46px;
+  border-radius:16px;
+  object-fit:cover;
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.20);
+}
+
 
 
 /* v125: редкость достижений и исправление выбора значка */
@@ -5561,10 +5590,10 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 <div class="modal" id="profileIconModal">
 <div class="modal-card profile-icon-modal-card">
 <h2>Значок профиля</h2>
-<p>Можно поставить значок из уже открытых достижений.</p>
+<p>Можно поставить аватар Google или значок из уже открытых достижений.</p>
 <div class="profile-icon-grid" id="profileIconGrid"></div>
 <div class="modal-actions">
-<button class="btn soft" id="clearProfileIcon">Убрать значок</button>
+<button class="btn soft" id="clearProfileIcon">Вернуть Google / пусто</button>
 <button class="btn" id="closeProfileIcon">Закрыть</button>
 </div>
 </div>
@@ -6256,6 +6285,24 @@ function renderDirectionEmblem(){
   if(sub) sub.textContent=d.sub;
 }
 
+function getGoogleProfilePhoto(){
+  const fromUser=window.CloudSync && window.CloudSync.user && window.CloudSync.user.photoURL;
+  const fromState=S.cloud && S.cloud.googlePhotoURL;
+  const fromAccount=S.account && S.account.googlePhotoURL;
+  return fromUser || fromState || fromAccount || '';
+}
+function rememberGoogleProfileInfo(user){
+  if(!user) return;
+  if(!S.cloud || typeof S.cloud!=='object') S.cloud={enabled:false,provider:'local',uid:'',lastSync:0};
+  if(!S.account || typeof S.account!=='object') S.account={achievements:{}};
+  if(user.photoURL){
+    S.cloud.googlePhotoURL=user.photoURL;
+    S.account.googlePhotoURL=user.photoURL;
+  }
+  if(user.email) S.cloud.googleEmail=user.email;
+  if(user.displayName) S.cloud.googleName=user.displayName;
+}
+
 function selectedProfileIconDef(){
   const id=S.account && S.account.profileIconAchievementId;
   if(!id) return null;
@@ -6273,11 +6320,30 @@ function renderProfileIcon(){
   const tag=$('#rankTier');
   if(!icon || !tag) return;
   const box=$('#profileInitial');
+  const googlePhoto=getGoogleProfilePhoto();
+  if(box){
+    box.querySelectorAll('.google-profile-avatar').forEach(el=>el.remove());
+    box.classList.remove('google-avatar-active');
+  }
   if(def){
     icon.textContent=def.icon;
     tag.textContent='';
     if(box) box.classList.remove('empty-profile-icon');
     $('#profileInitial').title=`Значок профиля: ${def.title}`;
+  }else if(googlePhoto){
+    icon.textContent='';
+    tag.textContent='';
+    if(box){
+      box.classList.remove('empty-profile-icon');
+      box.classList.add('google-avatar-active');
+      const img=document.createElement('img');
+      img.className='google-profile-avatar';
+      img.alt='Google avatar';
+      img.referrerPolicy='no-referrer';
+      img.src=googlePhoto;
+      box.prepend(img);
+    }
+    $('#profileInitial').title='Аватар Google. Нажми, чтобы выбрать значок профиля';
   }else{
     icon.textContent='＋';
     tag.textContent='';
@@ -6318,16 +6384,23 @@ function renderProfileIconModal(){
   const opened=ACHIEVEMENT_DEFS
     .filter(a=>got[a.id])
     .sort((a,b)=>(rarityOrder[a.rarity||'common']-rarityOrder[b.rarity||'common']) || a.title.localeCompare(b.title,'ru'));
-  if(!opened.length){
+  const selected=S.account?.profileIconAchievementId||'';
+  const googlePhoto=getGoogleProfilePhoto();
+  const googleCard=googlePhoto ? `<button class="profile-icon-choice google-avatar-choice ${!selected?'active':''}" data-profile-google-avatar="1">
+    <div><img src="${googlePhoto}" referrerpolicy="no-referrer" alt="Google avatar"><b>Аватар Google</b><em class="rarity-label">аккаунт</em></div>
+  </button>` : '';
+  if(!opened.length && !googlePhoto){
     grid.innerHTML='<div class="profile-icon-empty">Достижений пока нет. Пока значок профиля останется пустым. Когда откроешь достижения, здесь появится выбор.</div>';
     return;
   }
-  const selected=S.account?.profileIconAchievementId||'';
-  grid.innerHTML=opened.map(a=>`<button class="profile-icon-choice ${selected===a.id?'active':''} rarity-${a.rarity||'common'}" data-profile-icon="${a.id}">
+  grid.innerHTML=googleCard + opened.map(a=>`<button class="profile-icon-choice ${selected===a.id?'active':''} rarity-${a.rarity||'common'}" data-profile-icon="${a.id}">
     <div><div class="icon">${a.icon}</div><b>${a.title}</b><em class="rarity-label">${rarityName(a.rarity)}</em></div>
   </button>`).join('');
   document.querySelectorAll('[data-profile-icon]').forEach(btn=>{
     btn.onclick=()=>setProfileIcon(btn.dataset.profileIcon);
+  });
+  document.querySelectorAll('[data-profile-google-avatar]').forEach(btn=>{
+    btn.onclick=()=>{clearProfileIcon(); closeProfileIconModal(); showToast('Аватар Google','Поставлен аватар аккаунта Google');};
   });
 }
 function renderRankEmblem(){
@@ -7030,6 +7103,7 @@ window.CloudSync={
   async onAuth(user){
     this.user=user||null;
     if(!user){renderCloudSyncStatus();return;}
+    rememberGoogleProfileInfo(user);
     // KIRI v039: не сохраняем локальный профиль сразу после входа.
     // Иначе старое устройство получает свежий updatedAt и может перезаписать облако.
     await this.attachProfile();
@@ -7050,14 +7124,16 @@ window.CloudSync={
       // Локальный кэш телефона/ПК не имеет права перезаписывать облако просто из-за повторного входа.
       window.__cloudApplyingRemote=true;
       S=cloud;
-      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:cloudUpdated});
+      rememberGoogleProfileInfo(this.user);
+      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,lastSync:Date.now(),lastCloudUpdatedAt:cloudUpdated,googlePhotoURL:S.cloud?.googlePhotoURL||this.user.photoURL||'',googleEmail:this.user.email||S.cloud?.googleEmail||''});
       save();
       window.__cloudApplyingRemote=false;
       render();
       applyDashTab();
       showToast('Профиль загружен','Данные подтянуты из облака');
     }else if(local && local.ready){
-      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid});
+      rememberGoogleProfileInfo(this.user);
+      S.cloud=Object.assign({},S.cloud||{}, {enabled:true,provider:'google',uid:this.user.uid,googlePhotoURL:this.user.photoURL||S.cloud?.googlePhotoURL||'',googleEmail:this.user.email||S.cloud?.googleEmail||''});
       await this.saveNow(true);
       showToast('Облако подключено','Локальный профиль перенесён в Firebase');
     }
