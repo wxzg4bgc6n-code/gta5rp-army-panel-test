@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v079</title>
+<title>RP Cabinet TEST v080</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6341,6 +6341,122 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
   .profile-top-strip .level-row{flex-basis:100%!important;}
 }
 
+
+
+/* v080: плашки профиля — стиль карьерного пути, 5 фиксированных мест, вся строка кликабельна */
+.profile-main-settings-hidden{display:none!important;}
+#dashboardProfileInfo.profile-top-strip{
+  margin:0 0 18px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+.profile-top-strip .profile-info{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:10px!important;
+  width:100%!important;
+  padding:0!important;
+  background:transparent!important;
+}
+.profile-top-strip .row,
+.profile-top-strip .editable-row,
+.profile-top-strip .level-row{
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  height:52px!important;
+  min-height:52px!important;
+  padding:0 12px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:18px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.12))!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.026))!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.16)!important;
+  cursor:pointer!important;
+  overflow:hidden!important;
+  opacity:1!important;
+  visibility:visible!important;
+  transition:border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease!important;
+}
+.profile-top-strip .row.profile-top-hidden{
+  display:flex!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+.profile-top-strip .row::before,
+.profile-top-strip .editable-row::before,
+.profile-top-strip .level-row::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 8%, transparent),transparent 58%)!important;
+  opacity:.55!important;
+}
+.profile-top-strip .row::after,
+.profile-top-strip .editable-row::after,
+.profile-top-strip .level-row::after{
+  content:""!important;
+  position:absolute!important;
+  right:10px!important;
+  top:50%!important;
+  width:6px!important;
+  height:6px!important;
+  border-radius:999px!important;
+  background:color-mix(in srgb,var(--accent) 78%, white 10%)!important;
+  opacity:.48!important;
+  transform:translateY(-50%)!important;
+  display:block!important;
+}
+.profile-top-strip .row span{display:none!important;}
+.profile-top-strip .row b{
+  position:relative!important;
+  z-index:1!important;
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  color:var(--text)!important;
+  font-size:clamp(10px,.72vw,13px)!important;
+  font-weight:950!important;
+  letter-spacing:.02em!important;
+  line-height:1!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  padding:0 8px 0 0!important;
+}
+.profile-top-strip .mini-edit{display:none!important;}
+.profile-top-strip .row:hover,
+.profile-top-strip .editable-row:hover,
+.profile-top-strip .level-row:hover{
+  transform:translateY(-1px)!important;
+  border-color:color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.12))!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.04)),rgba(255,255,255,.028))!important;
+  box-shadow:0 16px 36px rgba(0,0,0,.24),0 0 0 1px color-mix(in srgb,var(--accent) 12%, transparent)!important;
+}
+#orgSectionModal .modal-card h2::after{
+  content:" · проект / путь / организация / раздел / ступень";
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:0;
+}
+@media(max-width:900px){
+  .profile-top-strip .profile-info{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+}
+@media(max-width:420px){
+  .profile-top-strip .profile-info{grid-template-columns:1fr!important;}
+}
+
 </style>
 </head>
 <body>
@@ -7938,6 +8054,14 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
 <p>При смене организации или раздела задачи прогресса будут обновлены.</p>
 <div class="settings-grid">
 <label class="field">
+<span>Проект</span>
+<select id="modalProjectSelect"><option>GTA5RP</option><option>Majestic RP</option></select>
+</label>
+<label class="field">
+<span>Путь</span>
+<select id="modalPathSelect"><option>Государственная служба</option><option>Крайм</option></select>
+</label>
+<label class="field">
 <span>Организация</span>
 <select id="modalOrgSelect"></select>
 </label>
@@ -7978,8 +8102,8 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
 <p>Здесь можно сменить проект, путь и стиль панели. При смене проекта или пути организация и прогресс сбросятся.</p>
 <div class="settings-grid">
 <label class="field"><span>Имя / ник</span><input id="settingsName" placeholder="Введи ник"/></label>
-<label class="field"><span>Проект</span><select id="settingsProject"><option>GTA5RP</option><option>Majestic RP</option></select></label>
-<label class="field"><span>Путь</span><select id="settingsPath"><option>Государственная служба</option><option>Крайм</option></select></label>
+<label class="field profile-main-settings-hidden"><span>Проект</span><select id="settingsProject"><option>GTA5RP</option><option>Majestic RP</option></select></label>
+<label class="field profile-main-settings-hidden"><span>Путь</span><select id="settingsPath"><option>Государственная служба</option><option>Крайм</option></select></label>
 <label class="field">
 <span>Стиль панели</span>
 <div class="theme-cards" id="themeCards">
@@ -8481,17 +8605,26 @@ function renderProgress(){
 }
 
 
+function modalActivePath(){
+  return document.getElementById('modalPathSelect')?.value || S.path || 'Государственная служба';
+}
 function modalSectionsForOrg(org){
-  return SECTIONS[org] || (S.path==='Государственная служба'?SECTIONS.defaultGov:SECTIONS.defaultCrime);
+  const path=modalActivePath();
+  return SECTIONS[org] || (path==='Государственная служба'?SECTIONS.defaultGov:SECTIONS.defaultCrime);
 }
 function modalLevelsForSection(section){
   return LEVELS[section] || LEVELS.default;
 }
 function fillOrgSectionModal(){
+  const projectSelect=$('#modalProjectSelect');
+  const pathSelect=$('#modalPathSelect');
   const orgSelect=$('#modalOrgSelect');
   const sectionSelect=$('#modalSectionSelect');
   const levelSelect=$('#modalOrgLevelSelect');
-  const orgList=ORGS[S.path]||[];
+  if(projectSelect) projectSelect.value=S.project||'GTA5RP';
+  if(pathSelect) pathSelect.value=S.path||'Государственная служба';
+  const activePath=pathSelect ? pathSelect.value : S.path;
+  const orgList=ORGS[activePath]||[];
   const selectedOrg=orgList.includes(S.org)?S.org:(orgList[0]||'');
   orgSelect.innerHTML=orgList.map(v=>`<option value="${v}" ${v===selectedOrg?'selected':''}>${v}</option>`).join('');
 
@@ -8512,10 +8645,15 @@ function closeOrgSectionModal(){
   $('#orgSectionModal').classList.remove('open');
 }
 function saveOrgSectionModal(){
+  const newProject=$('#modalProjectSelect')?.value || S.project;
+  const newPath=$('#modalPathSelect')?.value || S.path;
   const newOrg=$('#modalOrgSelect').value;
   const newSection=$('#modalSectionSelect').value;
   const newLevel=$('#modalOrgLevelSelect').value;
-  const changed = newOrg!==S.org || newSection!==S.section || newLevel!==S.level;
+  const changedMain = newProject!==S.project || newPath!==S.path;
+  const changed = changedMain || newOrg!==S.org || newSection!==S.section || newLevel!==S.level;
+  S.project=newProject;
+  S.path=newPath;
   S.org=newOrg;
   S.section=newSection;
   S.level=newLevel;
@@ -9598,10 +9736,10 @@ function saveSettings(){
   const oldName=S.name||'';
   const oldStyle=S.style||'style-violet';
   const newName=$('#settingsName').value.trim() || S.name || 'Игрок';
-  const newProject=$('#settingsProject').value;
-  const newPath=$('#settingsPath').value;
+  const newProject=S.project;
+  const newPath=S.path;
   const active=document.querySelector('.theme-card.active')?.dataset.style || S.style || 'style-arctic';
-  const changedMain=newProject!==S.project || newPath!==S.path;
+  const changedMain=false;
   S.name=newName;
   S.project=newProject;
   S.path=newPath;
@@ -9643,17 +9781,37 @@ $('#saveSetup').onclick=()=>{
 
 $('#editOrgBtn').onclick=openOrgSectionModal;
 $('#editSectionBtn').onclick=openOrgSectionModal;
-$('#infoOrg').onclick=openOrgSectionModal;
-$('#infoSection').onclick=openOrgSectionModal;
+['infoProject','infoPath','infoOrg','infoSection','infoLevel'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.onclick=openOrgSectionModal;
+});
+document.querySelectorAll('#dashboardProfileInfo .profile-info > .row').forEach(row=>{
+  row.addEventListener('click',openOrgSectionModal);
+});
 $('#closeOrgSectionModal').onclick=closeOrgSectionModal;
 $('#saveOrgSectionModal').onclick=saveOrgSectionModal;
-$('#modalOrgSelect').onchange=()=>{
+function refreshOrgChoicesForModalPath(){
+  const path=$('#modalPathSelect')?.value || S.path;
+  const orgList=ORGS[path]||[];
+  const orgSelect=$('#modalOrgSelect');
+  const oldOrg=orgSelect.value;
+  const selectedOrg=orgList.includes(oldOrg)?oldOrg:(orgList[0]||'');
+  orgSelect.innerHTML=orgList.map(v=>`<option value="${v}" ${v===selectedOrg?'selected':''}>${v}</option>`).join('');
+  refreshSectionChoicesForModalOrg();
+}
+function refreshSectionChoicesForModalOrg(){
   const org=$('#modalOrgSelect').value;
   const secList=modalSectionsForOrg(org);
-  $('#modalSectionSelect').innerHTML=secList.map(v=>`<option value="${v}">${v}</option>`).join('');
-  const lvlList=modalLevelsForSection($('#modalSectionSelect').value);
+  const sectionSelect=$('#modalSectionSelect');
+  const oldSection=sectionSelect.value;
+  const selectedSection=secList.includes(oldSection)?oldSection:(secList[0]||'');
+  sectionSelect.innerHTML=secList.map(v=>`<option value="${v}" ${v===selectedSection?'selected':''}>${v}</option>`).join('');
+  const lvlList=modalLevelsForSection(sectionSelect.value);
   $('#modalOrgLevelSelect').innerHTML=lvlList.map(v=>`<option value="${v}">${v}</option>`).join('');
-};
+}
+$('#modalProjectSelect').onchange=()=>{};
+$('#modalPathSelect').onchange=refreshOrgChoicesForModalPath;
+$('#modalOrgSelect').onchange=refreshSectionChoicesForModalOrg;
 $('#modalSectionSelect').onchange=()=>{
   const lvlList=modalLevelsForSection($('#modalSectionSelect').value);
   $('#modalOrgLevelSelect').innerHTML=lvlList.map(v=>`<option value="${v}">${v}</option>`).join('');
