@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v086</title>
+<title>RP Cabinet TEST v088</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6654,6 +6654,75 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
   }
 }
 
+
+
+/* KIRI v087: витрина достижений не мигает при загрузке/синхронизации */
+body.achievement-showcase-loading #achievementPreviewGrid,
+body.achievement-showcase-loading #achievementShowcaseNote{
+  visibility:hidden!important;
+}
+body.achievement-showcase-loading #achievementPreviewGrid{
+  min-height:150px!important;
+}
+@media(max-width:700px){
+  body.achievement-showcase-loading #achievementPreviewGrid{
+    min-height:330px!important;
+  }
+}
+
+
+
+/* KIRI v088: мобильное закрытие окна достижений — крестик всегда виден */
+.achievements-modal{
+  position:relative!important;
+}
+.modal-x{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:38px;
+  height:38px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(8,12,22,.78);
+  color:var(--text);
+  display:grid;
+  place-items:center;
+  font-size:24px;
+  line-height:1;
+  font-weight:850;
+  z-index:20;
+  box-shadow:0 12px 28px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.045);
+}
+.modal-x:hover{
+  border-color:color-mix(in srgb,var(--accent) 45%, rgba(255,255,255,.12));
+  background:color-mix(in srgb,var(--accent) 10%, rgba(8,12,22,.82));
+}
+@media(max-width:700px){
+  #achievementsModal .achievements-modal{
+    padding-top:18px!important;
+  }
+  #achievementsModal .achievement-modal-x{
+    position:sticky!important;
+    top:0!important;
+    margin-left:auto!important;
+    margin-bottom:6px!important;
+    right:auto!important;
+    width:34px!important;
+    height:34px!important;
+    border-radius:12px!important;
+    font-size:22px!important;
+    backdrop-filter:blur(12px)!important;
+    -webkit-backdrop-filter:blur(12px)!important;
+  }
+  #achievementsModal #closeAchievements{
+    display:none!important;
+  }
+  #achievementsModal .modal-actions{
+    display:none!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -8226,6 +8295,7 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
 </div>
 <div class="modal" id="achievementsModal">
 <div class="modal-card achievements-modal">
+<button class="modal-x achievement-modal-x" id="closeAchievementsX" type="button" aria-label="Закрыть">×</button>
 <h2>Коллекция достижений</h2>
 <div class="showcase-modal-tip" id="showcaseModalTip">В витрину можно закрепить до 6 открытых достижений. Если ничего не выбрано, профиль сам покажет самые редкие.</div>
 <div class="account-modal-summary">
@@ -8498,6 +8568,17 @@ let S={ready:false,name:'',project:'GTA5RP',path:'Государственная
 let displayedProgress=0;
 let progressAnimationFrame=null;
 const $=s=>document.querySelector(s);
+
+/* KIRI v087: скрываем витрину до окончания локальной/облачной загрузки, чтобы не мигали сначала все достижения */
+window.__achievementShowcaseHold=true;
+document.body.classList.add('achievement-showcase-loading');
+function releaseAchievementShowcase(){
+  window.__achievementShowcaseHold=false;
+  document.body.classList.remove('achievement-showcase-loading');
+}
+setTimeout(()=>{
+  if(window.__achievementShowcaseHold) releaseAchievementShowcase();
+},2200);
 
 function save(){
   // KIRI v039: обновляем updatedAt только при реальном действии пользователя.
@@ -9754,6 +9835,7 @@ window.CloudSync={
       this.auth.onAuthStateChanged(user=>this.onAuth(user));
     }catch(e){
       console.warn('Firebase init failed',e);
+      releaseAchievementShowcase();
       this.ready=false;
       setCloudStatus('error','Firebase недоступен','Панель работает локально. Облако не подключилось.',String(e.message||e));
     }
@@ -9792,7 +9874,7 @@ window.CloudSync={
   },
   async onAuth(user){
     this.user=user||null;
-    if(!user){renderCloudSyncStatus();return;}
+    if(!user){renderCloudSyncStatus();releaseAchievementShowcase();return;}
     rememberGoogleProfileInfo(user);
     await this.attachProfile();
   },
@@ -9852,6 +9934,8 @@ window.CloudSync={
       setCloudStatus('error','Ошибка синхронизации','Не удалось слушать изменения Firebase.',String(err.message||err).slice(0,120));
     });
     renderCloudSyncStatus();
+    releaseAchievementShowcase();
+    renderAchievementPreviews();
   },
   scheduleSave(){
     if(!this.ready || !this.user || !S.ready || window.__cloudApplyingRemote || window.__cloudAttaching || window.__cloudSigningOut) return;
@@ -9876,6 +9960,7 @@ window.CloudSync={
     window.__cloudLocalDirtyAt=0;
     window.__cloudApplyingRemote=false;
     render();
+    releaseAchievementShowcase();
     applyDashTab();
     renderCloudSyncStatus();
     if(!silent) showToast('Профиль обновлён','Данные подтянуты из облака');
@@ -10031,12 +10116,10 @@ document.addEventListener('click',e=>{
   if(e.target && (e.target.id==='openAchievements' || e.target.id==='openAchievementsHero' || e.target.id==='openAchievementsHeroMini')) openAchievementsModal();
 });
 $('#closeAchievements').onclick=closeAchievementsModal;
+$('#closeAchievementsX').onclick=closeAchievementsModal;
 $('#achievementsModal').onclick=e=>{if(e.target.id==='achievementsModal')closeAchievementsModal()};
 
-function sectionDisplayName(){
-  if(!S.configured || !S.section) return 'Academy';
-  return S.section;
-}
+/* KIRI v087: удалён старый дубль renderDynamicDepartmentDashboard; оставлена только актуальная версия v030 ниже. */
 function sectionTabIconSvg(section){
   if(section==='USAF') return '<svg viewBox="0 0 24 24"><path d="M2 16l20-8-8 8 1 6-4-4-5 2 2-4-6 0Z"/></svg>';
   if(section==='MP') return '<svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.5 9 8 11 4.5-2 8-6 8-11V5l-8-3Z"/><path d="M9 12h6"/><path d="M12 9v6"/></svg>';
@@ -10047,32 +10130,7 @@ function sectionTabIconSvg(section){
   if(section==='ED') return '<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5Z"/></svg>';
   return '<svg viewBox="0 0 24 24"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3.5 2 8.5 2 12 0v-5"/><path d="M22 10v6"/></svg>';
 }
-function renderDynamicDepartmentDashboard(){
-  const label=document.getElementById('sectionInfoTabLabel');
-  const icon=document.getElementById('sectionInfoTabIcon');
-  const title=document.getElementById('departmentInfoTitle');
-  const desc=document.getElementById('departmentInfoDesc');
-  const badge=document.getElementById('departmentInfoBadge');
-  const content=document.getElementById('departmentInfoContent');
-  const section=sectionDisplayName();
-  if(label) label.textContent=section;
-  if(icon) icon.innerHTML=sectionTabIconSvg(section);
-  if(title) title.textContent=(section==='Academy'?'🎓 ':'▣ ')+section;
-  if(badge) badge.textContent=section.toUpperCase();
-  if(!content) return;
-  if(section==='Academy'){
-    const tpl=document.getElementById('academyInfoTemplate');
-    if(tpl && !content.dataset.renderedAcademy){
-      content.innerHTML=tpl.innerHTML;
-      content.dataset.renderedAcademy='1';
-    }
-    if(desc) desc.textContent='Информация и тесты, связанные только с Academy.';
-  }else{
-    content.dataset.renderedAcademy='';
-    if(desc) desc.textContent='Вкладка уже под выбранный отдел. Сюда дальше добавим тесты и инфу именно этого отдела.';
-    content.innerHTML=`<div class="department-placeholder"><h3>${section}</h3><p>Раздел переключился под выбранный отдел. Сейчас из старой панели перенесены готовые тесты Academy; следующие тесты и справочники будем добавлять сюда по отделам, чтобы вместо общей плашки ARMY была конкретная вкладка выбранного направления.</p></div>`;
-  }
-}
+
 
 let activeDashTab='profile';
 function applyDashTab(){
