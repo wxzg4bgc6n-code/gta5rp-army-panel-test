@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v078</title>
+<title>RP Cabinet TEST v079</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6204,6 +6204,141 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
 }
 @media(max-width:360px){
   .profile-top-strip .profile-info{grid-template-columns:1fr!important;}
+}
+
+
+
+/* v079: верхние плашки профиля как вкладки — 5 в ряд, без общей рамки, полный текст */
+#dashboardProfileInfo.profile-top-strip{
+  margin:0 0 18px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+.profile-top-strip .profile-info{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  gap:8px!important;
+  align-items:stretch!important;
+  width:100%!important;
+  padding:0!important;
+  background:transparent!important;
+}
+.profile-top-strip .row,
+.profile-top-strip .editable-row,
+.profile-top-strip .level-row{
+  position:relative!important;
+  flex:1 1 0!important;
+  min-width:0!important;
+  height:50px!important;
+  min-height:50px!important;
+  padding:0 34px 0 14px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:10px!important;
+  border:1px solid rgba(255,255,255,.075)!important;
+  background:rgba(4,7,14,.58)!important;
+  color:var(--muted)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 10px 24px rgba(0,0,0,.18)!important;
+  overflow:hidden!important;
+  transition:border-color .18s ease, background .18s ease, box-shadow .18s ease, color .18s ease, transform .18s ease!important;
+}
+.profile-top-strip .row.profile-top-hidden{display:none!important;}
+.profile-top-strip .row.profile-top-last{border:1px solid rgba(255,255,255,.075)!important;}
+.profile-top-strip .row::after,
+.profile-top-strip .editable-row::after,
+.profile-top-strip .level-row::after{display:none!important;content:none!important;}
+.profile-top-strip .row::before,
+.profile-top-strip .editable-row::before,
+.profile-top-strip .level-row::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,0))!important;
+}
+.profile-top-strip .row span{display:none!important;}
+.profile-top-strip .row b{
+  display:block!important;
+  width:auto!important;
+  max-width:100%!important;
+  min-width:0!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:.015em!important;
+  text-transform:none!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  padding:0!important;
+  position:relative!important;
+  z-index:1!important;
+}
+.profile-top-strip .row b::before,
+#infoProject::before,
+#infoPath::before,
+#infoOrg::before,
+#infoSection::before,
+#infoLevel::before{display:none!important;content:none!important;}
+.profile-top-strip .mini-edit{
+  position:absolute!important;
+  right:9px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:22px!important;
+  height:22px!important;
+  min-width:22px!important;
+  min-height:22px!important;
+  border-radius:8px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 34%, rgba(255,255,255,.10))!important;
+  background:rgba(255,255,255,.04)!important;
+  color:var(--accent)!important;
+  box-shadow:none!important;
+  opacity:.92!important;
+  font-size:0!important;
+  line-height:1!important;
+  padding:0!important;
+  margin:0!important;
+  z-index:2!important;
+}
+.profile-top-strip .mini-edit.show{display:grid!important;place-items:center!important;}
+.profile-top-strip .mini-edit::before{
+  content:"✎"!important;
+  display:block!important;
+  font-size:10px!important;
+  line-height:1!important;
+  color:var(--accent)!important;
+  margin:0!important;
+}
+.profile-top-strip .mini-edit svg,
+.profile-top-strip .mini-edit img{display:none!important;}
+.profile-top-strip .editable-row:hover,
+.profile-top-strip .level-row:hover,
+.profile-top-strip .row:hover{
+  color:var(--text)!important;
+  border-color:color-mix(in srgb,var(--accent) 45%, rgba(255,255,255,.10))!important;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 20%, rgba(255,255,255,.035)),color-mix(in srgb,var(--accent) 10%, rgba(5,8,15,.58)))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055),0 0 0 1px color-mix(in srgb,var(--accent) 10%, transparent),0 14px 30px rgba(0,0,0,.24),0 0 24px color-mix(in srgb,var(--accent) 16%, transparent)!important;
+}
+.profile-top-strip .row:hover b,
+.profile-top-strip .editable-row:hover b,
+.profile-top-strip .level-row:hover b{color:var(--text)!important;}
+@media(max-width:900px){
+  .profile-top-strip .profile-info{flex-wrap:wrap!important;gap:7px!important;}
+  .profile-top-strip .row,
+  .profile-top-strip .editable-row,
+  .profile-top-strip .level-row{flex:1 1 calc(50% - 7px)!important;height:46px!important;min-height:46px!important;padding:0 32px 0 12px!important;}
+}
+@media(max-width:420px){
+  .profile-top-strip .row,
+  .profile-top-strip .editable-row,
+  .profile-top-strip .level-row{flex-basis:100%!important;}
 }
 
 </style>
