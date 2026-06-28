@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v088</title>
+<title>RP Cabinet TEST v089</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6671,49 +6671,37 @@ body.achievement-showcase-loading #achievementPreviewGrid{
 }
 
 
-
-/* KIRI v088: мобильное закрытие окна достижений — крестик всегда виден */
-.achievements-modal{
-  position:relative!important;
-}
-.modal-x{
-  position:absolute;
-  top:14px;
-  right:14px;
-  width:38px;
-  height:38px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(8,12,22,.78);
-  color:var(--text);
-  display:grid;
-  place-items:center;
-  font-size:24px;
-  line-height:1;
-  font-weight:850;
-  z-index:20;
-  box-shadow:0 12px 28px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.045);
-}
-.modal-x:hover{
-  border-color:color-mix(in srgb,var(--accent) 45%, rgba(255,255,255,.12));
-  background:color-mix(in srgb,var(--accent) 10%, rgba(8,12,22,.82));
+/* KIRI v089: мобильный крестик в окне достижений без изменения окна/фона/скруглений */
+.achievement-modal-x{
+  display:none;
 }
 @media(max-width:700px){
-  #achievementsModal .achievements-modal{
-    padding-top:18px!important;
-  }
   #achievementsModal .achievement-modal-x{
-    position:sticky!important;
-    top:0!important;
-    margin-left:auto!important;
-    margin-bottom:6px!important;
-    right:auto!important;
+    position:fixed!important;
+    top:calc(env(safe-area-inset-top, 0px) + 16px)!important;
+    right:18px!important;
+    z-index:10050!important;
     width:34px!important;
     height:34px!important;
+    min-width:34px!important;
+    min-height:34px!important;
+    padding:0!important;
+    display:grid!important;
+    place-items:center!important;
     border-radius:12px!important;
+    border:1px solid rgba(255,255,255,.12)!important;
+    background:rgba(8,12,22,.86)!important;
+    color:var(--text)!important;
     font-size:22px!important;
+    line-height:1!important;
+    font-weight:850!important;
+    box-shadow:0 12px 28px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.045)!important;
     backdrop-filter:blur(12px)!important;
     -webkit-backdrop-filter:blur(12px)!important;
+  }
+  #achievementsModal .achievement-modal-x:hover{
+    border-color:color-mix(in srgb,var(--accent) 45%, rgba(255,255,255,.12))!important;
+    background:color-mix(in srgb,var(--accent) 10%, rgba(8,12,22,.86))!important;
   }
   #achievementsModal #closeAchievements{
     display:none!important;
@@ -8295,7 +8283,7 @@ body.achievement-showcase-loading #achievementPreviewGrid{
 </div>
 <div class="modal" id="achievementsModal">
 <div class="modal-card achievements-modal">
-<button class="modal-x achievement-modal-x" id="closeAchievementsX" type="button" aria-label="Закрыть">×</button>
+<button class="achievement-modal-x" id="closeAchievementsX" type="button" aria-label="Закрыть">×</button>
 <h2>Коллекция достижений</h2>
 <div class="showcase-modal-tip" id="showcaseModalTip">В витрину можно закрепить до 6 открытых достижений. Если ничего не выбрано, профиль сам покажет самые редкие.</div>
 <div class="account-modal-summary">
