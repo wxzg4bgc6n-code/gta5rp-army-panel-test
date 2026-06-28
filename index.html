@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v089</title>
+<title>RP Cabinet TEST v092</title>
 <style>
 :root{
   --bg:#02040a;
@@ -2485,10 +2485,10 @@ body{
 }
 
 /* В модалке выбора значка визуально разделяем порядок по редкости */
-.profile-icon-choice.rarity-common{order:1}
-.profile-icon-choice.rarity-rare{order:2}
-.profile-icon-choice.rarity-epic{order:3}
-.profile-icon-choice.rarity-legendary{order:4}
+.profile-icon-choice.rarity-legendary{order:1}
+.profile-icon-choice.rarity-epic{order:2}
+.profile-icon-choice.rarity-rare{order:3}
+.profile-icon-choice.rarity-common{order:4}
 .profile-icon-choice{
   min-height:118px!important;
 }
@@ -3956,17 +3956,7 @@ body[data-active-dash-tab="reports"] #dashboardDepartmentTests{display:none!impo
 .cloud-sync-mini::before{content:"";width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 12px var(--glow);} 
 @media(max-width:700px){.cloud-sync-actions{grid-template-columns:1fr;}}
 
-/* KIRI v036: витрина — открытые достижения сверху; Academy визуально мягче и меньше перегруза */
-#achievementGrid .achievement-card.locked{
-  order:50!important;
-}
-#achievementGrid .achievement-card:not(.locked){
-  order:1!important;
-}
-#achievementGrid .achievement-card .showcase-select-btn.active{
-  order:-1!important;
-}
-
+/* KIRI v091: удалён старый порядок #achievementGrid через CSS — сортировка теперь только в JS по редкости. */
 #dashboardDepartment .department-info-head{
   margin-bottom:18px!important;
 }
@@ -6711,6 +6701,66 @@ body.achievement-showcase-loading #achievementPreviewGrid{
   }
 }
 
+
+
+/* KIRI v091: безопасная чистка старых перебивок достижений */
+#achievementGrid .achievement-card{
+  order:initial!important;
+}
+#achievementGrid .achievement-card.rarity-legendary{order:1!important;}
+#achievementGrid .achievement-card.rarity-epic{order:2!important;}
+#achievementGrid .achievement-card.rarity-rare{order:3!important;}
+#achievementGrid .achievement-card.rarity-common{order:4!important;}
+/* выбранность не должна ломать общий порядок редкости */
+#achievementGrid .achievement-card .showcase-select-btn.active{
+  order:initial!important;
+}
+.profile-icon-choice.rarity-legendary{order:1!important;}
+.profile-icon-choice.rarity-epic{order:2!important;}
+.profile-icon-choice.rarity-rare{order:3!important;}
+.profile-icon-choice.rarity-common{order:4!important;}
+
+
+/* KIRI v092: открытые достижения всегда выше скрытых + единый крестик закрытия */
+#achievementsModal .achievement-modal-x{
+  position:fixed!important;
+  top:calc(env(safe-area-inset-top, 0px) + 16px)!important;
+  right:18px!important;
+  z-index:10050!important;
+  width:36px!important;
+  height:36px!important;
+  min-width:36px!important;
+  min-height:36px!important;
+  padding:0!important;
+  display:grid!important;
+  place-items:center!important;
+  border-radius:12px!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  background:rgba(8,12,22,.86)!important;
+  color:var(--text)!important;
+  font-size:22px!important;
+  line-height:1!important;
+  font-weight:850!important;
+  box-shadow:0 12px 28px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.045)!important;
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+}
+#achievementsModal .achievement-modal-x:hover{
+  border-color:color-mix(in srgb,var(--accent) 45%, rgba(255,255,255,.12))!important;
+  background:color-mix(in srgb,var(--accent) 10%, rgba(8,12,22,.86))!important;
+}
+#achievementsModal #closeAchievements,
+#achievementsModal .modal-actions{
+  display:none!important;
+}
+#achievementGrid .achievement-card,
+#achievementGrid .achievement-card.rarity-legendary,
+#achievementGrid .achievement-card.rarity-epic,
+#achievementGrid .achievement-card.rarity-rare,
+#achievementGrid .achievement-card.rarity-common{
+  order:initial!important;
+}
+
 </style>
 </head>
 <body>
@@ -9415,16 +9465,21 @@ function renderAchievementModal(){
   if(tip) tip.innerHTML=`Витрина: <b>${picked.length} / 6</b>. Нажми «В витрину» на открытом достижении. Если ничего не выбрано, профиль сам покажет самые редкие.`;
   const sourceList=activeAchCategory==='Все'?ACHIEVEMENT_DEFS:ACHIEVEMENT_DEFS.filter(a=>a.cat===activeAchCategory);
   const list=[...sourceList].sort((a,b)=>{
+    // v092: сначала ВСЕ открытые достижения, затем ВСЕ закрытые.
+    // Внутри каждой группы порядок по редкости: легендарные → эпические → редкие → обычные.
     const ao=got[a.id]?1:0;
     const bo=got[b.id]?1:0;
-    if(ao!==bo) return bo-ao; // открытые всегда выше закрытых
+    if(ao!==bo) return bo-ao;
+    const rarityDiff=rarityWeight(b.rarity)-rarityWeight(a.rarity);
+    if(rarityDiff) return rarityDiff;
+    const ap=picked.includes(a.id)?1:0;
+    const bp=picked.includes(b.id)?1:0;
+    if(ap!==bp) return bp-ap;
     if(ao && bo){
-      const ap=picked.includes(a.id)?1:0;
-      const bp=picked.includes(b.id)?1:0;
-      if(ap!==bp) return bp-ap; // выбранные в витрину первыми среди открытых
-      return ((got[b.id]?.time||0)-(got[a.id]?.time||0)) || (rarityWeight(b.rarity)-rarityWeight(a.rarity)) || a.title.localeCompare(b.title,'ru');
+      const timeDiff=(got[b.id]?.time||0)-(got[a.id]?.time||0);
+      if(timeDiff) return timeDiff;
     }
-    return (rarityWeight(b.rarity)-rarityWeight(a.rarity)) || a.title.localeCompare(b.title,'ru');
+    return a.title.localeCompare(b.title,'ru');
   });
   $('#achievementGrid').innerHTML=list.map(a=>{
     const open=!!got[a.id];
