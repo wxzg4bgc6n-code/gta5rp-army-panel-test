@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v082</title>
+<title>RP Cabinet TEST v083</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6570,6 +6570,26 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
 }
 @media(max-width:420px){
   .profile-top-strip .profile-info{grid-template-columns:1fr!important;}
+}
+
+
+
+/* KIRI v083: выравнивание только заголовка "🏆 Достижения" */
+#dashboardAchievements .dash-section-head > div:first-child h2{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  line-height:1.05 !important;
+  margin:0 !important;
+}
+#dashboardAchievements .dash-section-head{
+  align-items:center !important;
+}
+@media(max-width:900px){
+  #dashboardAchievements .dash-section-head > div:first-child h2{
+    align-items:center !important;
+    line-height:1.05 !important;
+  }
 }
 
 </style>
