@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v081</title>
+<title>RP Cabinet TEST v082</title>
 <style>
 :root{
   --bg:#02040a;
@@ -10307,11 +10307,11 @@ render = function(){
 
     if(projectSelect){
       const projects=['GTA5RP','Majestic RP'];
-      projectSelect.innerHTML=opt('', 'Не выбрано', !S.project)+projects.map(v=>opt(v,v,S.project===v)).join('');
+      projectSelect.innerHTML=projects.map(v=>opt(v,v,(S.project||'GTA5RP')===v)).join('');
     }
     if(pathSelect){
       const paths=['Государственная служба','Крайм'];
-      pathSelect.innerHTML=opt('', 'Не выбрано', !S.path)+paths.map(v=>opt(v,v,S.path===v)).join('');
+      pathSelect.innerHTML=paths.map(v=>opt(v,v,(S.path||'Государственная служба')===v)).join('');
     }
 
     const activePath=pathSelect?.value || S.path || '';
