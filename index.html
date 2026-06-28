@@ -9548,6 +9548,7 @@ function buildCareerPathSteps(){
   const academyDone=!!got['academy_finished'];
   if(isArmy){
     const academyActive=S.section==='Academy';
+    const academyCompletedButNotCurrent=academyDone && !academyActive;
     steps.push({
       title:'ARMY',
       status:S.section && S.section!=='Academy'?'Фракция активна':(academyActive?'Текущая фракция':'Фракция выбрана'),
@@ -9557,12 +9558,12 @@ function buildCareerPathSteps(){
     });
     steps.push({
       title:'Academy',
-      status:academyDone?'Завершено':(academyActive?`${S.level||'В процессе'} · ${p}%`:'Нужно выбрать'),
+      status:academyActive?`${S.level||'В процессе'} · ${p}%`: (academyCompletedButNotCurrent?'Завершено':'Нужно выбрать'),
       icon:'🎓',
-      done:academyDone,
+      done:academyCompletedButNotCurrent,
       active:academyActive,
-      locked:!academyActive && !academyDone,
-      progress:academyActive?p:(academyDone?100:undefined)
+      locked:!academyActive && !academyCompletedButNotCurrent,
+      progress:academyActive?p:(academyCompletedButNotCurrent?100:undefined)
     });
     if(S.configured && S.section && S.section!=='Academy'){
       steps.push({
