@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v084</title>
+<title>RP Cabinet TEST v085</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6598,6 +6598,59 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
   }
   #dashboardAchievements .achievement-title-icon{
     transform:translateY(0)!important;
+  }
+}
+
+
+
+/* KIRI v085: мобильная кнопка "Все достижения" меньше и без обрезания справа */
+@media(max-width:620px){
+  #dashboardAchievements,
+  #dashboardAchievements .dash-section-head,
+  #dashboardAchievements .achievement-showcase-toolbar{
+    overflow:visible!important;
+  }
+  #dashboardAchievements .dash-section-head{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:10px!important;
+  }
+  #dashboardAchievements .achievement-showcase-toolbar{
+    justify-content:end!important;
+    justify-self:end!important;
+    width:auto!important;
+    max-width:100%!important;
+    padding-right:6px!important;
+  }
+  #dashboardAchievements .hero-all-achievements-btn{
+    width:auto!important;
+    min-width:0!important;
+    max-width:190px!important;
+    min-height:42px!important;
+    height:42px!important;
+    padding:0 12px!important;
+    border-radius:12px!important;
+    font-size:12px!important;
+    gap:8px!important;
+    box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 7%, transparent), inset 0 0 16px color-mix(in srgb,var(--accent) 4%, transparent)!important;
+  }
+  #dashboardAchievements .hero-all-achievements-btn span{
+    white-space:nowrap!important;
+  }
+  #dashboardAchievements .hero-all-achievements-btn svg{
+    width:15px!important;
+    height:15px!important;
+    flex:0 0 15px!important;
+  }
+}
+@media(max-width:420px){
+  #dashboardAchievements .hero-all-achievements-btn{
+    max-width:176px!important;
+    min-height:40px!important;
+    height:40px!important;
+    padding:0 10px!important;
+    font-size:11.5px!important;
   }
 }
 
