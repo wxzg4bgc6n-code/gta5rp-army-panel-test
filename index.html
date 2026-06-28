@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v085</title>
+<title>RP Cabinet TEST v086</title>
 <style>
 :root{
   --bg:#02040a;
@@ -9488,11 +9488,12 @@ function buildCareerPathSteps(){
     });
     steps.push({
       title:'Academy',
-      status:academyDone?'Завершено':(academyActive?`${S.level||'В процессе'} · ${p}%`:'Не отмечено'),
+      status:academyDone?'Завершено':(academyActive?`${S.level||'В процессе'} · ${p}%`:'Нужно выбрать'),
       icon:'🎓',
       done:academyDone,
       active:academyActive,
-      progress:academyActive?p:(academyDone?100:0)
+      locked:!academyActive && !academyDone,
+      progress:academyActive?p:(academyDone?100:undefined)
     });
     if(S.configured && S.section && S.section!=='Academy'){
       steps.push({
