@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v083</title>
+<title>RP Cabinet TEST v084</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6574,21 +6574,30 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
 
 
 
-/* KIRI v083: выравнивание только заголовка "🏆 Достижения" */
-#dashboardAchievements .dash-section-head > div:first-child h2{
-  display:flex !important;
-  align-items:center !important;
-  gap:10px !important;
-  line-height:1.05 !important;
-  margin:0 !important;
+/* KIRI v084: реальное выравнивание заголовка "Достижения" — иконка отдельным элементом */
+#dashboardAchievements .achievement-title-aligned{
+  display:flex!important;
+  align-items:center!important;
+  gap:12px!important;
+  margin:0!important;
+  line-height:1!important;
 }
-#dashboardAchievements .dash-section-head{
-  align-items:center !important;
+#dashboardAchievements .achievement-title-icon{
+  display:inline-grid!important;
+  place-items:center!important;
+  width:1.12em!important;
+  height:1.12em!important;
+  line-height:1!important;
+  font-size:.92em!important;
+  transform:translateY(1px)!important;
+  flex:0 0 auto!important;
 }
-@media(max-width:900px){
-  #dashboardAchievements .dash-section-head > div:first-child h2{
-    align-items:center !important;
-    line-height:1.05 !important;
+@media(max-width:620px){
+  #dashboardAchievements .achievement-title-aligned{
+    gap:10px!important;
+  }
+  #dashboardAchievements .achievement-title-icon{
+    transform:translateY(0)!important;
   }
 }
 
@@ -6689,7 +6698,7 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
 </div>
 <div class="panel dashboard-section" id="dashboardAchievements">
 <div class="dash-section-head">
-<div><h2>🏆 Достижения</h2></div>
+<div><h2 class="achievement-title-aligned"><span class="achievement-title-icon" aria-hidden="true">🏆</span><span>Достижения</span></h2></div>
 <div class="achievement-showcase-toolbar">
 <button class="btn soft hero-all-achievements-btn" id="openAchievementsHero"><span>Все достижения</span><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path><path d="M19 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"></path></svg></button>
 </div>
