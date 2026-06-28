@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v080</title>
+<title>RP Cabinet TEST v081</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6457,6 +6457,121 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
   .profile-top-strip .profile-info{grid-template-columns:1fr!important;}
 }
 
+
+
+/* KIRI v081: профильные плашки — чистые, без карандашей/точек, стиль карьерного пути */
+#dashboardProfileInfo.profile-top-strip{
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+.profile-top-strip .profile-info{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  gap:10px!important;
+  width:100%!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+.profile-top-strip .row,
+.profile-top-strip .editable-row,
+.profile-top-strip .level-row{
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  height:52px!important;
+  min-height:52px!important;
+  padding:0 16px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:14px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.12))!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.026))!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.16)!important;
+  cursor:pointer!important;
+  overflow:hidden!important;
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease!important;
+}
+.profile-top-strip .row.profile-top-hidden{
+  display:flex!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+.profile-top-strip .row::before,
+.profile-top-strip .editable-row::before,
+.profile-top-strip .level-row::before,
+.profile-top-strip .row::after,
+.profile-top-strip .editable-row::after,
+.profile-top-strip .level-row::after{
+  display:none!important;
+  content:none!important;
+}
+.profile-top-strip .mini-edit,
+.profile-top-strip .mini-edit.show{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+.profile-top-strip .row span{display:none!important;}
+.profile-top-strip .row b{
+  position:relative!important;
+  z-index:1!important;
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  color:var(--text)!important;
+  font-size:clamp(11px,.72vw,14px)!important;
+  font-weight:950!important;
+  letter-spacing:.02em!important;
+  line-height:1.05!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  padding:0!important;
+  text-transform:none!important;
+}
+.profile-top-strip .row b.is-tight{font-size:clamp(10px,.64vw,12px)!important;}
+.profile-top-strip .row b::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-8px;
+  width:28px;
+  height:2px;
+  border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 44%, transparent);
+  transform:translateX(-50%);
+  opacity:.55;
+  transition:opacity .16s ease,width .16s ease;
+}
+.profile-top-strip .row:hover,
+.profile-top-strip .editable-row:hover,
+.profile-top-strip .level-row:hover{
+  transform:translateY(-1px)!important;
+  border-color:color-mix(in srgb,var(--accent) 42%, rgba(255,255,255,.12))!important;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.04)),rgba(255,255,255,.028))!important;
+  box-shadow:0 16px 36px rgba(0,0,0,.24),0 0 0 1px color-mix(in srgb,var(--accent) 12%, transparent)!important;
+}
+.profile-top-strip .row:hover b::after{opacity:.9;width:44px;}
+#orgSectionModal .settings-grid .field.is-hidden{display:none!important;}
+#orgSectionModal .settings-grid{gap:11px!important;}
+@media(max-width:900px){
+  .profile-top-strip .profile-info{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;}
+  .profile-top-strip .row,.profile-top-strip .editable-row,.profile-top-strip .level-row{height:48px!important;min-height:48px!important;border-radius:13px!important;}
+  .profile-top-strip .row b{font-size:13px!important;}
+}
+@media(max-width:420px){
+  .profile-top-strip .profile-info{grid-template-columns:1fr!important;}
+}
+
 </style>
 </head>
 <body>
@@ -10136,6 +10251,220 @@ render = function(){
   kiriV078Render();
   updateProfileTopVisibility();
 };
+
+
+/* KIRI v081: кликабельные плашки профиля с отдельным выбором каждого поля */
+(function(){
+  const NONE='';
+  const fieldTitles={project:'Изменить проект',path:'Изменить путь',org:'Изменить организацию',section:'Изменить раздел',level:'Изменить ступень'};
+  let activeProfileField='all';
+
+  function opt(value,label,selected){
+    return `<option value="${String(value).replaceAll('"','&quot;')}" ${selected?'selected':''}>${label}</option>`;
+  }
+  function currentPathForModal(){
+    return document.getElementById('modalPathSelect')?.value || S.path || '';
+  }
+  function currentOrgForModal(){
+    return document.getElementById('modalOrgSelect')?.value || S.org || '';
+  }
+  function currentSectionForModal(){
+    return document.getElementById('modalSectionSelect')?.value || S.section || '';
+  }
+  function setFieldVisibility(field){
+    const map={
+      project:'modalProjectSelect',
+      path:'modalPathSelect',
+      org:'modalOrgSelect',
+      section:'modalSectionSelect',
+      level:'modalOrgLevelSelect'
+    };
+    Object.entries(map).forEach(([key,id])=>{
+      const el=document.getElementById(id);
+      const wrap=el?.closest('.field');
+      if(wrap) wrap.classList.toggle('is-hidden', field!==key && field!=='all');
+    });
+    const title=document.querySelector('#orgSectionModal h2');
+    const desc=document.querySelector('#orgSectionModal h2 + p');
+    if(title) title.textContent=fieldTitles[field] || 'Изменить профиль';
+    if(desc) desc.textContent='Нажми нужный вариант и сохрани. Остальные поля не меняются.';
+  }
+
+  window.modalActivePath=function(){ return currentPathForModal() || S.path || 'Государственная служба'; };
+  window.modalSectionsForOrg=function(org){
+    const path=modalActivePath();
+    return SECTIONS[org] || (path==='Государственная служба'?SECTIONS.defaultGov:SECTIONS.defaultCrime);
+  };
+  window.modalLevelsForSection=function(section){ return LEVELS[section] || LEVELS.default; };
+
+  window.fillOrgSectionModal=function(field='all'){
+    activeProfileField=field;
+    const projectSelect=document.getElementById('modalProjectSelect');
+    const pathSelect=document.getElementById('modalPathSelect');
+    const orgSelect=document.getElementById('modalOrgSelect');
+    const sectionSelect=document.getElementById('modalSectionSelect');
+    const levelSelect=document.getElementById('modalOrgLevelSelect');
+
+    if(projectSelect){
+      const projects=['GTA5RP','Majestic RP'];
+      projectSelect.innerHTML=opt('', 'Не выбрано', !S.project)+projects.map(v=>opt(v,v,S.project===v)).join('');
+    }
+    if(pathSelect){
+      const paths=['Государственная служба','Крайм'];
+      pathSelect.innerHTML=opt('', 'Не выбрано', !S.path)+paths.map(v=>opt(v,v,S.path===v)).join('');
+    }
+
+    const activePath=pathSelect?.value || S.path || '';
+    const orgList=activePath ? (ORGS[activePath]||[]) : [];
+    const selectedOrg=orgList.includes(S.org)?S.org:'';
+    if(orgSelect){
+      orgSelect.innerHTML=opt('', 'Не выбрано', !selectedOrg)+orgList.map(v=>opt(v,v,v===selectedOrg)).join('');
+    }
+
+    const secList=selectedOrg ? modalSectionsForOrg(selectedOrg) : [];
+    const selectedSection=secList.includes(S.section)?S.section:'';
+    if(sectionSelect){
+      sectionSelect.innerHTML=opt('', 'Не выбрано', !selectedSection)+secList.map(v=>opt(v,v,v===selectedSection)).join('');
+    }
+
+    const lvlList=selectedSection ? modalLevelsForSection(selectedSection) : [];
+    const selectedLevel=lvlList.includes(S.level)?S.level:'';
+    if(levelSelect){
+      levelSelect.innerHTML=opt('', 'Не выбрано', !selectedLevel)+lvlList.map(v=>opt(v,v,v===selectedLevel)).join('');
+    }
+    setFieldVisibility(field);
+  };
+
+  window.openOrgSectionModal=function(field='all'){
+    if(!S.ready) return;
+    activeProfileField=typeof field==='string'?field:'all';
+    fillOrgSectionModal(activeProfileField);
+    document.getElementById('orgSectionModal')?.classList.add('open');
+  };
+
+  window.refreshOrgChoicesForModalPath=function(){
+    const path=document.getElementById('modalPathSelect')?.value || '';
+    const orgSelect=document.getElementById('modalOrgSelect');
+    if(!orgSelect) return;
+    const orgList=path ? (ORGS[path]||[]) : [];
+    const oldOrg=orgSelect.value;
+    const selectedOrg=orgList.includes(oldOrg)?oldOrg:'';
+    orgSelect.innerHTML=opt('', 'Не выбрано', !selectedOrg)+orgList.map(v=>opt(v,v,v===selectedOrg)).join('');
+    refreshSectionChoicesForModalOrg();
+  };
+  window.refreshSectionChoicesForModalOrg=function(){
+    const org=document.getElementById('modalOrgSelect')?.value || '';
+    const sectionSelect=document.getElementById('modalSectionSelect');
+    const levelSelect=document.getElementById('modalOrgLevelSelect');
+    if(!sectionSelect || !levelSelect) return;
+    const secList=org ? modalSectionsForOrg(org) : [];
+    const oldSection=sectionSelect.value;
+    const selectedSection=secList.includes(oldSection)?oldSection:'';
+    sectionSelect.innerHTML=opt('', 'Не выбрано', !selectedSection)+secList.map(v=>opt(v,v,v===selectedSection)).join('');
+    const lvlList=selectedSection ? modalLevelsForSection(selectedSection) : [];
+    const selectedLevel=lvlList.includes(S.level)?S.level:'';
+    levelSelect.innerHTML=opt('', 'Не выбрано', !selectedLevel)+lvlList.map(v=>opt(v,v,v===selectedLevel)).join('');
+  };
+
+  window.saveOrgSectionModal=function(){
+    const old={project:S.project,path:S.path,org:S.org,section:S.section,level:S.level};
+    const field=activeProfileField||'all';
+    const project=document.getElementById('modalProjectSelect')?.value || '';
+    const path=document.getElementById('modalPathSelect')?.value || '';
+    const org=document.getElementById('modalOrgSelect')?.value || '';
+    const section=document.getElementById('modalSectionSelect')?.value || '';
+    const level=document.getElementById('modalOrgLevelSelect')?.value || '';
+
+    if(field==='project' || field==='all') S.project=project;
+    if(field==='path' || field==='all'){
+      if(path!==S.path){ S.org=''; S.section=''; S.level=''; S.configured=false; }
+      S.path=path;
+    }
+    if(field==='org' || field==='all'){
+      if(org!==S.org){ S.section=''; S.level=''; S.configured=false; }
+      S.org=org;
+    }
+    if(field==='section' || field==='all'){
+      if(section!==S.section){ S.level=''; S.configured=false; }
+      S.section=section;
+    }
+    if(field==='level' || field==='all') S.level=level;
+
+    if(!S.path){ S.org=''; S.section=''; S.level=''; }
+    if(!S.org){ S.section=''; S.level=''; }
+    if(!S.section){ S.level=''; }
+    S.configured=!!(S.org && S.section && S.level);
+
+    const changed=old.project!==S.project || old.path!==S.path || old.org!==S.org || old.section!==S.section || old.level!==S.level;
+    if(changed){ S.tasks={}; displayedProgress=0; }
+    save();
+    closeOrgSectionModal();
+    render();
+    showToast('Выбор обновлён', changed?'Профиль обновлён':'Без изменений');
+  };
+
+  function fieldFromRow(row){
+    const id=row?.querySelector('b')?.id;
+    if(id==='infoProject') return 'project';
+    if(id==='infoPath') return 'path';
+    if(id==='infoOrg') return 'org';
+    if(id==='infoSection') return 'section';
+    if(id==='infoLevel') return 'level';
+    return 'all';
+  }
+  document.addEventListener('click',function(e){
+    const row=e.target.closest('#dashboardProfileInfo .profile-info > .row');
+    if(!row) return;
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    openOrgSectionModal(fieldFromRow(row));
+  },true);
+
+  const pathSelect=document.getElementById('modalPathSelect');
+  if(pathSelect) pathSelect.onchange=refreshOrgChoicesForModalPath;
+  const orgSelect=document.getElementById('modalOrgSelect');
+  if(orgSelect) orgSelect.onchange=refreshSectionChoicesForModalOrg;
+  const sectionSelect=document.getElementById('modalSectionSelect');
+  if(sectionSelect) sectionSelect.onchange=function(){
+    const lvlList=this.value ? modalLevelsForSection(this.value) : [];
+    const levelSelect=document.getElementById('modalOrgLevelSelect');
+    if(levelSelect) levelSelect.innerHTML=opt('', 'Не выбрано', true)+lvlList.map(v=>opt(v,v,false)).join('');
+  };
+
+  window.updateProfileTopVisibility=function(){
+    const box=document.getElementById('dashboardProfileInfo');
+    if(!box) return;
+    const rows=[...box.querySelectorAll('.profile-info > .row')];
+    rows.forEach(row=>{
+      const b=row.querySelector('b');
+      const id=b ? b.id : '';
+      const value=(b ? b.textContent : '').trim();
+      b?.classList.toggle('is-tight', value.length>18);
+      let hide=false;
+      if(id==='infoProject') hide=!S.project || value==='—';
+      if(id==='infoPath') hide=!S.path || value==='—';
+      if(id==='infoOrg') hide=!S.org || value==='Нужно выбрать' || value==='—';
+      if(id==='infoSection') hide=!S.section || value==='—';
+      if(id==='infoLevel') hide=!S.level || value==='—';
+      row.classList.toggle('profile-top-hidden', hide);
+      row.classList.remove('profile-top-last');
+    });
+    const visible=rows.filter(row=>!row.classList.contains('profile-top-hidden'));
+    if(visible.length) visible[visible.length-1].classList.add('profile-top-last');
+  };
+
+  const prevRender=render;
+  render=function(){
+    prevRender();
+    if(document.getElementById('infoProject')) document.getElementById('infoProject').textContent=S.project||'—';
+    if(document.getElementById('infoPath')) document.getElementById('infoPath').textContent=S.path||'—';
+    if(document.getElementById('infoOrg')) document.getElementById('infoOrg').textContent=S.org||'—';
+    if(document.getElementById('infoSection')) document.getElementById('infoSection').textContent=S.section||'—';
+    if(document.getElementById('infoLevel')) document.getElementById('infoLevel').textContent=S.level||'—';
+    updateProfileTopVisibility();
+  };
+})();
 
 load();
 render();
