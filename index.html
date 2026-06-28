@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>RP Cabinet TEST v076</title>
+<title>RP Cabinet TEST v077</title>
 <style>
 :root{
   --bg:#02040a;
@@ -6086,6 +6086,156 @@ body[data-active-dash-tab="profile"] #dashboardProfileInfo.profile-top-strip{dis
   .profile-top-strip .level-row:last-child{border-bottom:0!important;}
 }
 
+
+
+/* v077: верхняя плашка профиля — вариант 3: без подписей, только иконка + значение; пустые поля скрываются */
+#dashboardProfileInfo.profile-top-strip{
+  margin:0 0 16px!important;
+  padding:7px!important;
+  border-radius:16px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 24%, rgba(255,255,255,.12))!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.055),rgba(255,255,255,.026))!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.16)!important;
+  overflow:hidden!important;
+}
+.profile-top-strip .profile-info{
+  display:flex!important;
+  align-items:stretch!important;
+  gap:0!important;
+  padding:0!important;
+  background:transparent!important;
+  min-width:0!important;
+}
+.profile-top-strip .row,
+.profile-top-strip .editable-row,
+.profile-top-strip .level-row{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:38px!important;
+  height:38px!important;
+  padding:0 14px!important;
+  gap:8px!important;
+  border:0!important;
+  border-right:1px solid color-mix(in srgb,var(--accent) 18%, rgba(255,255,255,.10))!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  min-width:0!important;
+}
+.profile-top-strip .row.profile-top-hidden{display:none!important;}
+.profile-top-strip .row.profile-top-last{border-right:0!important;}
+.profile-top-strip .row::after,
+.profile-top-strip .editable-row::after,
+.profile-top-strip .level-row::after{
+  content:""!important;
+  position:absolute!important;
+  top:8px!important;
+  right:-1px!important;
+  width:1px!important;
+  height:calc(100% - 16px)!important;
+  background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 28%, rgba(255,255,255,.08)),transparent)!important;
+  pointer-events:none!important;
+}
+.profile-top-strip .row.profile-top-last::after{display:none!important;}
+.profile-top-strip .row span{display:none!important;}
+.profile-top-strip .row b{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  min-width:0!important;
+  max-width:100%!important;
+  color:var(--text)!important;
+  font-size:14px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  padding:0!important;
+}
+.profile-top-strip .row b::before{
+  flex:0 0 auto!important;
+  color:var(--accent)!important;
+  font-size:16px!important;
+  line-height:1!important;
+  filter:drop-shadow(0 0 10px var(--glow));
+}
+#infoProject::before{content:"▣";}
+#infoPath::before{content:"🏛";}
+#infoOrg::before{content:"★";}
+#infoSection::before{content:"▤";}
+#infoLevel::before{content:"◆";}
+.profile-top-strip .mini-edit{
+  position:static!important;
+  flex:0 0 20px!important;
+  width:20px!important;
+  height:20px!important;
+  min-width:20px!important;
+  min-height:20px!important;
+  border-radius:7px!important;
+  border:1px solid color-mix(in srgb,var(--accent) 38%, rgba(255,255,255,.10))!important;
+  background:rgba(255,255,255,.04)!important;
+  color:var(--accent)!important;
+  box-shadow:none!important;
+  opacity:.9!important;
+  font-size:0!important;
+  line-height:1!important;
+  padding:0!important;
+  margin:0!important;
+}
+.profile-top-strip .mini-edit.show{display:grid!important;place-items:center!important;}
+.profile-top-strip .mini-edit::before{
+  content:"✎"!important;
+  display:block!important;
+  font-size:10px!important;
+  line-height:1!important;
+  color:var(--accent)!important;
+  margin:0!important;
+}
+.profile-top-strip .mini-edit svg,
+.profile-top-strip .mini-edit img{display:none!important;}
+.profile-top-strip .editable-row:hover,
+.profile-top-strip .level-row:hover{
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 10%, rgba(255,255,255,.04)),rgba(255,255,255,.028))!important;
+}
+.profile-top-strip .row:nth-child(1){flex:0 1 150px!important;}
+.profile-top-strip .row:nth-child(2){flex:1.6 1 260px!important;}
+.profile-top-strip .row:nth-child(3){flex:1 1 190px!important;}
+.profile-top-strip .row:nth-child(4){flex:1 1 170px!important;}
+.profile-top-strip .row:nth-child(5){flex:1 1 190px!important;}
+@media(max-width:900px){
+  .profile-top-strip .profile-info{flex-wrap:wrap!important;}
+  .profile-top-strip .row,
+  .profile-top-strip .editable-row,
+  .profile-top-strip .level-row{
+    flex:1 1 calc(50% - 1px)!important;
+    min-width:160px!important;
+    border-bottom:1px solid color-mix(in srgb,var(--accent) 16%, rgba(255,255,255,.08))!important;
+  }
+}
+@media(max-width:520px){
+  #dashboardProfileInfo.profile-top-strip{padding:6px!important;border-radius:14px!important;}
+  .profile-top-strip .profile-info{display:grid!important;grid-template-columns:1fr!important;}
+  .profile-top-strip .row,
+  .profile-top-strip .editable-row,
+  .profile-top-strip .level-row{
+    width:100%!important;
+    min-width:0!important;
+    height:40px!important;
+    min-height:40px!important;
+    justify-content:flex-start!important;
+    padding:0 12px!important;
+    border-right:0!important;
+    border-bottom:1px solid color-mix(in srgb,var(--accent) 16%, rgba(255,255,255,.08))!important;
+  }
+  .profile-top-strip .row::after,
+  .profile-top-strip .editable-row::after,
+  .profile-top-strip .level-row::after{display:none!important;}
+  .profile-top-strip .row b{justify-content:flex-start!important;font-size:14px!important;}
+}
+
 </style>
 </head>
 <body>
@@ -9697,6 +9847,32 @@ document.addEventListener('click',e=>{
     if(text.includes('экзамен') || text.includes('тест')) recordPanelRead('tests');
   }
 },true);
+
+
+/* v077: скрываем в верхней плашке профиля поля, которые ещё не выбраны */
+function updateProfileTopVisibility(){
+  const box=document.getElementById('dashboardProfileInfo');
+  if(!box) return;
+  const rows=[...box.querySelectorAll('.profile-info > .row')];
+  rows.forEach(row=>{
+    const b=row.querySelector('b');
+    const id=b ? b.id : '';
+    const value=(b ? b.textContent : '').trim();
+    let hide=false;
+    if(id==='infoOrg') hide=!S.org || value==='Нужно выбрать' || value==='—';
+    if(id==='infoSection') hide=!S.configured || !S.section || value==='—';
+    if(id==='infoLevel') hide=!S.configured || !S.level || value==='—';
+    row.classList.toggle('profile-top-hidden', hide);
+    row.classList.remove('profile-top-last');
+  });
+  const visible=rows.filter(row=>!row.classList.contains('profile-top-hidden'));
+  if(visible.length) visible[visible.length-1].classList.add('profile-top-last');
+}
+const kiriV077Render = render;
+render = function(){
+  kiriV077Render();
+  updateProfileTopVisibility();
+};
 
 load();
 render();
