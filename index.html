@@ -1178,6 +1178,7 @@ function renderRatingBlock(){
   const profileRatingProject=$('#profileRatingProject');
   if(profileRatingProject){
     if(!authed) profileRatingProject.textContent=S.project?`Проект: ${S.project}`:'по выбранному проекту';
+    else if(rating.publicReady===false) profileRatingProject.textContent=`Проект: ${S.project||'—'} · ждёт правила Firebase`;
     else if(rating.updatedAt) profileRatingProject.textContent=`Проект: ${S.project||'—'} · обновлено`;
     else profileRatingProject.textContent=`Проект: ${S.project||'—'} · синхронизация`;
   }
@@ -1185,7 +1186,11 @@ function renderRatingBlock(){
   if(profileRatingTopLink){
     profileRatingTopLink.title=authed?'Открыть ТОП-10 проекта из Firebase':'Сначала войдите через Google';
     const small=profileRatingTopLink.querySelector('small');
-    if(small) small.textContent=authed?'Открыть актуальный ТОП-10 выбранного проекта.':'Будет доступно после входа через Google.';
+    if(small){
+      if(!authed) small.textContent='Будет доступно после входа через Google.';
+      else if(rating.publicReady===false) small.textContent='Своя позиция сохранена. ТОП-10 включится после правил Firebase.';
+      else small.textContent='Открыть актуальный ТОП-10 выбранного проекта.';
+    }
   }
 }
 function ratingTopRowsHtml(rows){
@@ -1613,18 +1618,28 @@ window.CloudSync={
     if(!this.ready || !this.user || !this.db || !S.ready) return;
     const snap=currentRatingSnapshot();
     const now=Date.now();
+    const publicData={
+      uid:this.user.uid,
+      project:snap.project,
+      projectKey:snap.projectKey,
+      rating:snap.value,
+      version:snap.version,
+      name:S.name||this.user.displayName||'Игрок',
+      photoURL:getGoogleProfilePhoto()||this.user.photoURL||'',
+      updatedAt:now
+    };
+    S.cloud=Object.assign({},S.cloud||{}, {
+      rating:{project:snap.project,projectKey:snap.projectKey,place:0,updatedAt:now,version:snap.version,publicReady:true},
+      lastRatingSync:now
+    });
+    save();
+    try{
+      await this.profileRef().set({rating:snap, cloud:S.cloud, updatedAt:now},{merge:true});
+    }catch(e){
+      console.warn('Own rating profile save skipped',e);
+    }
     try{
       const playerRef=this.ratingPlayerRef(snap.projectKey);
-      const publicData={
-        uid:this.user.uid,
-        project:snap.project,
-        projectKey:snap.projectKey,
-        rating:snap.value,
-        version:snap.version,
-        name:S.name||this.user.displayName||'Игрок',
-        photoURL:getGoogleProfilePhoto()||this.user.photoURL||'',
-        updatedAt:now
-      };
       await playerRef.set(publicData,{merge:true});
       const topSnap=await this.db.collection(RATING_COLLECTION).doc(snap.projectKey).collection('players').orderBy('rating','desc').orderBy('updatedAt','asc').limit(10).get();
       const top=[];
@@ -1640,16 +1655,21 @@ window.CloudSync={
         place=top.findIndex(r=>r.uid===this.user.uid)+1;
       }
       S.cloud=Object.assign({},S.cloud||{}, {
-        rating:{project:snap.project,projectKey:snap.projectKey,place:place||0,updatedAt:now,version:snap.version},
+        rating:{project:snap.project,projectKey:snap.projectKey,place:place||0,updatedAt:now,version:snap.version,publicReady:true},
         lastRatingSync:now
       });
       renderRatingBlock();
       if(openAfter) showRatingTopModal();
     }catch(e){
-      console.warn('Rating sync failed',e);
-      const place=$('#profileRatingPlace'); if(place) place.textContent='—';
-      const project=$('#profileRatingProject'); if(project) project.textContent='Рейтинг недоступен: проверь правила Firebase';
-      if(openAfter) showToast('Рейтинг недоступен','Не удалось прочитать ТОП-10 из Firebase');
+      console.warn('Public rating sync failed',e);
+      window.__ratingTopRows=[];
+      S.cloud=Object.assign({},S.cloud||{}, {
+        rating:{project:snap.project,projectKey:snap.projectKey,place:0,updatedAt:now,version:snap.version,publicReady:false},
+        lastRatingSync:now
+      });
+      save();
+      renderRatingBlock();
+      if(openAfter) showToast('ТОП-10 пока не открыт','Личный рейтинг сохранён. Для общего ТОПа нужны правила Firebase для projectRatings.');
     }
   },
   async saveNow(force){
