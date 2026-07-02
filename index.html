@@ -1833,8 +1833,10 @@ function achievementRarityCounts(opened){
   },{common:0,rare:0,epic:0,legendary:0});
 }
 
-const RATING_SYNC_VERSION=1;
+const RATING_SYNC_VERSION=2;
 const RATING_COLLECTION='projectRatings';
+const RATING_FLAT_COLLECTION='projectRatingPlayers';
+const RATING_BOARD_COLLECTION='projectRatingBoards';
 const RATING_RARITY_WEIGHT={common:5,rare:25,epic:65,legendary:140};
 const RATING_IGNORED_ACHIEVEMENTS=new Set([
   'profile_created','project_gta5rp','project_majestic','path_gov','path_crime','org_army',
@@ -1921,7 +1923,14 @@ function ratingTopRowsHtml(rows){
     if(own) list=[own];
   }
   if(!list.length) return '<p class="profile-rating-note">Войдите через Google, чтобы открыть ТОП-10 проекта.</p>';
-  return '<div class="rating-top-list">'+list.map((r,i)=>`<div class="rating-top-row ${r.uid===uid?'rating-top-me':''}"><div class="rating-top-rank">${i+1}</div><strong>${escapeHtml(r.name||'Игрок')}</strong><span>${r.uid===uid?'Вы':''}</span></div>`).join('')+'</div>';
+  let debug='';
+  const dbg=window.__ratingDebug||{};
+  if(list.length<=1 && dbg.errors && dbg.errors.length){
+    debug='<p class="profile-rating-note">Общий список Firebase пока не читается. Видна только ваша запись. Проверь правила Firestore для публичного рейтинга: projectRatingPlayers, projectRatings и projectRatingBoards.</p>';
+  }else if(dbg.sources && dbg.sources.length){
+    debug='<p class="profile-rating-note">Источник ТОПа: '+escapeHtml(dbg.sources.join(' + '))+'</p>';
+  }
+  return '<div class="rating-top-list">'+list.map((r,i)=>`<div class="rating-top-row ${r.uid===uid?'rating-top-me':''}"><div class="rating-top-rank">${i+1}</div><strong>${escapeHtml(r.name||'Игрок')}</strong><span>${r.uid===uid?'Вы':''}</span></div>`).join('')+'</div>'+debug;
 }
 function showRatingTopModal(){
   let modal=document.getElementById('ratingTopModal');
@@ -2358,43 +2367,122 @@ window.CloudSync={
     clearTimeout(this.ratingTimer);
     this.ratingTimer=setTimeout(()=>this.syncRating(!!force,false), force?120:900);
   },
+  ratingDocId(projectKey){
+    const uid=String(this.user?.uid||'unknown').replace(/[^A-Za-z0-9_-]/g,'_');
+    return `${projectKey}_${uid}`;
+  },
   ratingFlatPlayerRef(projectKey){
-    return this.db.collection(RATING_COLLECTION).doc(`${projectKey}_${this.user.uid}`);
+    return this.db.collection(RATING_FLAT_COLLECTION).doc(this.ratingDocId(projectKey));
   },
   ratingLegacyPlayerRef(projectKey){
     return this.db.collection(RATING_COLLECTION).doc(projectKey).collection('players').doc(this.user.uid);
   },
+  ratingBoardRef(projectKey){
+    return this.db.collection(RATING_BOARD_COLLECTION).doc(projectKey);
+  },
   ratingPlayerRef(projectKey){
-    return this.ratingFlatPlayerRef(projectKey);
+    return this.ratingLegacyPlayerRef(projectKey);
+  },
+  normalizeRatingRow(row,id,projectKey){
+    if(!row) return null;
+    const clean=Object.assign({id:id||row.uid||''},row);
+    if(!clean.uid) return null;
+    clean.projectKey=clean.projectKey||projectKey;
+    if(clean.projectKey!==projectKey) return null;
+    clean.rating=Number(clean.rating||clean.value||0);
+    clean.updatedAt=Number(clean.updatedAt||0);
+    clean.name=String(clean.name||'Игрок').slice(0,42);
+    return clean;
+  },
+  ratingRowFromProfileDoc(doc,projectKey){
+    const data=doc && doc.data ? (doc.data()||{}) : (doc||{});
+    const st=data.state||{};
+    const snap=st.rating||data.rating||{};
+    const cloud=st.cloud||{};
+    const uid=data.ownerUid||cloud.uid||st.cloud?.uid||'';
+    if(!uid || ratingProjectKey(snap.project||st.project||'GTA5RP')!==projectKey) return null;
+    return this.normalizeRatingRow({
+      uid,
+      project:snap.project||st.project||'GTA5RP',
+      projectKey,
+      rating:Number(snap.value||snap.rating||0),
+      version:snap.version||RATING_SYNC_VERSION,
+      name:st.name||data.name||'Игрок',
+      photoURL:cloud.googlePhotoURL||'',
+      updatedAt:data.updatedAt||st.updatedAt||snap.updatedAt||0
+    },uid,projectKey);
+  },
+  async writeRatingBoard(projectKey,publicData){
+    const ref=this.ratingBoardRef(projectKey);
+    await this.db.runTransaction(async tx=>{
+      const snap=await tx.get(ref);
+      const data=snap.exists ? (snap.data()||{}) : {};
+      const players=Object.assign({},data.players||{});
+      players[publicData.uid]=publicData;
+      const rows=Object.values(players).filter(Boolean).sort((a,b)=>Number(b.rating||0)-Number(a.rating||0) || Number(a.updatedAt||0)-Number(b.updatedAt||0)).slice(0,50);
+      const nextPlayers={};
+      rows.forEach(r=>{ if(r && r.uid) nextPlayers[r.uid]=r; });
+      tx.set(ref,{projectKey,updatedAt:Date.now(),players:nextPlayers,top:rows.slice(0,10)},{merge:true});
+    });
   },
   async fetchProjectRatingRows(projectKey, ownRow){
     const rowsByUid=new Map();
-    const addRow=(row,id)=>{
-      if(!row || !row.uid || row.projectKey!==projectKey) return;
-      const clean=Object.assign({id:id||row.uid},row);
-      clean.rating=Number(clean.rating||0);
-      clean.updatedAt=Number(clean.updatedAt||0);
+    const debug={sources:[],errors:[]};
+    const addRow=(row,id,source)=>{
+      const clean=this.normalizeRatingRow(row,id,projectKey);
+      if(!clean) return;
       const prev=rowsByUid.get(clean.uid);
       if(!prev || clean.rating>Number(prev.rating||0) || clean.updatedAt>Number(prev.updatedAt||0)) rowsByUid.set(clean.uid,clean);
+      if(source && !debug.sources.includes(source)) debug.sources.push(source);
     };
     try{
-      const flatSnap=await this.db.collection(RATING_COLLECTION).where('projectKey','==',projectKey).limit(300).get();
-      flatSnap.forEach(doc=>addRow(doc.data()||{},doc.id));
+      const board=await this.ratingBoardRef(projectKey).get();
+      if(board.exists){
+        const data=board.data()||{};
+        if(Array.isArray(data.top)) data.top.forEach((r,i)=>addRow(r,r?.uid||`top_${i}`,'board'));
+        if(data.players && typeof data.players==='object') Object.entries(data.players).forEach(([id,r])=>addRow(r,id,'board'));
+      }
     }catch(e){
+      debug.errors.push('board: '+String(e.code||e.message||e).slice(0,80));
+      console.warn('Board rating read failed',e);
+    }
+    try{
+      const flatSnap=await this.db.collection(RATING_FLAT_COLLECTION).where('projectKey','==',projectKey).limit(300).get();
+      flatSnap.forEach(doc=>addRow(doc.data()||{},doc.id,'flat'));
+    }catch(e){
+      debug.errors.push('flat: '+String(e.code||e.message||e).slice(0,80));
       console.warn('Flat rating list read failed',e);
     }
     try{
-      const legacySnap=await this.db.collection(RATING_COLLECTION).doc(projectKey).collection('players').limit(300).get();
-      legacySnap.forEach(doc=>addRow(doc.data()||{},doc.id));
+      const oldFlatSnap=await this.db.collection(RATING_COLLECTION).where('projectKey','==',projectKey).limit(300).get();
+      oldFlatSnap.forEach(doc=>addRow(doc.data()||{},doc.id,'old-flat'));
     }catch(e){
+      debug.errors.push('old-flat: '+String(e.code||e.message||e).slice(0,80));
+      console.warn('Old flat rating list read failed',e);
+    }
+    try{
+      const legacySnap=await this.db.collection(RATING_COLLECTION).doc(projectKey).collection('players').limit(300).get();
+      legacySnap.forEach(doc=>addRow(doc.data()||{},doc.id,'legacy'));
+    }catch(e){
+      debug.errors.push('legacy: '+String(e.code||e.message||e).slice(0,80));
       console.warn('Legacy rating list read failed',e);
     }
-    addRow(ownRow,ownRow?.uid);
-    return Array.from(rowsByUid.values()).sort((a,b)=>{
+    try{
+      const profileSnap=await this.db.collectionGroup('profiles').limit(300).get();
+      profileSnap.forEach(doc=>addRow(this.ratingRowFromProfileDoc(doc,projectKey),doc.id,'profiles'));
+    }catch(e){
+      debug.errors.push('profiles: '+String(e.code||e.message||e).slice(0,80));
+      console.warn('Profile collectionGroup rating read failed',e);
+    }
+    addRow(ownRow,ownRow?.uid,'own');
+    const rows=Array.from(rowsByUid.values()).sort((a,b)=>{
       const byRating=Number(b.rating||0)-Number(a.rating||0);
       if(byRating) return byRating;
       return Number(a.updatedAt||0)-Number(b.updatedAt||0);
     });
+    debug.count=rows.length;
+    window.__ratingDebug=debug;
+    return rows;
   },
   async syncRating(force,openAfter){
     if(!this.ready || !this.user || !this.db || !S.ready) return;
@@ -2434,7 +2522,13 @@ window.CloudSync={
         writeErrors.push(e);
         console.warn('Legacy public rating write failed',e);
       }
-      if(writeErrors.length>=2) throw writeErrors[0];
+      try{
+        await this.writeRatingBoard(snap.projectKey,publicData);
+      }catch(e){
+        writeErrors.push(e);
+        console.warn('Board public rating write failed',e);
+      }
+      if(writeErrors.length>=3) throw writeErrors[0];
       const allRows=await this.fetchProjectRatingRows(snap.projectKey,publicData);
       const top=allRows.slice(0,10);
       window.__ratingTopRows=top.length?top:[publicData];
